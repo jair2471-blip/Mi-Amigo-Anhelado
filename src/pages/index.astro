@@ -118,7 +118,12 @@ import PageLayout from '../layouts/PageLayout.astro';
       { texto: "Yo soy el camino, y la verdad, y la vida.", cita: "Juan 14:6" },
       { texto: "La paz os dejo, mi paz os doy; yo no os la doy como el mundo la da.", cita: "Juan 14:27" },
       { texto: "He aquí yo estoy con vosotros todos los días, hasta el fin del mundo.", cita: "Mateo 28:20" },
-      { texto: "Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.", cita: "Mateo 11:28" }
+      { texto: "Todo lo puedo en Cristo que me fortalece.", cita: "Filipenses 4:13" },
+      { texto: "No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios.", cita: "Isaías 41:10" },
+      { texto: "Bástate mi gracia; porque mi poder se perfecciona en la debilidad.", cita: "2 Corintios 12:9" },
+      { texto: "Si Dios es por nosotros, ¿quién contra nosotros?", cita: "Romanos 8:31" },
+      { texto: "El Señor es mi pastor; nada me faltará.", cita: "Salmo 23:1" },
+      { texto: "La paz de Dios, que sobrepasa todo entendimiento, guardará vuestros corazones.", cita: "Filipenses 4:7" }
     ];
 
     function cargarVersiculo() {
@@ -130,6 +135,9 @@ import PageLayout from '../layouts/PageLayout.astro';
         citaElem.innerText = `— ${versiculos[indice].cita}`;
       }
     }
+
+    document.addEventListener('DOMContentLoaded', cargarVersiculo);
+  </script>
 
     // Asegurarse de que cargue incluso si la página se sirve desde caché
     document.addEventListener('DOMContentLoaded', cargarVersiculo);
