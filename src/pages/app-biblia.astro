@@ -181,11 +181,12 @@ import PageLayout from '../layouts/PageLayout.astro';
     }
 
     .btn-tool {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      border: none;
+      /* Usamos nuestro verde sólido para que no se pierda nada */
+      background: linear-gradient(135deg, #1a4d2e 0%, #2d5a3f 100%);
+      border: 1px solid #d4a574; /* Un borde dorado fino para que resalte */
       font-size: 0.95rem;
       cursor: pointer;
-      color: #ffffff;
+      color: #ffffff !important; /* Forzamos el blanco en el texto */
       padding: 0.75rem 1.5rem;
       border-radius: 14px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -216,6 +217,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 
     .btn-tool:hover {
       transform: translateY(-2px);
+      background: #1a4d2e; /* Se mantiene firme al pasar el mouse */
       box-shadow: 0 6px 20px rgba(26, 77, 46, 0.4);
     }
 
@@ -226,6 +228,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     .control-group {
       display: flex;
       gap: 0.75rem;
+      flex-wrap: wrap; /* Por si en el celular hay muchos botones, que no se amontonen */
     }
 
     /* Acordeones majestuosos */
