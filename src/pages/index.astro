@@ -38,14 +38,19 @@ import PageLayout from '../layouts/PageLayout.astro';
   </section>
 
   <style>
-    /* Hero Section */
-    .hero {
-      height: 80vh;
+   .hero {
+      height: 85vh;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      background: radial-gradient(circle at center, #ffffff 0%, #f9fbf9 100%);
+      /* Capa blanca suave + textura de papel artesanal */
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), 
+        url('https://www.transparenttextures.com/patterns/cream-paper.png');
+      background-color: #fdfdfd; /* Color de respaldo */
+      background-attachment: fixed; /* Para que el fondo se quede quieto al bajar */
+      border-bottom: 1px solid rgba(212, 165, 116, 0.2);
     }
 
     .subtitle {
