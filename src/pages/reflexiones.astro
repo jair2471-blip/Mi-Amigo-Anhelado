@@ -1,0 +1,38 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout title="Reflexiones de Verdad">
+    <section class="intro">
+        <h1>Reflexiones Directas</h1>
+        <p>La sabiduría de Dios aplicada a tu realidad, sin filtros humanos.</p>
+    </section>
+
+    <div class="reflexiones-grid">
+        <article class="capsula">
+            <div class="tag">Para hoy</div>
+            <h2>¿Por qué te afanas?</h2>
+            <p class="quote">"No se afanen por el día de mañana..." - Jesús</p>
+            <p class="meditacion">El afán es la sombra de la falta de confianza. Si Dios viste los lirios, ¿no hará mucho más por ti?</p>
+            <button class="btn-share">Compartir Verdad</button>
+        </article>
+
+        </div>
+
+    <style>
+        .intro { text-align: center; padding: 4rem 1rem; }
+        .reflexiones-grid { display: grid; gap: 2rem; max-width: 800px; margin: 0 auto; }
+        .capsula { 
+            background: white; 
+            padding: 2.5rem; 
+            border-radius: 20px; 
+            border-left: 6px solid #d4a574; /* Dorado sobrio */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .tag { color: #1a4d2e; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; }
+        h2 { font-family: 'Playfair Display', serif; margin: 1rem 0; font-size: 2rem; }
+        .quote { font-style: italic; color: #5d6d7e; border-bottom: 1px solid #eee; padding-bottom: 1rem; }
+        .meditacion { margin-top: 1.5rem; font-size: 1.2rem; line-height: 1.8; }
+        .btn-share { margin-top: 1.5rem; background: none; border: 1px solid #d4a574; color: #d4a574; padding: 0.5rem 1rem; border-radius: 50px; cursor: pointer; }
+    </style>
+</PageLayout>
