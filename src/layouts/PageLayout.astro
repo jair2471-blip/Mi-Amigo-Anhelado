@@ -7,16 +7,47 @@ const { title } = Astro.props;
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     <title>{title} | Mi Amigo Anhelado</title>
+    <meta name="description" content="La enseñanza pura de Dios y el Señor Jesucristo. Reflexiones bíblicas y plan de lectura 365 días para una vida transformada." />
+    <meta name="author" content="Mi Amigo Anhelado" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title + " | Mi Amigo Anhelado"} />
+    <meta property="og:description" content="Mensajes bíblicos y reflexiones diferentes. Sin filtros humanos, solo la Verdad de las Escrituras." />
+    <meta property="og:url" content="https://tu-dominio.com/" />
+    <meta property="og:image" content="https://tu-dominio.com/og-image.jpg" />
+
     <style>
         body {
-            font-family: sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
+            font-family: 'Crimson Text', Georgia, serif; /* Un toque más elegante y bíblico */
+            line-height: 1.8;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem;
             background-color: #fdfdfd;
-            color: #333;
+            color: #1a202c;
+        }
+        nav {
+            padding: 1rem 0;
+            text-align: center;
+        }
+        nav a {
+            text-decoration: none;
+            color: #1a4d2e; /* El verde que nos gusta */
+            font-weight: bold;
+            margin: 0 0.5rem;
+        }
+        nav a:hover {
+            color: #d4a574; /* Dorado al pasar el mouse */
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: #718096;
+            border-top: 1px solid #eee;
         }
     </style>
 </head>
@@ -24,14 +55,17 @@ const { title } = Astro.props;
     <header>
         <nav>
             <a href="/">Inicio</a> | 
-            <a href="/app-biblia">Biblia</a>
+            <a href="/app-biblia">Biblia</a> |
+            <a href="/reflexiones" style="color: #d4a574;">Reflexiones</a>
         </nav>
     </header>
-    <hr />
+    
     <main>
-        <slot /> </main>
+        <slot /> 
+    </main>
+
     <footer>
-        <p>&copy; 2026 Mi Amigo Anhelado</p>
+        <p>&copy; 2026 📖 Mi Amigo Anhelado - Enseñanza Pura</p>
     </footer>
 </body>
 </html>
