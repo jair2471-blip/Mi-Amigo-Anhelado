@@ -96,141 +96,116 @@ import PageLayout from '../layouts/PageLayout.astro';
   </div>
 
  <script is:inline>
-  // 1. LISTA COMPLETA DE LOS 66 LIBROS (Ya verifiqué todos)
-  const ESTRUCTURA = [
-    {n:'Génesis', f:'genesis', c:50, t:'AT'}, {n:'Éxodo', f:'exodo', c:40, t:'AT'}, {n:'Levítico', f:'levitico', c:27, t:'AT'},
-    {n:'Números', f:'numeros', c:36, t:'AT'}, {n:'Deuteronomio', f:'deuteronomio', c:34, t:'AT'}, {n:'Josué', f:'josue', c:24, t:'AT'},
-    {n:'Jueces', f:'jueces', c:21, t:'AT'}, {n:'Rut', f:'rut', c:4, t:'AT'}, {n:'1 Samuel', f:'1_samuel', c:31, t:'AT'},
-    {n:'2 Samuel', f:'2_samuel', c:24, t:'AT'}, {n:'1 Reyes', f:'1_reyes', c:22, t:'AT'}, {n:'2 Reyes', f:'2_reyes', c:25, t:'AT'},
-    {n:'1 Crónicas', f:'1_cronicas', c:29, t:'AT'}, {n:'2 Crónicas', f:'2_cronicas', c:36, t:'AT'}, {n:'Esdras', f:'esdras', c:10, t:'AT'},
-    {n:'Nehemías', f:'nehemias', c:13, t:'AT'}, {n:'Ester', f:'ester', c:10, t:'AT'}, {n:'Job', f:'job', c:42, t:'AT'},
-    {n:'Salmos', f:'salmos', c:150, t:'AT'}, {n:'Proverbios', f:'proverbios', c:31, t:'AT'}, {n:'Eclesiastés', f:'eclesiastes', c:12, t:'AT'},
-    {n:'Cantares', f:'cantares', c:8, t:'AT'}, {n:'Isaías', f:'isaias', c:66, t:'AT'}, {n:'Jeremías', f:'jeremias', c:52, t:'AT'},
-    {n:'Lamentaciones', f:'lamentaciones', c:5, t:'AT'}, {n:'Ezequiel', f:'ezequiel', c:48, t:'AT'}, {n:'Daniel', f:'daniel', c:12, t:'AT'},
-    {n:'Oseas', f:'oseas', c:14, t:'AT'}, {n:'Joel', f:'joel', c:3, t:'AT'}, {n:'Amós', f:'amos', c:9, t:'AT'},
-    {n:'Abdías', f:'abdias', c:1, t:'AT'}, {n:'Jonás', f:'jonas', c:4, t:'AT'}, {n:'Miqueas', f:'miqueas', c:7, t:'AT'},
-    {n:'Nahúm', f:'nahum', c:3, t:'AT'}, {n:'Habacuc', f:'habacuc', c:3, t:'AT'}, {n:'Sofonías', f:'sofonias', c:3, t:'AT'},
-    {n:'Hageo', f:'hageo', c:2, t:'AT'}, {n:'Zacarías', f:'zacarias', c:14, t:'AT'}, {n:'Malaquías', f:'malaquias', c:4, t:'AT'},
-    {n:'Mateo', f:'mateo', c:28, t:'NT'}, {n:'Marcos', f:'marcos', c:16, t:'NT'}, {n:'Lucas', f:'lucas', c:24, t:'NT'},
-    {n:'Juan', f:'juan', c:21, t:'NT'}, {n:'Hechos', f:'hechos', c:28, t:'NT'}, {n:'Romanos', f:'romanos', c:16, t:'NT'},
-    {n:'1 Corintios', f:'1_corintios', c:16, t:'NT'}, {n:'2 Corintios', f:'2_corintios', c:13, t:'NT'}, {n:'Gálatas', f:'galatas', c:6, t:'NT'},
-    {n:'Efesios', f:'efesios', c:6, t:'NT'}, {n:'Filipenses', f:'filipenses', c:4, t:'NT'}, {n:'Colosenses', f:'colosenses', c:4, t:'NT'},
-    {n:'1 Tesalonicenses', f:'1_tesalonicenses', c:5, t:'NT'}, {n:'2 Tesalonicenses', f:'2_tesalonicenses', c:3, t:'NT'},
-    {n:'1 Timoteo', f:'1_timoteo', c:6, t:'NT'}, {n:'2 Timoteo', f:'2_timoteo', c:4, t:'NT'}, {n:'Tito', f:'tito', c:3, t:'NT'},
-    {n:'Filemón', f:'filemon', c:1, t:'NT'}, {n:'Hebreos', f:'hebreos', c:13, t:'NT'}, {n:'Santiago', f:'santiago', c:5, t:'NT'},
-    {n:'1 Pedro', f:'1_pedro', c:5, t:'NT'}, {n:'2 Pedro', f:'2_pedro', c:3, t:'NT'}, {n:'1 Juan', f:'1_juan', c:5, t:'NT'},
-    {n:'2 Juan', f:'2_juan', c:1, t:'NT'}, {n:'3 Juan', f:'3_juan', c:1, t:'NT'}, {n:'Judas', f:'judas', c:1, t:'NT'},
-    {n:'Apocalipsis', f:'apocalipsis', c:22, t:'NT'}
+  // LISTA DE LIBROS
+  const booksDB = [
+    {n:'Génesis', f:'genesis', c:50}, {n:'Éxodo', f:'exodo', c:40}, {n:'Levítico', f:'levitico', c:27},
+    {n:'Números', f:'numeros', c:36}, {n:'Deuteronomio', f:'deuteronomio', c:34}, {n:'Josué', f:'josue', c:24},
+    {n:'Jueces', f:'jueces', c:21}, {n:'Rut', f:'rut', c:4}, {n:'1 Samuel', f:'1_samuel', c:31},
+    {n:'2 Samuel', f:'2_samuel', c:24}, {n:'1 Reyes', f:'1_reyes', c:22}, {n:'2 Reyes', f:'2_reyes', c:25},
+    {n:'1 Crónicas', f:'1_cronicas', c:29}, {n:'2 Crónicas', f:'2_cronicas', c:36}, {n:'Esdras', f:'esdras', c:10},
+    {n:'Nehemías', f:'nehemias', c:13}, {n:'Ester', f:'ester', c:10}, {n:'Job', f:'job', c:42},
+    {n:'Salmos', f:'salmos', c:150}, {n:'Proverbios', f:'proverbios', c:31}, {n:'Eclesiastés', f:'eclesiastes', c:12},
+    {n:'Cantares', f:'cantares', c:8}, {n:'Isaías', f:'isaias', c:66}, {n:'Jeremías', f:'jeremias', c:52},
+    {n:'Lamentaciones', f:'lamentaciones', c:5}, {n:'Ezequiel', f:'ezequiel', c:48}, {n:'Daniel', f:'daniel', c:12},
+    {n:'Oseas', f:'oseas', c:14}, {n:'Joel', f:'joel', c:3}, {n:'Amós', f:'amos', c:9},
+    {n:'Abdías', f:'abdias', c:1}, {n:'Jonás', f:'jonas', c:4}, {n:'Miqueas', f:'miqueas', c:7},
+    {n:'Nahúm', f:'nahum', c:3}, {n:'Habacuc', f:'habacuc', c:3}, {n:'Sofonías', f:'sofonias', c:3},
+    {n:'Hageo', f:'hageo', c:2}, {n:'Zacarías', f:'zacarias', c:14}, {n:'Malaquías', f:'malaquias', c:4},
+    {n:'Mateo', f:'mateo', c:28}, {n:'Marcos', f:'marcos', c:16}, {n:'Lucas', f:'lucas', c:24},
+    {n:'Juan', f:'juan', c:21}, {n:'Hechos', f:'hechos', c:28}, {n:'Romanos', f:'romanos', c:16},
+    {n:'1 Corintios', f:'1_corintios', c:16}, {n:'2 Corintios', f:'2_corintios', c:13}, {n:'Gálatas', f:'galatas', c:6},
+    {n:'Efesios', f:'efesios', c:6}, {n:'Filipenses', f:'filipenses', c:4}, {n:'Colosenses', f:'colosenses', c:4},
+    {n:'1 Tesalonicenses', f:'1_tesalonicenses', c:5}, {n:'2 Tesalonicenses', f:'2_tesalonicenses', c:3},
+    {n:'1 Timoteo', f:'1_timoteo', c:6}, {n:'2 Timoteo', f:'2_timoteo', c:4}, {n:'Tito', f:'tito', c:3},
+    {n:'Filemón', f:'filemon', c:1}, {n:'Hebreos', f:'hebreos', c:13}, {n:'Santiago', f:'santiago', c:5},
+    {n:'1 Pedro', f:'1_pedro', c:5}, {n:'2 Pedro', f:'2_pedro', c:3}, {n:'1 Juan', f:'1_juan', c:5},
+    {n:'2 Juan', f:'2_juan', c:1}, {n:'3 Juan', f:'3_juan', c:1}, {n:'Judas', f:'judas', c:1},
+    {n:'Apocalipsis', f:'apocalipsis', c:22}
   ];
 
   let bibliaJSON = null;
-  let fecha = new Date();
-  let fontSize = 20;
+  let fechaActual = new Date();
+  let plan = [];
+  booksDB.forEach(b => { for(let i=1; i<=b.c; i++) plan.push({n:b.n, f:b.f, c:i}); });
 
-  // Creamos el plan de 365 días basado en los libros de arriba
-  let plan365 = [];
-  ESTRUCTURA.forEach(b => { for(let i=1; i<=b.c; i++) plan365.push({n:b.n, f:b.f, c:i}); });
-
-  async function cargarArchivoJSON() {
+  // CARGA CON DIAGNÓSTICO
+  async function cargarBiblia() {
+    const contenedor = document.getElementById('lector');
     try {
       const res = await fetch('/biblia.json'); 
+      if (!res.ok) throw new Error(`Archivo no encontrado (Status: ${res.status})`);
+      
       bibliaJSON = await res.json();
-      window.iniciarApp();
+      console.log("Biblia cargada correctamente");
+      cargarLectura(); // Inicia la lectura del día
     } catch (e) {
-      document.getElementById('lector').innerHTML = `<p style="color:red; text-align:center;">Error: No se encontró biblia.json.</p>`;
+      console.error(e);
+      contenedor.innerHTML = `
+        <div class="card" style="border:2px solid #e76f51; padding:2rem; text-align:center;">
+          <h2 style="color:#e76f51">⚠️ Error al cargar el archivo</h2>
+          <p>No pudimos leer <b>biblia.json</b>.</p>
+          <div style="text-align:left; background:rgba(0,0,0,0.1); padding:1rem; border-radius:10px; margin-top:1rem; font-family:monospace; font-size:0.8rem;">
+            Error: ${e.message}
+          </div>
+          <p style="margin-top:1rem; font-size:0.9rem;">Asegúrate de que el archivo esté en la carpeta <b>public/</b> de tu proyecto Astro.</p>
+        </div>
+      `;
     }
   }
 
-  // BUSCADOR INTELIGENTE: Encuentra el libro aunque se llame "S. Juan" o "Juan"
-  function buscarLibroEnJSON(nombreBuscado) {
+  // BUSCADOR INTELIGENTE (Para que aparezca "Juan")
+  function buscarLibro(nombre) {
     if (!bibliaJSON) return null;
-    
     // 1. Intento exacto
-    if (bibliaJSON[nombreBuscado]) return bibliaJSON[nombreBuscado];
-    
-    // 2. Intento normalizado (minúsculas y sin espacios locos)
-    const nombreLimpio = nombreBuscado.toLowerCase().trim();
+    if (bibliaJSON[nombre]) return bibliaJSON[nombre];
+    // 2. Intento flexible (minúsculas, incluye nombre, etc)
     const keys = Object.keys(bibliaJSON);
-    
-    // Buscamos una coincidencia parcial (ej: si buscamos "Juan" y el JSON tiene "S. Juan")
-    const llaveEncontrada = keys.find(k => 
-      k.toLowerCase().includes(nombreLimpio) || 
-      nombreLimpio.includes(k.toLowerCase())
-    );
-    
-    return llaveEncontrada ? bibliaJSON[llaveEncontrada] : null;
+    const encontrada = keys.find(k => k.toLowerCase().includes(nombre.toLowerCase()) || nombre.toLowerCase().includes(k.toLowerCase()));
+    return encontrada ? bibliaJSON[encontrada] : null;
   }
 
-  window.iniciarApp = () => {
-    const inicio = new Date(fecha.getFullYear(), 0, 0);
-    const diaAnio = Math.floor((fecha - inicio) / 86400000);
-    const idx = (diaAnio - 1) * 3;
-    const hoyItems = plan365.slice(idx, idx + 3);
-
-    document.getElementById('diaLabel').innerText = diaAnio;
-    const offset = 238.7 - (diaAnio / 365) * 238.7;
-    document.getElementById('progreso').style.strokeDashoffset = offset;
-
-    renderLectura(hoyItems);
-  };
-
-  function renderLectura(items) {
+  function cargarLectura(especifico = null) {
     const lector = document.getElementById('lector');
+    const hoy = Math.floor((fechaActual - new Date(fechaActual.getFullYear(), 0, 0)) / 86400000);
+    const items = especifico || plan.slice((hoy - 1) * 3, (hoy - 1) * 3 + 3);
+    
     let html = '';
-
     items.forEach(it => {
-      const libroData = buscarLibroEnJSON(it.n);
-      const capituloData = libroData ? libroData[it.c] : null;
+      const libroData = buscarLibro(it.n);
+      const capData = libroData ? libroData[it.c] : null;
 
-      if (capituloData) {
-        html += `<div class="card">
-          <h2 class="cap-titulo">${it.n} ${it.c}</h2>
-          <div>`;
+      if (capData) {
+        html += `<div class="capitulo-acordeon" style="margin-bottom:2rem">
+          <div class="header-info" style="padding:1rem; background:var(--primary); color:white; border-radius:15px 15px 0 0">
+            <h2 style="margin:0">${it.n} ${it.c}</h2>
+          </div>
+          <div class="versiculos" style="background:var(--surface); padding:1.5rem; border-radius:0 0 15px 15px; border:1px solid var(--border)">`;
         
-        Object.entries(capituloData).forEach(([num, texto]) => {
-          const numReal = isNaN(num) ? num : (parseInt(num) + (Array.isArray(capituloData) ? 1 : 0));
-          
-          // Limpieza de /n y números repetidos
+        Object.entries(capData).forEach(([num, texto]) => {
+          // Limpieza de texto (/n y números dobles)
           let textoLimpio = texto
-            .replace(new RegExp('^' + numReal + '/n'), '')
+            .replace(new RegExp('^' + num + '/n'), '')
             .replace(/^\d+\/n/, '')
             .replace(/\/n/g, '<br>');
 
-          html += `<p class="txt-v"><span class="v-num">${numReal}</span>${textoLimpio}</p>`;
+          html += `<p class="versiculo" style="margin-bottom:1rem">
+            <span class="num" style="color:var(--accent); font-weight:bold; margin-right:0.5rem">${num}</span>
+            <span class="txt">${textoLimpio}</span>
+          </p>`;
         });
-
         html += `</div></div>`;
       } else {
-        html += `<div class="card"><p>No se encontró el contenido para ${it.n} ${it.c}</p></div>`;
+        html += `<div class="card"><p>No se encontró el contenido para ${it.n} ${it.c}. Revisa si el nombre en el JSON es exacto.</p></div>`;
       }
     });
 
     lector.innerHTML = html;
-    window.scrollTo(0,0);
+    // Actualizar UI de progreso si tienes las funciones
+    if (typeof updateProgressRing === 'function') updateProgressRing(hoy);
+    if (typeof updateStats === 'function') updateStats(hoy);
   }
 
-  window.seleccionarLibro = (f, n) => {
-    const libro = ESTRUCTURA.find(l => l.f === f);
-    let todosLosCaps = [];
-    for(let i = 1; i <= libro.c; i++) { todosLosCaps.push({ f, n, c: i }); }
-    window.cerrarLibros();
-    renderLectura(todosLosCaps);
-  };
-
-  window.abrirLibros = () => {
-    const listaAT = document.getElementById('listaAT');
-    const listaNT = document.getElementById('listaNT');
-    listaAT.innerHTML = ESTRUCTURA.filter(b => b.t === 'AT').map(b => `<button class="btn-lib" onclick="window.seleccionarLibro('${b.f}', '${b.n}')">${b.n}</button>`).join('');
-    listaNT.innerHTML = ESTRUCTURA.filter(b => b.t === 'NT').map(b => `<button class="btn-lib" onclick="window.seleccionarLibro('${b.f}', '${b.n}')">${b.n}</button>`).join('');
-    document.getElementById('modalBiblioteca').style.display = 'grid';
-  };
-
-  window.cerrarLibros = () => document.getElementById('modalBiblioteca').style.display = 'none';
-  window.zoom = (n) => { fontSize += n; document.documentElement.style.setProperty('--f-size', fontSize + 'px'); };
-  window.modoNoche = () => document.body.classList.toggle('dark-mode');
-  window.irDia = (d) => { fecha.setDate(fecha.getDate() + d); window.iniciarApp(); };
-  window.irHoy = () => { fecha = new Date(); window.iniciarApp(); };
-
-  document.addEventListener('DOMContentLoaded', cargarArchivoJSON);
+  // Evento inicial
+  document.addEventListener('DOMContentLoaded', cargarBiblia);
 </script>
 </PageLayout>
