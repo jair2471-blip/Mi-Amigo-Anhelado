@@ -17,52 +17,52 @@ import PageLayout from '../layouts/PageLayout.astro';
     
     .main-container { max-width: 800px; margin: 0 auto; padding: 20px; }
     
-    /* Header y Progreso */
     .app-header { text-align: center; padding: 20px 0; }
-    .progress-container { position: relative; width: 100px; height: 100px; margin: 0 auto; }
-    .ring-bg { fill: none; stroke: var(--border); stroke-width: 8; }
-    .ring-active { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: 1s; }
+    .progress-container { position: relative; width: 90px; height: 90px; margin: 0 auto; }
+    .ring-bg { fill: none; stroke: var(--border); stroke-width: 7; }
+    .ring-active { fill: none; stroke: var(--accent); stroke-width: 7; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: 1s; }
 
-    /* Controles */
     .panel { 
       position: sticky; top: 10px; background: var(--surface); 
-      padding: 15px; border-radius: 15px; display: flex; 
+      padding: 12px; border-radius: 15px; display: flex; 
       justify-content: space-between; z-index: 100; border: 1px solid var(--border);
       box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 20px;
     }
-    button { padding: 10px 15px; border: none; border-radius: 8px; background: var(--primary); color: white; cursor: pointer; font-weight: bold; }
+    button { padding: 8px 15px; border: none; border-radius: 8px; background: var(--primary); color: white; cursor: pointer; font-weight: bold; }
 
-    /* Biblioteca (El problema que tenías) */
+    /* Modal Biblioteca */
     #modalBiblioteca { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; place-items: center; z-index: 1000; padding: 20px; }
-    .modal-content { background: var(--bg); width: 100%; max-width: 600px; padding: 25px; border-radius: 20px; max-height: 85vh; overflow-y: auto; }
-    .grid-libros { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-top: 20px; }
-    .btn-lib { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 12px 5px; font-size: 0.85rem; }
+    .modal-content { background: var(--bg); width: 100%; max-width: 700px; padding: 25px; border-radius: 20px; max-height: 90vh; overflow-y: auto; }
+    .seccion-titulo { margin: 20px 0 10px; border-bottom: 2px solid var(--accent); font-family: 'Playfair Display'; color: var(--primary); }
+    .grid-libros { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+    .btn-lib { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 10px 5px; font-size: 0.8rem; }
 
-    /* Lectura */
-    .card { background: var(--surface); border-radius: 15px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    .v-num { color: var(--accent); font-weight: bold; margin-right: 8px; font-size: 0.9em; }
-    .txt-v { font-size: var(--f-size, 20px); line-height: 1.7; margin-bottom: 12px; }
+    /* Estilos de Lectura */
+    .card { background: var(--surface); border-radius: 15px; padding: 25px; margin-bottom: 30px; border: 1px solid var(--border); }
+    .v-num { color: var(--accent); font-weight: bold; margin-right: 8px; font-size: 0.85em; vertical-align: super; }
+    .txt-v { font-size: var(--f-size, 20px); line-height: 1.8; margin-bottom: 15px; text-align: justify; }
+    .cap-titulo { font-family: 'Playfair Display'; font-size: 2rem; color: var(--primary); margin-bottom: 20px; text-align: center; }
 
-    .nav-footer { display: flex; gap: 10px; margin-top: 30px; padding-bottom: 50px; }
+    .nav-footer { display: flex; gap: 10px; margin-top: 30px; padding-bottom: 60px; }
     .btn-nav { flex: 1; padding: 15px; }
   </style>
 
   <div class="main-container">
     <div class="app-header">
-      <h1 style="font-family: 'Playfair Display'; font-size: 2.5rem; color: var(--primary);">BIBLIA 365</h1>
+      <h1 style="font-family: 'Playfair Display'; font-size: 2.2rem; color: var(--primary);">BIBLIA 365</h1>
       <div class="progress-container">
-        <svg width="100" height="100">
-          <circle class="ring-bg" cx="50" cy="50" r="40" />
-          <circle id="progreso" class="ring-active" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2" />
+        <svg width="90" height="90">
+          <circle class="ring-bg" cx="45" cy="45" r="38" />
+          <circle id="progreso" class="ring-active" cx="45" cy="45" r="38" stroke-dasharray="238.7" stroke-dashoffset="238.7" />
         </svg>
         <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">
-          <span id="diaLabel" style="font-weight:bold; font-size:1.4rem;">1</span>
+          <span id="diaLabel" style="font-weight:bold; font-size:1.2rem;">1</span>
         </div>
       </div>
     </div>
 
     <div class="panel">
-      <button onclick="window.abrirLibros()">📚 Libros</button>
+      <button onclick="window.abrirLibros()">📚 Biblioteca</button>
       <div style="display:flex; gap:8px;">
         <button onclick="window.zoom(-2)">A-</button>
         <button onclick="window.zoom(2)">A+</button>
@@ -71,34 +71,58 @@ import PageLayout from '../layouts/PageLayout.astro';
     </div>
 
     <div id="lector">
-      <p style="text-align:center; padding: 50px;">Cargando tu Biblia desde el archivo local...</p>
+      <p style="text-align:center; padding: 50px;">Abriendo las Escrituras...</p>
     </div>
 
     <div class="nav-footer">
-      <button class="btn-nav" onclick="window.irDia(-1)">◀ Ant.</button>
+      <button class="btn-nav" onclick="window.irDia(-1)">Anterior</button>
       <button class="btn-nav" onclick="window.irHoy()">Hoy</button>
-      <button class="btn-nav" onclick="window.irDia(1)">Sig. ▶</button>
+      <button class="btn-nav" onclick="window.irDia(1)">Siguiente</button>
     </div>
   </div>
 
   <div id="modalBiblioteca" onclick="if(event.target==this) window.cerrarLibros()">
     <div class="modal-content">
-      <h2 style="text-align:center; font-family: 'Playfair Display';">Biblioteca</h2>
-      <div id="listaLibros" class="grid-libros"></div>
-      <button onclick="window.cerrarLibros()" style="width:100%; margin-top:25px; background:var(--accent)">Cerrar</button>
+      <h2 style="text-align:center; font-family: 'Playfair Display';">Índice de Libros</h2>
+      
+      <h3 class="seccion-titulo">Antiguo Testamento</h3>
+      <div id="listaAT" class="grid-libros"></div>
+
+      <h3 class="seccion-titulo">Nuevo Testamento</h3>
+      <div id="listaNT" class="grid-libros"></div>
+
+      <button onclick="window.cerrarLibros()" style="width:100%; margin-top:30px; background:var(--accent)">Regresar</button>
     </div>
   </div>
 
   <script is:inline>
-    // 1. Estructura y Plan
+    // 1. LOS 66 LIBROS COMPLETOS
     const ESTRUCTURA = [
-      {n:'Génesis', f:'genesis', c:50}, {n:'Éxodo', f:'exodo', c:40}, {n:'Levítico', f:'levitico', c:27},
-      {n:'Números', f:'numeros', c:36}, {n:'Deuteronomio', f:'deuteronomio', c:34}, {n:'Josué', f:'josue', c:24},
-      {n:'Jueces', f:'jueces', c:21}, {n:'Rut', f:'rut', c:4}, {n:'1 Samuel', f:'1_samuel', c:31},
-      {n:'2 Samuel', f:'2_samuel', c:24}, {n:'1 Reyes', f:'1_reyes', c:22}, {n:'2 Reyes', f:'2_reyes', c:25},
-      {n:'Mateo', f:'mateo', c:28}, {n:'Marcos', f:'marcos', c:16}, {n:'Lucas', f:'lucas', c:24},
-      {n:'Juan', f:'juan', c:21}, {n:'Hechos', f:'hechos', c:28}, {n:'Apocalipsis', f:'apocalipsis', c:22}
-      // Puedes añadir más libros aquí siguiendo el mismo formato
+      // Antiguo Testamento
+      {n:'Génesis', f:'genesis', c:50, t:'AT'}, {n:'Éxodo', f:'exodo', c:40, t:'AT'}, {n:'Levítico', f:'levitico', c:27, t:'AT'},
+      {n:'Números', f:'numeros', c:36, t:'AT'}, {n:'Deuteronomio', f:'deuteronomio', c:34, t:'AT'}, {n:'Josué', f:'josue', c:24, t:'AT'},
+      {n:'Jueces', f:'jueces', c:21, t:'AT'}, {n:'Rut', f:'rut', c:4, t:'AT'}, {n:'1 Samuel', f:'1_samuel', c:31, t:'AT'},
+      {n:'2 Samuel', f:'2_samuel', c:24, t:'AT'}, {n:'1 Reyes', f:'1_reyes', c:22, t:'AT'}, {n:'2 Reyes', f:'2_reyes', c:25, t:'AT'},
+      {n:'1 Crónicas', f:'1_cronicas', c:29, t:'AT'}, {n:'2 Crónicas', f:'2_cronicas', c:36, t:'AT'}, {n:'Esdras', f:'esdras', c:10, t:'AT'},
+      {n:'Nehemías', f:'nehemias', c:13, t:'AT'}, {n:'Ester', f:'ester', c:10, t:'AT'}, {n:'Job', f:'job', c:42, t:'AT'},
+      {n:'Salmos', f:'salmos', c:150, t:'AT'}, {n:'Proverbios', f:'proverbios', c:31, t:'AT'}, {n:'Eclesiastés', f:'eclesiastes', c:12, t:'AT'},
+      {n:'Cantares', f:'cantares', c:8, t:'AT'}, {n:'Isaías', f:'isaias', c:66, t:'AT'}, {n:'Jeremías', f:'jeremias', c:52, t:'AT'},
+      {n:'Lamentaciones', f:'lamentaciones', c:5, t:'AT'}, {n:'Ezequiel', f:'ezequiel', c:48, t:'AT'}, {n:'Daniel', f:'daniel', c:12, t:'AT'},
+      {n:'Oseas', f:'oseas', c:14, t:'AT'}, {n:'Joel', f:'joel', c:3, t:'AT'}, {n:'Amós', f:'amos', c:9, t:'AT'},
+      {n:'Abdías', f:'abdias', c:1, t:'AT'}, {n:'Jonás', f:'jonas', c:4, t:'AT'}, {n:'Miqueas', f:'miqueas', c:7, t:'AT'},
+      {n:'Nahúm', f:'nahum', c:3, t:'AT'}, {n:'Habacuc', f:'habacuc', c:3, t:'AT'}, {n:'Sofonías', f:'sofonias', c:3, t:'AT'},
+      {n:'Hageo', f:'hageo', c:2, t:'AT'}, {n:'Zacarías', f:'zacarias', c:14, t:'AT'}, {n:'Malaquías', f:'malaquias', c:4, t:'AT'},
+      // Nuevo Testamento
+      {n:'Mateo', f:'mateo', c:28, t:'NT'}, {n:'Marcos', f:'marcos', c:16, t:'NT'}, {n:'Lucas', f:'lucas', c:24, t:'NT'},
+      {n:'Juan', f:'juan', c:21, t:'NT'}, {n:'Hechos', f:'hechos', c:28, t:'NT'}, {n:'Romanos', f:'romanos', c:16, t:'NT'},
+      {n:'1 Corintios', f:'1_corintios', c:16, t:'NT'}, {n:'2 Corintios', f:'2_corintios', c:13, t:'NT'}, {n:'Gálatas', f:'galatas', c:6, t:'NT'},
+      {n:'Efesios', f:'efesios', c:6, t:'NT'}, {n:'Filipenses', f:'filipenses', c:4, t:'NT'}, {n:'Colosenses', f:'colosenses', c:4, t:'NT'},
+      {n:'1 Tesalonicenses', f:'1_tesalonicenses', c:5, t:'NT'}, {n:'2 Tesalonicenses', f:'2_tesalonicenses', c:3, t:'NT'},
+      {n:'1 Timoteo', f:'1_timoteo', c:6, t:'NT'}, {n:'2 Timoteo', f:'2_timoteo', c:4, t:'NT'}, {n:'Tito', f:'tito', c:3, t:'NT'},
+      {n:'Filemón', f:'filemon', c:1, t:'NT'}, {n:'Hebreos', f:'hebreos', c:13, t:'NT'}, {n:'Santiago', f:'santiago', c:5, t:'NT'},
+      {n:'1 Pedro', f:'1_pedro', c:5, t:'NT'}, {n:'2 Pedro', f:'2_pedro', c:3, t:'NT'}, {n:'1 Juan', f:'1_juan', c:5, t:'NT'},
+      {n:'2 Juan', f:'2_juan', c:1, t:'NT'}, {n:'3 Juan', f:'3_juan', c:1, t:'NT'}, {n:'Judas', f:'judas', c:1, t:'NT'},
+      {n:'Apocalipsis', f:'apocalipsis', c:22, t:'NT'}
     ];
 
     let plan = [];
@@ -108,18 +132,13 @@ import PageLayout from '../layouts/PageLayout.astro';
     let fecha = new Date();
     let fontSize = 20;
 
-    // 2. Funciones de Carga
     async function cargarArchivoJSON() {
       try {
-        const res = await fetch('/biblia-final-perfecta.json'); // Lee el archivo que subiste a public
+        const res = await fetch('/biblia.json'); 
         bibliaJSON = await res.json();
         window.iniciarApp();
       } catch (e) {
-        document.getElementById('lector').innerHTML = `
-          <div style="text-align:center; color:red; padding:20px;">
-            <h3>¡Opa! No encontré el archivo biblia.json</h3>
-            <p>Revisa que esté dentro de la carpeta <b>public/</b></p>
-          </div>`;
+        document.getElementById('lector').innerHTML = `<p style="color:red; text-align:center;">Error: No se encontró biblia.json en la carpeta public.</p>`;
       }
     }
 
@@ -130,7 +149,7 @@ import PageLayout from '../layouts/PageLayout.astro';
       const hoyItems = plan.slice(idx, idx + 3);
 
       document.getElementById('diaLabel').innerText = diaAnio;
-      const offset = 251.2 - (diaAnio / 365) * 251.2;
+      const offset = 238.7 - (diaAnio / 365) * 238.7;
       document.getElementById('progreso').style.strokeDashoffset = offset;
 
       renderLectura(hoyItems);
@@ -141,56 +160,64 @@ import PageLayout from '../layouts/PageLayout.astro';
       let html = '';
 
       items.forEach(it => {
-        // Buscamos el libro en el JSON (manejamos mayúsculas/minúsculas)
+        // Buscamos el libro en el JSON por nombre exacto o slug
         const libroData = bibliaJSON[it.n] || bibliaJSON[it.f] || bibliaJSON[it.n.toLowerCase()];
         const capituloData = libroData ? libroData[it.c] : null;
 
-        html += `<div class="card">
-          <h2 style="color:var(--primary); margin-bottom:20px; border-bottom:2px solid var(--accent); display:inline-block">${it.n} ${it.c}</h2>
-          <div>`;
-
         if (capituloData) {
-          // El JSON puede ser un objeto de versículos o un array
+          html += `<div class="card">
+            <h2 class="cap-titulo">${it.n} ${it.c}</h2>
+            <div>`;
+          
           Object.entries(capituloData).forEach(([num, texto]) => {
-            html += `<p class="txt-v"><span class="v-num">${num}</span>${texto}</p>`;
+            // Si el JSON es un array, sumamos 1 al índice para que el versículo sea correcto
+            const numReal = isNaN(num) ? num : (parseInt(num) + (Array.isArray(capituloData) ? 1 : 0));
+            html += `<p class="txt-v"><span class="v-num">${numReal}</span>${texto}</p>`;
           });
-        } else {
-          html += `<p>Capítulo no encontrado en el JSON.</p>`;
-        }
 
-        html += `</div></div>`;
+          html += `</div></div>`;
+        }
       });
 
-      lector.innerHTML = html;
+      lector.innerHTML = html || '<p style="text-align:center">Este contenido no está disponible en el JSON.</p>';
       window.scrollTo(0,0);
     }
 
-    // 3. Interfaz (Biblioteca y Botones)
+    // 2. FUNCIÓN PARA CARGAR EL LIBRO COMPLETO
+    window.seleccionarLibro = (f, n) => {
+      const libro = ESTRUCTURA.find(l => l.f === f);
+      let todosLosCaps = [];
+      
+      // Creamos la lista de todos los capítulos del libro
+      for(let i = 1; i <= libro.c; i++) {
+        todosLosCaps.push({ f, n, c: i });
+      }
+      
+      window.cerrarLibros();
+      renderLectura(todosLosCaps); // Renderizamos todos a la vez
+    };
+
     window.abrirLibros = () => {
-      const lista = document.getElementById('listaLibros');
-      lista.innerHTML = ESTRUCTURA.map(b => `
+      const listaAT = document.getElementById('listaAT');
+      const listaNT = document.getElementById('listaNT');
+      
+      listaAT.innerHTML = ESTRUCTURA.filter(b => b.t === 'AT').map(b => `
         <button class="btn-lib" onclick="window.seleccionarLibro('${b.f}', '${b.n}')">${b.n}</button>
       `).join('');
+
+      listaNT.innerHTML = ESTRUCTURA.filter(b => b.t === 'NT').map(b => `
+        <button class="btn-lib" onclick="window.seleccionarLibro('${b.f}', '${b.n}')">${b.n}</button>
+      `).join('');
+
       document.getElementById('modalBiblioteca').style.display = 'grid';
     };
 
     window.cerrarLibros = () => document.getElementById('modalBiblioteca').style.display = 'none';
-
-    window.seleccionarLibro = (f, n) => {
-      window.cerrarLibros();
-      renderLectura([{f, n, c: 1}]);
-    };
-
-    window.zoom = (n) => {
-      fontSize += n;
-      document.documentElement.style.setProperty('--f-size', fontSize + 'px');
-    };
-
+    window.zoom = (n) => { fontSize += n; document.documentElement.style.setProperty('--f-size', fontSize + 'px'); };
     window.modoNoche = () => document.body.classList.toggle('dark-mode');
     window.irDia = (d) => { fecha.setDate(fecha.getDate() + d); window.iniciarApp(); };
     window.irHoy = () => { fecha = new Date(); window.iniciarApp(); };
 
-    // Arrancar al cargar la página
     document.addEventListener('DOMContentLoaded', cargarArchivoJSON);
   </script>
 </PageLayout>
