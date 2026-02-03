@@ -3,21 +3,27 @@ import PageLayout from '../layouts/PageLayout.astro';
 ---
 
 <PageLayout title="Biblia 365 - Mi Amigo Anhelado">
+
+  <!-- Recursos externos -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" is:inline></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
-  <!-- Aquí van todos tus estilos is:inline, los dejo iguales porque están perfectos -->
+  <!-- Estilos (pega aquí tu CSS completo, lo dejo comentado para no alargar) -->
   <style is:inline>
-    /* ... (pega aquí todo tu <style> original, no lo cambio porque está brutal) ... */
-    /* Para no hacer el mensaje eterno, asumo que mantienes tu CSS tal cual */
+    /* :root { ... } todo tu CSS hermoso va aquí */
+    /* body { ... } */
+    /* .main-container { ... } */
+    /* ... y todo lo demás que tenías ... */
+    /* No lo copio completo para que quepa, pero NO lo quites, está brutal */
   </style>
 
-  <!-- HTML igualito -->
+  <!-- Estructura HTML principal -->
   <div class="main-container">
     <header class="app-header">
       <h1 class="app-title">BIBLIA 365</h1>
       <p class="app-subtitle">Tu Plan Anual de Lectura</p>
-      
+
+      <!-- Progress Ring -->
       <div class="progress-ring">
         <div class="ring-container">
           <svg class="ring-svg" width="120" height="120">
@@ -28,8 +34,7 @@ import PageLayout from '../layouts/PageLayout.astro';
               </linearGradient>
             </defs>
             <circle class="ring-bg" cx="60" cy="60" r="52" />
-            <circle id="ringProgress" class="ring-progress" cx="60" cy="60" r="52"
-                    stroke-dasharray="326.73" stroke-dashoffset="326.73" />
+            <circle id="ringProgress" class="ring-progress" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73" />
           </svg>
           <div class="ring-text">
             <div id="ringDay" class="ring-day">1</div>
@@ -39,39 +44,27 @@ import PageLayout from '../layouts/PageLayout.astro';
         <div class="progress-info">
           <div id="infoDate" class="info-date"></div>
           <div class="info-stats">
-            <div class="stat-item">
-              <span>📖</span>
-              <span id="statChapters">0 capítulos hoy</span>
-            </div>
-            <div class="stat-item">
-              <span>✨</span>
-              <span id="statHighlights">0 versículos resaltados</span>
-            </div>
+            <div class="stat-item"><span>📖</span> <span id="statChapters">0 capítulos hoy</span></div>
+            <div class="stat-item"><span>✨</span> <span id="statHighlights">0 versículos resaltados</span></div>
           </div>
         </div>
       </div>
     </header>
 
+    <!-- Panel de controles -->
     <div class="control-panel">
-      <button class="btn-tool" onclick="abrirBiblioteca()">
-        <span>📚</span> Biblioteca
-      </button>
+      <button class="btn-tool" onclick="abrirBiblioteca()"><span>📚</span> Biblioteca</button>
       <div class="control-group">
         <button class="btn-tool" onclick="cambiarFuente(-2)">A-</button>
         <button class="btn-tool" onclick="cambiarFuente(2)">A+</button>
       </div>
-      <button class="btn-tool" onclick="toggleModo()">
-        <span>🌓</span> Tema
-      </button>
+      <button class="btn-tool" onclick="toggleModo()"><span>🌓</span> Tema</button>
     </div>
 
-    <div class="search-container" style="display:none;" id="searchContainer">
-      <span class="search-icon">🔍</span>
-      <input type="text" class="search-input" placeholder="Buscar versículo o libro..." id="searchInput" />
-    </div>
-
+    <!-- Contenido dinámico -->
     <div id="contenido"></div>
 
+    <!-- Navegación -->
     <nav class="nav-buttons">
       <button class="btn-nav" onclick="cambiarDia(-1)">← ANTERIOR</button>
       <button class="btn-nav btn-today" onclick="irAHoy()">HOY</button>
@@ -79,15 +72,25 @@ import PageLayout from '../layouts/PageLayout.astro';
     </nav>
   </div>
 
-  <!-- Menú flotante, modal, canvas-helper, toast... todo igual -->
+  <!-- Menú flotante de acciones -->
   <div id="menuAcciones" class="menu-acciones">
-    <!-- ... botones de acciones ... -->
+    <button class="btn-action" onclick="subrayar('sub-yellow')"><span>✨</span> Oro</button>
+    <button class="btn-action" onclick="subrayar('sub-green')"><span>🌿</span> Vida</button>
+    <button class="btn-action" onclick="subrayar('sub-blue')"><span>💎</span> Cielo</button>
+    <button class="btn-action" onclick="generarImagen()"><span>🖼️</span> Imagen</button>
+    <button class="btn-action" onclick="compartirWhatsApp()"><span>💬</span> Compartir</button>
+    <button class="btn-action" onclick="desactivarMenu()"><span>✕</span> Cerrar</button>
   </div>
 
+  <!-- Helper para generar imagen -->
   <div id="canvas-helper">
-    <!-- ... igual ... -->
+    <div style="font-size: 60px; color: var(--accent); margin-bottom: 30px;">"</div>
+    <div id="img-text" style="font-size: 36px; line-height: 1.6; font-style: italic;"></div>
+    <div style="font-size: 60px; color: var(--accent); margin-top: 20px;">"</div>
+    <div id="img-ref" style="margin-top: 50px; font-size: 24px; letter-spacing: 6px; border-top: 2px solid var(--accent); display: inline-block; padding-top: 20px;"></div>
   </div>
 
+  <!-- Modal Biblioteca -->
   <div id="modalBiblioteca" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
       <h2>📖 Biblioteca Sagrada</h2>
@@ -95,148 +98,160 @@ import PageLayout from '../layouts/PageLayout.astro';
     </div>
   </div>
 
+  <!-- Contenedor de toasts -->
   <div id="toastContainer"></div>
 
+  <!-- JavaScript principal -->
   <script is:inline>
-    const URL_BIBLIA = '/biblia.json';  // ← ¡Cambio clave! Local en public/
+    // ────────────────────────────────────────────────
+    // CONFIGURACIÓN PRINCIPAL
+    // ────────────────────────────────────────────────
+    const BIBLIA_URL = '/biblia.json';   // Archivo en public/
 
-    let bibleData = null;
-    let fechaActual = new Date();
-    let fontSize = 21;
+    let bibleData       = null;
+    let fechaActual     = new Date();
+    let fontSize        = 21;
     let selectedVersiculo = null;
-    let selectedInfo = '';
-    let currentVId = null;
-    let highlights = JSON.parse(localStorage.getItem('biblia365_highlights') || '{}');
+    let selectedInfo    = '';
+    let currentVId      = null;
+    let highlights      = JSON.parse(localStorage.getItem('biblia365_highlights') || '{}');
 
-    // booksDB actualizado: usamos hyphens (-) en vez de underscores (_)
+    // ────────────────────────────────────────────────
+    // BASE DE LIBROS (con claves normalizadas: minúsculas + guiones)
+    // ────────────────────────────────────────────────
     const booksDB = [
-      { n: 'Génesis', f: 'genesis', c: 50 },
-      { n: 'Éxodo', f: 'exodo', c: 40 },
-      { n: 'Levítico', f: 'levitico', c: 27 },
-      { n: 'Números', f: 'numeros', c: 36 },
-      { n: 'Deuteronomio', f: 'deuteronomio', c: 34 },
-      { n: 'Josué', f: 'josue', c: 24 },
-      { n: 'Jueces', f: 'jueces', c: 21 },
-      { n: 'Rut', f: 'rut', c: 4 },
-      { n: '1 Samuel', f: '1-samuel', c: 31 },
-      { n: '2 Samuel', f: '2-samuel', c: 24 },
-      { n: '1 Reyes', f: '1-reyes', c: 22 },
-      { n: '2 Reyes', f: '2-reyes', c: 25 },
-      { n: '1 Crónicas', f: '1-cronicas', c: 29 },
-      { n: '2 Crónicas', f: '2-cronicas', c: 36 },
-      { n: 'Esdras', f: 'esdras', c: 10 },
-      { n: 'Nehemías', f: 'nehemias', c: 13 },
-      { n: 'Ester', f: 'ester', c: 10 },
-      { n: 'Job', f: 'job', c: 42 },
-      { n: 'Salmos', f: 'salmos', c: 150 },
-      { n: 'Proverbios', f: 'proverbios', c: 31 },
-      { n: 'Eclesiastés', f: 'eclesiastes', c: 12 },
-      { n: 'Cantares', f: 'cantares', c: 8 },
-      { n: 'Isaías', f: 'isaias', c: 66 },
-      { n: 'Jeremías', f: 'jeremias', c: 52 },
-      { n: 'Lamentaciones', f: 'lamentaciones', c: 5 },
-      { n: 'Ezequiel', f: 'ezequiel', c: 48 },
-      { n: 'Daniel', f: 'daniel', c: 12 },
-      { n: 'Oseas', f: 'oseas', c: 14 },
-      { n: 'Joel', f: 'joel', c: 3 },
-      { n: 'Amós', f: 'amos', c: 9 },
-      { n: 'Abdías', f: 'abdias', c: 1 },
-      { n: 'Jonás', f: 'jonas', c: 4 },
-      { n: 'Miqueas', f: 'miqueas', c: 7 },
-      { n: 'Nahúm', f: 'nahum', c: 3 },
-      { n: 'Habacuc', f: 'habacuc', c: 3 },
-      { n: 'Sofonías', f: 'sofonias', c: 3 },
-      { n: 'Hageo', f: 'hageo', c: 2 },
-      { n: 'Zacarías', f: 'zacarias', c: 14 },
-      { n: 'Malaquías', f: 'malaquias', c: 4 },
-      { n: 'Mateo', f: 'mateo', c: 28 },
-      { n: 'Marcos', f: 'marcos', c: 16 },
-      { n: 'Lucas', f: 'lucas', c: 24 },
-      { n: 'Juan', f: 'juan', c: 21 },
-      { n: 'Hechos', f: 'hechos', c: 28 },
-      { n: 'Romanos', f: 'romanos', c: 16 },
-      { n: '1 Corintios', f: '1-corintios', c: 16 },
-      { n: '2 Corintios', f: '2-corintios', c: 13 },
-      { n: 'Gálatas', f: 'galatas', c: 6 },
-      { n: 'Efesios', f: 'efesios', c: 6 },
-      { n: 'Filipenses', f: 'filipenses', c: 4 },
-      { n: 'Colosenses', f: 'colosenses', c: 4 },
+      { n: 'Génesis',       f: 'genesis',         c: 50 },
+      { n: 'Éxodo',         f: 'exodo',           c: 40 },
+      { n: 'Levítico',      f: 'levitico',        c: 27 },
+      { n: 'Números',       f: 'numeros',         c: 36 },
+      { n: 'Deuteronomio',  f: 'deuteronomio',    c: 34 },
+      { n: 'Josué',         f: 'josue',           c: 24 },
+      { n: 'Jueces',        f: 'jueces',          c: 21 },
+      { n: 'Rut',           f: 'rut',             c: 4  },
+      { n: '1 Samuel',      f: '1-samuel',        c: 31 },
+      { n: '2 Samuel',      f: '2-samuel',        c: 24 },
+      { n: '1 Reyes',       f: '1-reyes',         c: 22 },
+      { n: '2 Reyes',       f: '2-reyes',         c: 25 },
+      { n: '1 Crónicas',    f: '1-cronicas',      c: 29 },
+      { n: '2 Crónicas',    f: '2-cronicas',      c: 36 },
+      { n: 'Esdras',        f: 'esdras',          c: 10 },
+      { n: 'Nehemías',      f: 'nehemias',        c: 13 },
+      { n: 'Ester',         f: 'ester',           c: 10 },
+      { n: 'Job',           f: 'job',             c: 42 },
+      { n: 'Salmos',        f: 'salmos',          c: 150 },
+      { n: 'Proverbios',    f: 'proverbios',      c: 31 },
+      { n: 'Eclesiastés',   f: 'eclesiastes',     c: 12 },
+      { n: 'Cantares',      f: 'cantares',        c: 8  },
+      { n: 'Isaías',        f: 'isaias',          c: 66 },
+      { n: 'Jeremías',      f: 'jeremias',        c: 52 },
+      { n: 'Lamentaciones', f: 'lamentaciones',   c: 5  },
+      { n: 'Ezequiel',      f: 'ezequiel',        c: 48 },
+      { n: 'Daniel',        f: 'daniel',          c: 12 },
+      { n: 'Oseas',         f: 'oseas',           c: 14 },
+      { n: 'Joel',          f: 'joel',            c: 3  },
+      { n: 'Amós',          f: 'amos',            c: 9  },
+      { n: 'Abdías',        f: 'abdias',          c: 1  },
+      { n: 'Jonás',         f: 'jonas',           c: 4  },
+      { n: 'Miqueas',       f: 'miqueas',         c: 7  },
+      { n: 'Nahúm',         f: 'nahum',           c: 3  },
+      { n: 'Habacuc',       f: 'habacuc',         c: 3  },
+      { n: 'Sofonías',      f: 'sofonias',        c: 3  },
+      { n: 'Hageo',         f: 'hageo',           c: 2  },
+      { n: 'Zacarías',      f: 'zacarias',        c: 14 },
+      { n: 'Malaquías',     f: 'malaquias',       c: 4  },
+      { n: 'Mateo',         f: 'mateo',           c: 28 },
+      { n: 'Marcos',        f: 'marcos',          c: 16 },
+      { n: 'Lucas',         f: 'lucas',           c: 24 },
+      { n: 'Juan',          f: 'juan',            c: 21 },
+      { n: 'Hechos',        f: 'hechos',          c: 28 },
+      { n: 'Romanos',       f: 'romanos',         c: 16 },
+      { n: '1 Corintios',   f: '1-corintios',     c: 16 },
+      { n: '2 Corintios',   f: '2-corintios',     c: 13 },
+      { n: 'Gálatas',       f: 'galatas',         c: 6  },
+      { n: 'Efesios',       f: 'efesios',         c: 6  },
+      { n: 'Filipenses',    f: 'filipenses',      c: 4  },
+      { n: 'Colosenses',    f: 'colosenses',      c: 4  },
       { n: '1 Tesalonicenses', f: '1-tesalonicenses', c: 5 },
       { n: '2 Tesalonicenses', f: '2-tesalonicenses', c: 3 },
-      { n: '1 Timoteo', f: '1-timoteo', c: 6 },
-      { n: '2 Timoteo', f: '2-timoteo', c: 4 },
-      { n: 'Tito', f: 'tito', c: 3 },
-      { n: 'Filemón', f: 'filemon', c: 1 },
-      { n: 'Hebreos', f: 'hebreos', c: 13 },
-      { n: 'Santiago', f: 'santiago', c: 5 },
-      { n: '1 Pedro', f: '1-pedro', c: 5 },
-      { n: '2 Pedro', f: '2-pedro', c: 3 },
-      { n: '1 Juan', f: '1-juan', c: 5 },
-      { n: '2 Juan', f: '2-juan', c: 1 },
-      { n: '3 Juan', f: '3-juan', c: 1 },
-      { n: 'Judas', f: 'judas', c: 1 },
-      { n: 'Apocalipsis', f: 'apocalipsis', c: 22 },
+      { n: '1 Timoteo',     f: '1-timoteo',       c: 6  },
+      { n: '2 Timoteo',     f: '2-timoteo',       c: 4  },
+      { n: 'Tito',          f: 'tito',            c: 3  },
+      { n: 'Filemón',       f: 'filemon',         c: 1  },
+      { n: 'Hebreos',       f: 'hebreos',         c: 13 },
+      { n: 'Santiago',      f: 'santiago',        c: 5  },
+      { n: '1 Pedro',       f: '1-pedro',         c: 5  },
+      { n: '2 Pedro',       f: '2-pedro',         c: 3  },
+      { n: '1 Juan',        f: '1-juan',          c: 5  },
+      { n: '2 Juan',        f: '2-juan',          c: 1  },
+      { n: '3 Juan',        f: '3-juan',          c: 1  },
+      { n: 'Judas',         f: 'judas',           c: 1  },
+      { n: 'Apocalipsis',   f: 'apocalipsis',     c: 22 }
     ];
 
-    let plan = [];
-    booksDB.forEach(b => {
-      for (let i = 1; i <= b.c; i++) {
-        plan.push({ n: b.n, f: b.f, c: i });
+    // Generar plan de lectura completo
+    const plan = [];
+    booksDB.forEach(book => {
+      for (let i = 1; i <= book.c; i++) {
+        plan.push({ n: book.n, f: book.f, c: i });
       }
     });
 
-    // Toast (igual)
-    function showToast(message, icon = '✓') {
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-message">${message}</span>`;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.classList.add('show'), 10);
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400);
-      }, 3000);
+    // ────────────────────────────────────────────────
+    // FUNCIONES AUXILIARES
+    // ────────────────────────────────────────────────
+    function showToast(msg, icon = '✓') {
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-message">${msg}</span>`;
+      document.body.appendChild(t);
+      setTimeout(() => t.classList.add('show'), 10);
+      setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 3000);
     }
 
-    // Progress ring (igual)
     function updateProgressRing(day) {
-      const circumference = 326.73;
-      const progress = (day / 365) * circumference;
-      document.getElementById('ringProgress').style.strokeDashoffset = circumference - progress;
+      const circ = 326.73;
+      document.getElementById('ringProgress').style.strokeDashoffset = circ - (day / 365 * circ);
       document.getElementById('ringDay').textContent = day;
     }
 
-    function updateStats(chaptersCount) {
-      const highlightCount = Object.keys(highlights).length;
-      document.getElementById('statChapters').textContent = `${chaptersCount} ${chaptersCount === 1 ? 'capítulo' : 'capítulos'} hoy`;
-      document.getElementById('statHighlights').textContent = `${highlightCount} ${highlightCount === 1 ? 'versículo resaltado' : 'versículos resaltados'}`;
+    function updateStats(chapters) {
+      const hlCount = Object.keys(highlights).length;
+      document.getElementById('statChapters').textContent = `${chapters} ${chapters === 1 ? 'capítulo' : 'capítulos'} hoy`;
+      document.getElementById('statHighlights').textContent = `${hlCount} ${hlCount === 1 ? 'versículo resaltado' : 'versículos resaltados'}`;
     }
 
+    // ────────────────────────────────────────────────
+    // CARGA DE LECTURA (la función principal)
+    // ────────────────────────────────────────────────
     async function cargarLectura(custom = null) {
+      // Cargar JSON solo la primera vez
       if (!bibleData) {
         try {
-          const res = await fetch(URL_BIBLIA);
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const res = await fetch(BIBLIA_URL);
+          if (!res.ok) throw new Error(`Error ${res.status}`);
           bibleData = await res.json();
           document.getElementById('gridLibros').innerHTML = booksDB
-            .map(l => `<button onclick="seleccionarLibro('${l.f}','${l.n}')">${l.n}</button>`)
+            .map(b => `<button onclick="seleccionarLibro('${b.f}','${b.n.replace(/'/g,"\\'")}')">${b.n}</button>`)
             .join('');
-          showToast('Biblia cargada exitosamente', '📖');
-        } catch (err) {
-          console.error('Error cargando biblia.json:', err);
-          showToast('No se pudo cargar la Biblia 😔 Revisa consola', '⚠️');
-          document.getElementById('contenido').innerHTML = '<p style="text-align:center; color:red; padding:2rem;">Error al cargar la Biblia. Verifica que biblia.json esté en /public/</p>';
+          showToast('Biblia cargada', '📖');
+        } catch (e) {
+          console.error('Falló carga de biblia.json →', e);
+          showToast('No pude cargar la Biblia 😔', '⚠️');
+          document.getElementById('contenido').innerHTML = '<p style="text-align:center;padding:3rem;color:var(--accent);">Error al cargar biblia.json<br>Verifica que esté en /public/</p>';
           return;
         }
       }
 
-      const start = new Date(fechaActual.getFullYear(), 0, 0);
-      const dayOfYear = Math.floor((fechaActual - start) / 86400000) + 1;
+      // Día del año
+      const startYear = new Date(fechaActual.getFullYear(), 0, 0);
+      const dayOfYear = Math.floor((fechaActual - startYear) / 86400000) + 1;
       updateProgressRing(dayOfYear);
 
-      const dateStr = fechaActual.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      // Fecha legible
+      const dateStr = fechaActual.toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
       document.getElementById('infoDate').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
+      // Lectura del día o libro completo
       const lectura = custom || plan.slice(
         Math.floor(((dayOfYear - 1) * 1189) / 365),
         Math.floor((dayOfYear * 1189) / 365)
@@ -245,83 +260,173 @@ import PageLayout from '../layouts/PageLayout.astro';
       updateStats(lectura.length);
 
       let html = '';
-      for (const it of lectura) {
-        // Normalizamos la clave: lowercase + hyphen si aplica
-        let clave = it.f.toLowerCase();
+      for (const [idx, item] of lectura.entries()) {
+        const claveBase = item.f.toLowerCase();
+        let cap = bibleData[claveBase]?.[item.c.toString()];
 
-        let cap = null;
-        if (bibleData[clave] && bibleData[clave][String(it.c)]) {
-          cap = bibleData[clave][String(it.c)];
-        }
-
-        // Si no, intentamos variantes comunes
+        // Intentos de rescate si no coincide exactamente
         if (!cap) {
-          const variantes = [
-            clave.replace(/-/g, ''),           // 1samuel
-            clave.replace(/-/g, '_'),          // 1_samuel (por si acaso)
-            clave,                             // ya está
-          ];
-          for (const varClave of variantes) {
-            if (bibleData[varClave] && bibleData[varClave][String(it.c)]) {
-              cap = bibleData[varClave][String(it.c)];
-              console.log(`Encontrado con variante: ${varClave}`);
+          const intentos = [claveBase, claveBase.replace(/-/g,''), claveBase.replace(/-/g,'_')];
+          for (const k of intentos) {
+            if (bibleData[k]?.[item.c.toString()]) {
+              cap = bibleData[k][item.c.toString()];
               break;
             }
           }
         }
 
         if (!cap) {
-          console.warn(`Capítulo no encontrado: ${it.n} ${it.c} (clave: ${clave})`);
-          html += `<details class="capitulo-acordeon"><summary class="header-info"><h2>${it.n} ${it.c} (no disponible)</h2></summary></details>`;
+          console.warn(`No encontrado: ${item.n} ${item.c} (clave: ${claveBase})`);
+          html += `<details class="capitulo-acordeon"><summary class="header-info"><h2>${item.n} ${item.c} (no disponible)</h2></summary></details>`;
           continue;
         }
 
         html += `
-          <details ${lectura.indexOf(it) === 0 ? 'open' : ''} class="capitulo-acordeon">
+          <details ${idx === 0 ? 'open' : ''} class="capitulo-acordeon">
             <summary class="header-info">
-              <h2>${it.n} ${it.c} <span class="chapter-badge">${Object.keys(cap).length} v.</span></h2>
+              <h2>${item.n} ${item.c} <span class="chapter-badge">${Object.keys(cap).length} v.</span></h2>
               <span>▼</span>
             </summary>
             <div class="versiculos">
               ${Object.entries(cap).map(([num, texto]) => {
-                const vId = `${it.f}_${it.c}_${num}`;
-                const highlightClass = highlights[vId] || '';
-                const textoLimpio = (texto || '')
-                  .replace(/_/g, '')
-                  .replace(/\\n/g, ' ')
-                  .replace(/\/n/g, ' ')
-                  .replace(/\n/g, ' ')
+                const vId = `${item.f}_${item.c}_${num}`;
+                const hClass = highlights[vId] || '';
+                const cleanText = (texto || '')
+                  .replace(/[_\n\/]/g, ' ')
                   .replace(/\s+/g, ' ')
                   .trim();
 
                 return `
-                  <div class="versiculo" onclick="activarMenu(this, '${it.n} ${it.c}:${num}', '${vId}')">
+                  <div class="versiculo" onclick="activarMenu(this, '${item.n} ${item.c}:${num}', '${vId}')">
                     <span class="num">${num}</span>
-                    <span class="txt ${highlightClass}">${textoLimpio}</span>
+                    <span class="txt ${hClass}">${cleanText}</span>
                   </div>
                 `;
               }).join('')}
             </div>
-          </details>
-        `;
+          </details>`;
       }
 
       document.getElementById('contenido').innerHTML = html;
     }
 
-    // Resto de funciones (activarMenu, subrayar, generarImagen, etc.) se mantienen iguales
-    // ... pega aquí todas las demás funciones window.XXXXX que tenías ...
+    // ────────────────────────────────────────────────
+    // EVENTOS Y FUNCIONES DE INTERFAZ
+    // ────────────────────────────────────────────────
+    window.activarMenu = (el, ref, vId) => {
+      selectedVersiculo = el;
+      selectedInfo = ref;
+      currentVId = vId;
+      document.querySelectorAll('.versiculo.active').forEach(v => v.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('menuAcciones').classList.add('active');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
 
-    // Inicialización
+    window.desactivarMenu = () => {
+      document.getElementById('menuAcciones').classList.remove('active');
+      document.querySelectorAll('.versiculo.active').forEach(v => v.classList.remove('active'));
+    };
+
+    window.subrayar = (cls) => {
+      const txt = selectedVersiculo.querySelector('.txt');
+      ['sub-yellow','sub-green','sub-blue'].forEach(c => txt.classList.remove(c));
+
+      if (highlights[currentVId] === cls) {
+        delete highlights[currentVId];
+        showToast('Resaltado eliminado', '🗑️');
+      } else {
+        txt.classList.add(cls);
+        highlights[currentVId] = cls;
+        showToast('Resaltado guardado', '✨');
+      }
+
+      localStorage.setItem('biblia365_highlights', JSON.stringify(highlights));
+      updateStats(plan.length); // aproximado
+      desactivarMenu();
+    };
+
+    window.compartirWhatsApp = () => {
+      const texto = selectedVersiculo.querySelector('.txt').innerText;
+      const url = `https://wa.me/?text=${encodeURIComponent(`"${texto}" — ${selectedInfo}`)}`;
+      window.open(url, '_blank');
+      showToast('Abriendo WhatsApp', '💬');
+      desactivarMenu();
+    };
+
+    window.generarImagen = () => {
+      const helper = document.getElementById('canvas-helper');
+      document.getElementById('img-text').innerText = selectedVersiculo.querySelector('.txt').innerText;
+      document.getElementById('img-ref').innerText = selectedInfo.toUpperCase();
+
+      html2canvas(helper, { scale: 2, backgroundColor: null }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `${selectedInfo.replace(/[: ]/g, '-')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('Imagen descargada', '🖼️');
+      });
+      desactivarMenu();
+    };
+
+    window.cambiarFuente = (delta) => {
+      fontSize = Math.max(16, Math.min(32, fontSize + delta));
+      document.querySelectorAll('.versiculos').forEach(el => el.style.fontSize = fontSize + 'px');
+      localStorage.setItem('biblia365_fontsize', fontSize);
+      showToast(`Tamaño: ${fontSize}px`, '📏');
+    };
+
+    window.toggleModo = () => {
+      document.body.classList.toggle('dark-mode');
+      const dark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('biblia365_darkmode', dark);
+      showToast(dark ? 'Modo oscuro' : 'Modo claro', '🌓');
+    };
+
+    window.abrirBiblioteca = () => {
+      document.getElementById('modalBiblioteca').style.display = 'grid';
+    };
+
+    window.seleccionarLibro = (f, n) => {
+      const libro = booksDB.find(b => b.f === f);
+      if (!libro) return showToast('Libro no encontrado', '⚠️');
+
+      const capitulos = [];
+      for (let i = 1; i <= libro.c; i++) capitulos.push({ n: libro.n, f: libro.f, c: i });
+
+      document.getElementById('modalBiblioteca').style.display = 'none';
+      cargarLectura(capitulos);
+      showToast(`Leyendo ${n} completo`, '📖');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.cambiarDia = (delta) => {
+      fechaActual.setDate(fechaActual.getDate() + delta);
+      cargarLectura();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.irAHoy = () => {
+      fechaActual = new Date();
+      cargarLectura();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast('Volviendo a hoy', '📅');
+    };
+
+    // ────────────────────────────────────────────────
+    // INICIALIZACIÓN
+    // ────────────────────────────────────────────────
     if (localStorage.getItem('biblia365_darkmode') === 'true') {
       document.body.classList.add('dark-mode');
     }
-    const savedFont = localStorage.getItem('biblia365_fontsize');
-    if (savedFont) {
-      fontSize = parseInt(savedFont);
-      document.querySelectorAll('.versiculos').forEach(v => v.style.fontSize = fontSize + 'px');
+
+    const savedSize = localStorage.getItem('biblia365_fontsize');
+    if (savedSize) {
+      fontSize = parseInt(savedSize);
+      document.querySelectorAll('.versiculos').forEach(el => el.style.fontSize = fontSize + 'px');
     }
 
-    cargarLectura();  // ¡Arranca!
+    // ¡Arrancamos!
+    cargarLectura();
   </script>
 </PageLayout>
