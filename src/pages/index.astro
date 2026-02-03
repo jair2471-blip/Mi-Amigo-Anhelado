@@ -26,6 +26,20 @@ import PageLayout from '../layouts/PageLayout.astro';
         <a href="/reflexiones" class="btn-secondary">Cápsulas de Verdad</a>
       </div>
     </div>
+<div class="toolbar">
+  <button class="btn-top" onclick="window.abrirBib()">📚 Libros</button>
+  
+  <a href="/vivencias" style="text-decoration:none;">
+    <button class="btn-top" style="background:var(--accent)">🧔 Personajes</button>
+  </a>
+
+  <div style="display:flex; gap:8px;">
+    <button class="btn-top" onclick="window.zoom(-2)">A-</button>
+    <button class="btn-top" onclick="window.zoom(2)">A+</button>
+    <button class="btn-top" onclick="window.modoNoche()">🌓</button>
+  </div>
+</div>
+
   </section>
 
   <section class="features">
