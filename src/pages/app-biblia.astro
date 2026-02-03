@@ -2,138 +2,129 @@
 import PageLayout from '../layouts/PageLayout.astro';
 ---
 
-<PageLayout title="Biblia 365 - Mi Amigo Anhelado">
+<PageLayout title="Biblia 365 - Modo Acordeón">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
 
   <style is:inline>
     :root {
-      --primary: #1a4d2e;
-      --accent: #d4a574;
-      --bg: #faf8f5;
-      --text: #1a202c;
-      --surface: #ffffff;
-      --border: rgba(0,0,0,0.1);
+      --primary: #1a4d2e; --accent: #d4a574; --bg: #faf8f5; --text: #1a202c; --surface: #ffffff;
     }
     body.dark-mode {
-      --bg: #0a0e0d;
-      --text: #f7fafc;
-      --surface: #1a1f1e;
-      --primary: #52b788;
+      --bg: #0a0e0d; --text: #f7fafc; --surface: #1a1f1e; --primary: #52b788;
     }
 
-    /* ESTO ES LO QUE CENTRA TODO */
     body {
       background-color: var(--bg);
       color: var(--text);
       font-family: 'Crimson Text', serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* Centra horizontalmente */
+      margin: 0; padding: 0;
+      display: flex; flex-direction: column; align-items: center; /* CENTRADO TOTAL */
       min-height: 100vh;
     }
 
-    .wrapper {
+    .main-wrapper {
       width: 100%;
-      max-width: 750px; /* Ancho máximo para que no se vea gigante */
+      max-width: 700px; /* Ancho de lectura perfecto */
       padding: 20px;
       box-sizing: border-box;
+    }
+
+    .toolbar {
+      position: sticky; top: 10px;
+      background: var(--surface);
+      padding: 10px 20px;
+      border-radius: 50px;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 100; border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    button {
+      padding: 8px 15px; border: none; border-radius: 20px;
+      background: var(--primary); color: white;
+      cursor: pointer; font-weight: bold; transition: 0.3s;
+    }
+
+    /* ESTILO DEL ACORDEÓN */
+    .acordeon-item {
+      background: var(--surface);
+      border-radius: 15px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(0,0,0,0.08);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    .acordeon-header {
+      padding: 20px;
+      cursor: pointer;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+      transition: background 0.3s;
     }
 
-    .app-header { text-align: center; padding: 20px 0; }
+    .acordeon-header:hover { background: rgba(212, 165, 116, 0.1); }
+
+    .acordeon-header h2 {
+      margin: 0; font-family: 'Playfair Display';
+      font-size: 1.6rem; color: var(--primary);
+    }
+
+    .acordeon-content {
+      max-height: 0; /* ESCONDIDO POR DEFECTO */
+      overflow: hidden;
+      transition: max-height 0.5s ease-out, padding 0.3s;
+      padding: 0 25px;
+      background: var(--surface);
+    }
+
+    /* Cuando se abre */
+    .acordeon-item.active .acordeon-content {
+      max-height: 5000px; /* Suficiente para capítulos largos */
+      padding: 10px 25px 30px 25px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .acordeon-item.active .icon-arrow { transform: rotate(180deg); }
+
+    .versiculo { font-size: var(--f-size, 20px); line-height: 1.8; margin-bottom: 12px; display: block; }
+    .v-num { color: var(--accent); font-weight: bold; margin-right: 10px; font-size: 0.8em; }
+
+    .footer-nav { display: flex; gap: 10px; margin: 30px 0 100px; }
+    .footer-nav button { flex: 1; padding: 15px; border-radius: 12px; }
     
-    .toolbar { 
-      position: sticky; 
-      top: 10px; 
-      background: var(--surface); 
-      padding: 12px; 
-      border-radius: 15px; 
-      display: flex; 
-      justify-content: space-between; 
-      z-index: 100; 
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      margin-bottom: 25px;
-    }
-
-    button { 
-      padding: 10px 18px; 
-      border: none; 
-      border-radius: 8px; 
-      background: var(--primary); 
-      color: white; 
-      cursor: pointer; 
-      font-weight: bold; 
-      font-family: inherit;
-    }
-
-    /* EFECTO ACORDEÓN / TARJETAS */
-    .card-lectura { 
-      background: var(--surface); 
-      border-radius: 20px; 
-      padding: 30px; 
-      margin-bottom: 30px; 
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-      width: 100%; /* Ocupa todo el ancho del wrapper */
-      box-sizing: border-box;
-    }
-
-    .titulo-libro {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
-      color: var(--primary);
-      margin-bottom: 20px;
-      text-align: center;
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 10px;
-    }
-
-    .versiculo { 
-      font-size: var(--f-size, 20px); 
-      line-height: 1.8; 
-      margin-bottom: 15px; 
-      display: block; 
-    }
-    .v-num { color: var(--accent); font-weight: bold; margin-right: 8px; }
-
-    .nav-footer { 
-      display: flex; 
-      gap: 15px; 
-      margin-top: 20px; 
-      padding-bottom: 100px; 
-    }
-    .btn-nav { flex: 1; padding: 18px; font-size: 1.1rem; }
+    .icon-arrow { transition: transform 0.3s; font-size: 1.2rem; color: var(--accent); }
   </style>
 
-  <div class="wrapper">
-    <div class="app-header">
-      <h1 style="font-family: 'Playfair Display'; font-size: 2.5rem; color: var(--primary);">BIBLIA 365</h1>
-      <p>Día <span id="numDia">...</span></p>
+  <div class="main-wrapper">
+    <div style="text-align:center; padding: 20px 0;">
+      <h1 style="font-family: 'Playfair Display'; font-size: 2.8rem; color: var(--primary); margin:0;">Biblia 365</h1>
+      <p style="color: var(--accent); font-weight: bold; letter-spacing: 2px;">DÍA <span id="numDia">1</span></p>
     </div>
 
     <div class="toolbar">
-      <button onclick="window.zoom(-2)">A-</button>
-      <button onclick="window.zoom(2)">A+</button>
-      <button onclick="window.modoNoche()">🌓</button>
+      <button onclick="window.irHoy()" style="background:var(--accent)">Hoy</button>
+      <div style="display:flex; gap:8px;">
+        <button onclick="window.zoom(-2)">A-</button>
+        <button onclick="window.zoom(2)">A+</button>
+        <button onclick="window.modoNoche()">🌓</button>
+      </div>
     </div>
 
-    <div id="lector">
+    <div id="contenedor-acordeon">
       </div>
 
-    <div class="nav-footer">
-      <button class="btn-nav" onclick="window.cambiarDia(-1)">◀ Anterior</button>
-      <button class="btn-nav" onclick="window.irHoy()">Hoy</button>
-      <button class="btn-nav" onclick="window.cambiarDia(1)">Siguiente ▶</button>
+    <div class="footer-nav">
+      <button onclick="window.cambiarDia(-1)">Anterior</button>
+      <button onclick="window.cambiarDia(1)">Siguiente</button>
     </div>
   </div>
 
   <script is:inline>
-    // Usando los IDs exactos de tu biblia.json
-    const LIBROS = [
+    const PLAN_LIBROS = [
       {n:'Génesis', id:'genesis', c:50}, {n:'Éxodo', id:'exodo', c:40}, {n:'Levítico', id:'levitico', c:27},
       {n:'Números', id:'numeros', c:36}, {n:'Deuteronomio', id:'deuteronomio', c:34}, {n:'Josué', id:'josue', c:24},
       {n:'Jueces', id:'jueces', c:21}, {n:'Rut', id:'rut', c:4}, {n:'1 Samuel', id:'1-samuel', c:31},
@@ -159,51 +150,60 @@ import PageLayout from '../layouts/PageLayout.astro';
       {n:'Apocalipsis', id:'apocalipsis', c:22}
     ];
 
-    let bibliaJSON = null;
-    let fecha = new Date();
+    let db = null;
+    let fechaActual = new Date();
     let fontSize = 20;
     let planFull = [];
-    LIBROS.forEach(l => { for(let i=1; i<=l.c; i++) planFull.push({n:l.n, id:l.id, c:i}); });
+    PLAN_LIBROS.forEach(l => { for(let i=1; i<=l.c; i++) planFull.push({n:l.n, id:l.id, c:i}); });
 
     async function cargar() {
-      try {
-        const res = await fetch('/biblia.json');
-        bibliaJSON = await res.json();
-        mostrar();
-      } catch (e) {
-        document.getElementById('lector').innerHTML = "<p>Error: No se pudo cargar la Biblia.</p>";
-      }
+      const res = await fetch('/biblia.json');
+      db = await res.json();
+      render();
     }
 
-    function mostrar() {
-      const start = new Date(fecha.getFullYear(), 0, 0);
-      const diaAnio = Math.floor((fecha - start) / 86400000);
+    function render() {
+      const diaAnio = Math.floor((fechaActual - new Date(fechaActual.getFullYear(), 0, 0)) / 86400000);
       document.getElementById('numDia').innerText = diaAnio;
-
+      
       const idx = (diaAnio - 1) * 3;
-      const hoy = planFull.slice(idx, idx + 3);
+      const lecturas = planFull.slice(idx, idx + 3);
       
       let html = "";
-      hoy.forEach(item => {
-        const libro = bibliaJSON[item.id];
-        const cap = libro ? libro[item.c] : null;
-        if (cap) {
-          html += `<div class="card-lectura"><h2 class="titulo-libro">${item.n} ${item.cap || item.c}</h2>`;
-          Object.entries(cap).forEach(([num, texto]) => {
-            const limpio = texto.replace(/^\d+\/n/, '').replace(/\/n/g, '<br>');
+      lecturas.forEach((it, index) => {
+        const capData = db[it.id] ? db[it.id][it.c] : null;
+        if(capData) {
+          // El primer capítulo aparece abierto por defecto (opcional)
+          const isActive = index === 0 ? 'active' : ''; 
+          html += `
+            <div class="acordeon-item ${isActive}" id="cap-${index}">
+              <div class="acordeon-header" onclick="window.toggleAcordeon(${index})">
+                <h2>${it.n} ${it.c}</h2>
+                <span class="icon-arrow">▼</span>
+              </div>
+              <div class="acordeon-content">`;
+          
+          Object.entries(capData).forEach(([num, txt]) => {
+            const limpio = txt.replace(/^\d+\/n/, '').replace(/\/n/g, '<br>');
             html += `<span class="versiculo"><span class="v-num">${num}</span>${limpio}</span>`;
           });
-          html += `</div>`;
+          
+          html += `</div></div>`;
         }
       });
-      document.getElementById('lector').innerHTML = html;
+      document.getElementById('contenedor-acordeon').innerHTML = html;
       window.scrollTo(0,0);
     }
 
+    window.toggleAcordeon = (idx) => {
+      const item = document.getElementById(`cap-${idx}`);
+      item.classList.toggle('active');
+    };
+
     window.zoom = (n) => { fontSize += n; document.documentElement.style.setProperty('--f-size', fontSize + 'px'); };
     window.modoNoche = () => document.body.classList.toggle('dark-mode');
-    window.cambiarDia = (n) => { fecha.setDate(fecha.getDate() + n); mostrar(); };
-    window.irHoy = () => { fecha = new Date(); mostrar(); };
+    window.cambiarDia = (n) => { fechaActual.setDate(fechaActual.getDate() + n); render(); };
+    window.irHoy = () => { fechaActual = new Date(); render(); };
 
     document.addEventListener('DOMContentLoaded', cargar);
   </script>
