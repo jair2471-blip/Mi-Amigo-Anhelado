@@ -3,227 +3,192 @@ import PageLayout from '../layouts/PageLayout.astro';
 ---
 
 <PageLayout title="Biblia 365 - Mi Amigo Anhelado">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" is:inline></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
 
   <style is:inline>
     :root {
-      --primary: #1a4d2e;
-      --accent: #d4a574;
-      --bg-main: #faf8f5;
-      --bg-secondary: #f0ebe3;
-      --surface: rgba(255, 255, 255, 0.95);
-      --text-main: #1a202c;
-      --border: rgba(212, 165, 116, 0.2);
+      --primary: #1a4d2e; --accent: #d4a574; --bg: #faf8f5; --text: #1a202c; --surface: #ffffff;
     }
-
     body.dark-mode {
-      --bg-main: #0a0e0d;
-      --bg-secondary: #1a1f1e;
-      --surface: rgba(30, 37, 34, 0.95);
-      --text-main: #f7fafc;
-      --primary: #52b788;
-      --accent: #f4a261;
+      --bg: #0a0e0d; --text: #f7fafc; --surface: #1a1f1e; --primary: #52b788;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-secondary) 100%);
-      background-attachment: fixed;
-      color: var(--text-main);
-      font-family: 'Crimson Text', serif;
-      line-height: 1.8;
-      min-height: 100-vh;
+    body { 
+      background-color: var(--bg); color: var(--text); 
+      font-family: 'Crimson Text', serif; transition: 0.3s;
     }
-
-    .main-container { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
-
-    /* Header y Progreso */
-    .app-header { text-align: center; margin-bottom: 2rem; }
-    .app-title { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: var(--primary); }
+    .main-container { max-width: 800px; margin: 0 auto; padding: 20px; }
     
-    .progress-ring { display: flex; justify-content: center; margin: 1rem 0; }
-    .ring-container { position: relative; width: 100px; height: 100px; }
-    .ring-svg { transform: rotate(-90deg); }
-    .ring-bg { fill: none; stroke: var(--border); stroke-width: 6; }
-    .ring-progress { fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; transition: 1s ease; }
-    .ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+    /* Header */
+    .app-header { text-align: center; padding: 20px 0; }
+    .progress-container { position: relative; width: 100px; height: 100px; margin: 0 auto; }
+    .ring-bg { fill: none; stroke: #ddd; stroke-width: 8; }
+    .ring-active { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: 1s; }
 
-    /* Panel de Control */
-    .control-panel { 
-      position: sticky; top: 10px; z-index: 100; 
-      background: var(--surface); backdrop-filter: blur(10px); 
-      padding: 1rem; border-radius: 20px; 
-      display: flex; justify-content: space-between; 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border);
-      margin-bottom: 2rem;
+    /* Botones y Panel */
+    .panel { 
+      position: sticky; top: 10px; background: var(--surface); 
+      padding: 15px; border-radius: 15px; display: flex; 
+      justify-content: space-between; z-index: 100; border: 1px solid #ddd;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 20px;
     }
-    
-    .btn-tool { 
-      background: var(--primary); color: white; border: none; 
-      padding: 0.6rem 1rem; border-radius: 10px; cursor: pointer; font-weight: bold;
+    button { 
+      padding: 10px 15px; border: none; border-radius: 8px; 
+      background: var(--primary); color: white; cursor: pointer; font-weight: bold;
     }
+    button:active { transform: scale(0.95); }
 
-    /* Biblioteca Modal */
+    /* Modal Biblioteca */
     #modalBiblioteca { 
       position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
-      display: none; place-items: center; z-index: 1000; padding: 1rem; 
+      display: none; place-items: center; z-index: 1000; 
     }
     .modal-content { 
-      background: var(--bg-main); width: 100%; max-width: 600px; 
-      max-height: 80vh; padding: 2rem; border-radius: 20px; overflow-y: auto; 
+      background: var(--bg); width: 90%; max-width: 500px; 
+      padding: 20px; border-radius: 20px; max-height: 80vh; overflow-y: auto; 
     }
-    #gridLibros { 
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
-      gap: 10px; margin-top: 1rem; 
+    .grid-libros { 
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
+      gap: 10px; margin-top: 20px; 
     }
-    .btn-libro-grid { 
-      padding: 0.8rem; border: 1px solid var(--border); border-radius: 8px; 
-      background: var(--surface); cursor: pointer; font-size: 0.9rem;
-    }
+    .btn-lib { background: var(--surface); color: var(--text); border: 1px solid #ddd; font-size: 0.8rem; }
 
     /* Lectura */
-    .capitulo-card { background: var(--surface); border-radius: 15px; margin-bottom: 1.5rem; border: 1px solid var(--border); overflow: hidden; }
-    .capitulo-header { background: var(--primary); color: white; padding: 1rem; text-align: center; }
-    .versiculos { padding: 1.5rem; font-size: var(--user-font, 20px); }
-    .versiculo { margin-bottom: 0.5rem; }
-    .num { color: var(--accent); font-weight: bold; margin-right: 0.5rem; }
+    .card { background: var(--surface); border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #ddd; }
+    .v-num { color: var(--accent); font-weight: bold; margin-right: 8px; font-size: 0.9em; }
+    .txt-v { font-size: var(--f-size, 20px); line-height: 1.6; }
 
-    .nav-footer { display: flex; gap: 10px; margin-top: 2rem; }
-    .btn-nav { flex: 1; padding: 1rem; border-radius: 12px; border: none; background: var(--primary); color: white; cursor: pointer; }
+    .nav-footer { display: flex; gap: 10px; margin-top: 30px; }
+    .btn-nav { flex: 1; padding: 15px; }
   </style>
 
   <div class="main-container">
-    <header class="app-header">
-      <h1 class="app-title">BIBLIA 365</h1>
-      <div class="progress-ring">
-        <div class="ring-container">
-          <svg class="ring-svg" width="100" height="100">
-            <circle class="ring-bg" cx="50" cy="50" r="45" />
-            <circle id="ringProgress" class="ring-progress" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="283" />
-          </svg>
-          <div class="ring-text">
-            <div id="ringDay" style="font-weight: bold; font-size: 1.2rem;">1</div>
-            <div style="font-size: 0.6rem; opacity: 0.7;">DÍA</div>
-          </div>
+    <div class="app-header">
+      <h1 style="font-family: 'Playfair Display';">BIBLIA 365</h1>
+      <div class="progress-container">
+        <svg width="100" height="100">
+          <circle class="ring-bg" cx="50" cy="50" r="40" />
+          <circle id="progreso" class="ring-active" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2" />
+        </svg>
+        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">
+          <span id="diaLabel" style="font-weight:bold; font-size:1.2rem;">1</span>
         </div>
-      </div>
-    </header>
-
-    <div class="control-panel">
-      <button class="btn-tool" onclick="abrirBiblioteca()">📚 Libros</button>
-      <div style="display: flex; gap: 5px;">
-        <button class="btn-tool" onclick="cambiarFuente(-2)">A-</button>
-        <button class="btn-tool" onclick="cambiarFuente(2)">A+</button>
-        <button class="btn-tool" onclick="toggleModo()">🌓</button>
       </div>
     </div>
 
-    <div id="contenedorLectura"></div>
+    <div class="panel">
+      <button onclick="window.abrirLibros()">📚 Libros</button>
+      <div style="display:flex; gap:8px;">
+        <button onclick="window.zoom(-2)">A-</button>
+        <button onclick="window.zoom(2)">A+</button>
+        <button onclick="window.modoNoche()">🌓</button>
+      </div>
+    </div>
+
+    <div id="lector"></div>
 
     <div class="nav-footer">
-      <button class="btn-nav" onclick="cambiarDia(-1)">◀ Anterior</button>
-      <button class="btn-nav" onclick="irAHoy()">Hoy</button>
-      <button class="btn-nav" onclick="cambiarDia(1)">Siguiente ▶</button>
+      <button class="btn-nav" onclick="window.irDia(-1)">◀ Ant.</button>
+      <button class="btn-nav" onclick="window.irHoy()">Hoy</button>
+      <button class="btn-nav" onclick="window.irDia(1)">Sig. ▶</button>
     </div>
   </div>
 
-  <div id="modalBiblioteca" onclick="if(event.target==this) cerrarBiblioteca()">
+  <div id="modalBiblioteca" onclick="if(event.target==this) window.cerrarLibros()">
     <div class="modal-content">
-      <h2 style="text-align: center; margin-bottom: 1rem;">Seleccionar Libro</h2>
-      <div id="gridLibros"></div>
+      <h3 style="text-align:center">Selecciona un Libro</h3>
+      <div id="listaLibros" class="grid-libros"></div>
+      <button onclick="window.cerrarLibros()" style="width:100%; margin-top:20px; background:var(--accent)">Cerrar</button>
     </div>
   </div>
 
   <script is:inline>
-    const BIBLIA = [
-      { n: 'Génesis', f: 'genesis', c: 50 }, { n: 'Éxodo', f: 'exodo', c: 40 }, { n: 'Levítico', f: 'levitico', c: 27 },
-      { n: 'Números', f: 'numeros', c: 36 }, { n: 'Deuteronomio', f: 'deuteronomio', c: 34 }, { n: 'Josué', f: 'josue', c: 24 },
-      { n: 'Jueces', f: 'jueces', c: 21 }, { n: 'Rut', f: 'rut', c: 4 }, { n: '1 Samuel', f: '1_samuel', c: 31 },
-      { n: '2 Samuel', f: '2_samuel', c: 24 }, { n: '1 Reyes', f: '1_reyes', c: 22 }, { n: '2 Reyes', f: '2_reyes', c: 25 },
-      { n: '1 Crónicas', f: '1_cronicas', c: 29 }, { n: '2 Crónicas', f: '2_cronicas', c: 36 }, { n: 'Esdras', f: 'esdras', c: 10 },
-      { n: 'Nehemías', f: 'nehemias', c: 13 }, { n: 'Ester', f: 'ester', c: 10 }, { n: 'Job', f: 'job', c: 42 },
-      { n: 'Salmos', f: 'salmos', c: 150 }, { n: 'Proverbios', f: 'proverbios', c: 31 }, { n: 'Eclesiastés', f: 'eclesiastes', c: 12 },
-      { n: 'Cantares', f: 'cantares', c: 8 }, { n: 'Isaías', f: 'isaias', c: 66 }, { n: 'Jeremías', f: 'jeremias', c: 52 },
-      { n: 'Lamentaciones', f: 'lamentaciones', c: 5 }, { n: 'Ezequiel', f: 'ezequiel', c: 48 }, { n: 'Daniel', f: 'daniel', c: 12 },
-      { n: 'Mateo', f: 'mateo', c: 28 }, { n: 'Marcos', f: 'marcos', c: 16 }, { n: 'Lucas', f: 'lucas', c: 24 },
-      { n: 'Juan', f: 'juan', c: 21 }, { n: 'Hechos', f: 'hechos', c: 28 }, { n: 'Apocalipsis', f: 'apocalipsis', c: 22 }
+    // 1. Datos de la Biblia
+    const BOOKS = [
+      {n:'Génesis', f:'genesis', c:50}, {n:'Éxodo', f:'exodo', c:40}, {n:'Levítico', f:'levitico', c:27},
+      {n:'Números', f:'numeros', c:36}, {n:'Deuteronomio', f:'deuteronomio', c:34}, {n:'Josué', f:'josue', c:24},
+      {n:'Jueces', f:'jueces', c:21}, {n:'Rut', f:'rut', c:4}, {n:'1 Samuel', f:'1_samuel', c:31},
+      {n:'2 Samuel', f:'2_samuel', c:24}, {n:'1 Reyes', f:'1_reyes', c:22}, {n:'2 Reyes', f:'2_reyes', c:25},
+      {n:'Mateo', f:'mateo', c:28}, {n:'Marcos', f:'marcos', c:16}, {n:'Lucas', f:'lucas', c:24},
+      {n:'Juan', f:'juan', c:21}, {n:'Hechos', f:'hechos', c:28}, {n:'Apocalipsis', f:'apocalipsis', c:22}
     ];
 
-    let planCompleto = [];
-    BIBLIA.forEach(libro => {
-      for(let i = 1; i <= libro.c; i++) planCompleto.push({ n: libro.n, f: libro.f, c: i });
-    });
+    let plan = [];
+    BOOKS.forEach(b => { for(let i=1; i<=b.c; i++) plan.push({n:b.n, f:b.f, c:i}); });
 
     let fecha = new Date();
     let fontSize = 20;
 
-    function renderBiblioteca() {
-      const grid = document.getElementById('gridLibros');
-      grid.innerHTML = BIBLIA.map(l => `
-        <button class="btn-libro-grid" onclick="irALibro('${l.f}', '${l.n}')">${l.n}</button>
+    // 2. FUNCIONES GLOBALES (Atadas a window para que los botones funcionen)
+    window.abrirLibros = () => {
+      const lista = document.getElementById('listaLibros');
+      lista.innerHTML = BOOKS.map(b => `
+        <button class="btn-lib" onclick="window.cargarLibro('${b.f}', '${b.n}')">${b.n}</button>
       `).join('');
-    }
-
-    window.abrirBiblioteca = () => {
       document.getElementById('modalBiblioteca').style.display = 'grid';
-      renderBiblioteca();
     };
 
-    window.cerrarBiblioteca = () => {
-      document.getElementById('modalBiblioteca').style.display = 'none';
+    window.cerrarLibros = () => document.getElementById('modalBiblioteca').style.display = 'none';
+
+    window.cargarLibro = (f, n) => {
+      window.cerrarLibros();
+      renderLectura([{f, n, c: 1}]);
     };
 
-    window.irALibro = (f, n) => {
-      cerrarBiblioteca();
-      cargarLectura([{ f, n, c: 1 }]);
+    window.zoom = (n) => {
+      fontSize += n;
+      document.documentElement.style.setProperty('--f-size', fontSize + 'px');
     };
 
-    async function cargarLectura(especifico = null) {
-      const cont = document.getElementById('contenedorLectura');
-      cont.innerHTML = '<p style="text-align:center">Cargando...</p>';
+    window.modoNoche = () => document.body.classList.toggle('dark-mode');
 
-      let items = especifico;
-      if (!especifico) {
-        const inicio = new Date(fecha.getFullYear(), 0, 0);
-        const diaNum = Math.floor((fecha - inicio) / 86400000);
-        const idx = (diaNum - 1) * 3;
-        items = planCompleto.slice(idx, idx + 3);
-        
-        document.getElementById('ringDay').innerText = diaNum;
-        const offset = 283 - (diaNum / 365) * 283;
-        document.getElementById('ringProgress').style.strokeDashoffset = offset;
-      }
+    window.irDia = (d) => {
+      fecha.setDate(fecha.getDate() + d);
+      window.iniciarApp();
+    };
 
+    window.irHoy = () => {
+      fecha = new Date();
+      window.iniciarApp();
+    };
+
+    async function renderLectura(items) {
+      const lector = document.getElementById('lector');
+      lector.innerHTML = '<p style="text-align:center">Cargando Palabra...</p>';
+      
       let html = '';
       for (const it of items) {
         try {
           const res = await fetch(`https://bible-api.deno.dev/api/read/rvv1960/${it.f}/${it.c}`);
           const data = await res.json();
           html += `
-            <div class="capitulo-card">
-              <div class="capitulo-header"><h2>${it.n} ${it.c}</h2></div>
-              <div class="versiculos">
-                ${data.vers.map(v => `<p class="versiculo"><span class="num">${v.number}</span>${v.verse}</p>`).join('')}
+            <div class="card">
+              <h2 style="color:var(--primary); margin-bottom:15px; border-bottom:2px solid var(--accent); display:inline-block">${it.n} ${it.c}</h2>
+              <div>
+                ${data.vers.map(v => `<p style="margin-bottom:10px" class="txt-v"><span class="v-num">${v.number}</span>${v.verse}</p>`).join('')}
               </div>
             </div>
           `;
         } catch (e) { console.error(e); }
       }
-      cont.innerHTML = html;
+      lector.innerHTML = html || '<p>Error de conexión</p>';
+      window.scrollTo(0,0);
     }
 
-    window.cambiarFuente = (n) => {
-      fontSize += n;
-      document.documentElement.style.setProperty('--user-font', fontSize + 'px');
+    window.iniciarApp = () => {
+      const inicio = new Date(fecha.getFullYear(), 0, 0);
+      const diaAnio = Math.floor((fecha - inicio) / 86400000);
+      const idx = (diaAnio - 1) * 3;
+      const hoyItems = plan.slice(idx, idx + 3);
+
+      document.getElementById('diaLabel').innerText = diaAnio;
+      const offset = 251.2 - (diaAnio / 365) * 251.2;
+      document.getElementById('progreso').style.strokeDashoffset = offset;
+
+      renderLectura(hoyItems);
     };
 
-    window.toggleModo = () => document.body.classList.toggle('dark-mode');
-    window.cambiarDia = (d) => { fecha.setDate(fecha.getDate() + d); cargarLectura(); };
-    window.irAHoy = () => { fecha = new Date(); cargarLectura(); };
-
-    // Iniciar
-    cargarLectura();
+    // Arrancar
+    document.addEventListener('DOMContentLoaded', window.iniciarApp);
   </script>
 </PageLayout>
