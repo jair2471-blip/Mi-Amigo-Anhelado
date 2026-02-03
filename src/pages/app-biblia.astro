@@ -44,9 +44,17 @@ import PageLayout from '../layouts/PageLayout.astro';
       --accent-light: #e9c46a;
       --accent-dark: #e76f51;
       --border: rgba(82, 183, 136, 0.25);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
+      --shadow-xl: 0 30px 60px rgba(0, 0, 0, 0.6);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-secondary) 100%);
@@ -55,89 +63,922 @@ import PageLayout from '../layouts/PageLayout.astro';
       font-family: 'Crimson Text', Georgia, serif;
       line-height: 1.8;
       transition: all 0.4s var(--transition-smooth);
+      position: relative;
       overflow-x: hidden;
     }
 
-    .main-container { max-width: 900px; margin: 0 auto; padding: 1.5rem; position: relative; z-index: 1; }
+    /* Patrón de fondo decorativo mejorado */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(212, 165, 116, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(26, 77, 46, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(212, 165, 116, 0.03) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 1;
+      transition: opacity 0.4s;
+    }
 
-    .app-header { text-align: center; margin-bottom: 2.5rem; }
+    body.dark-mode::before {
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(82, 183, 136, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(244, 162, 97, 0.06) 0%, transparent 50%);
+    }
+
+    /* Contenedor principal */
+    .main-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header elegante y mejorado */
+    .app-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeInDown 0.8s var(--transition-smooth);
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .app-title {
       font-family: 'Playfair Display', serif;
       font-size: clamp(2.5rem, 8vw, 4.5rem);
       font-weight: 900;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+      position: relative;
+      display: inline-block;
     }
 
-    /* Progress Ring */
-    .progress-ring { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin: 1.5rem 0; }
-    .ring-container { position: relative; width: 120px; height: 120px; }
-    .ring-svg { transform: rotate(-90deg); }
-    .ring-bg { fill: none; stroke: var(--border); stroke-width: 8; }
-    .ring-progress { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s; }
-    .ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-    .ring-day { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .app-subtitle {
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      color: var(--text-secondary);
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
 
-    /* Controls */
+    /* Progress Ring - NUEVO */
+    .progress-ring {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .ring-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+
+    .ring-svg {
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: var(--border);
+      stroke-width: 8;
+    }
+
+    .ring-progress {
+      fill: none;
+      stroke: url(#gradient);
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s var(--transition-smooth);
+    }
+
+    .ring-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .ring-day {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .ring-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .progress-info {
+      text-align: left;
+    }
+
+    .info-date {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .stat-badge {
+      background: var(--accent);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Panel de control mejorado */
     .control-panel {
-      position: sticky; top: 20px; z-index: 100; background: var(--surface);
-      backdrop-filter: blur(20px); padding: 1rem; border-radius: 24px;
-      display: flex; justify-content: space-between; gap: 1rem;
-      box-shadow: var(--shadow-lg); border: 2px solid var(--border); margin-bottom: 2rem;
+      position: sticky;
+      top: 20px;
+      z-index: 100;
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      padding: 1.25rem 2rem;
+      border-radius: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      box-shadow: var(--shadow-lg);
+      border: 2px solid var(--border);
+      margin-bottom: 3rem;
+      animation: slideInUp 0.6s var(--transition-smooth) 0.2s backwards;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .btn-tool {
-      background: var(--primary); color: white; border: none; padding: 0.6rem 1.2rem;
-      border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.3s;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #ffffff;
+      border: none;
+      font-size: 0.95rem;
+      cursor: pointer;
+      padding: 0.75rem 1.5rem;
+      border-radius: 14px;
+      transition: all 0.3s var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-family: 'Crimson Text', serif;
+      box-shadow: 0 4px 12px rgba(26, 77, 46, 0.3);
+      position: relative;
+      overflow: hidden;
     }
 
-    /* Library Modal */
+    .btn-tool::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s;
+    }
+
+    .btn-tool:hover::before {
+      left: 100%;
+    }
+
+    .btn-tool:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(26, 77, 46, 0.4);
+    }
+
+    .btn-tool:active {
+      transform: translateY(-1px) scale(1);
+    }
+
+    .control-group {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    /* Búsqueda rápida - NUEVO */
+    .search-container {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 2rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.5rem 1rem 3.5rem;
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      color: var(--text-main);
+      font-family: 'Crimson Text', serif;
+      font-size: 1rem;
+      transition: all 0.3s var(--transition-smooth);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.25rem;
+    }
+
+    /* Acordeones majestuosos mejorados */
+    .capitulo-acordeon {
+      background: var(--surface);
+      backdrop-filter: blur(15px);
+      border-radius: 24px;
+      margin-bottom: 2rem;
+      border: 2px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: all 0.4s var(--transition-smooth);
+      animation: cardReveal 0.6s var(--transition-smooth) backwards;
+    }
+
+    .capitulo-acordeon:nth-child(1) { animation-delay: 0.1s; }
+    .capitulo-acordeon:nth-child(2) { animation-delay: 0.2s; }
+    .capitulo-acordeon:nth-child(3) { animation-delay: 0.3s; }
+    .capitulo-acordeon:nth-child(4) { animation-delay: 0.4s; }
+    .capitulo-acordeon:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes cardReveal {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .capitulo-acordeon:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .capitulo-acordeon[open] {
+      box-shadow: var(--shadow-xl);
+      border-color: var(--accent);
+    }
+
+    .header-info {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #ffffff;
+      padding: 1.75rem 2rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-info::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.8s;
+    }
+
+    .header-info:hover::before {
+      transform: translateX(100%);
+    }
+
+    .header-info:hover {
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+    }
+
+    .header-info h2 {
+      margin: 0;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .chapter-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Crimson Text', serif;
+    }
+
+    .header-info span {
+      font-size: 1.5rem;
+      transition: transform 0.3s var(--transition-smooth);
+    }
+
+    .capitulo-acordeon[open] .header-info span {
+      transform: rotate(180deg);
+    }
+
+    /* Versículos elegantes mejorados */
+    .versiculos {
+      padding: 2.5rem 2rem;
+      font-size: var(--font-size, 21px);
+      line-height: 2;
+      color: var(--text-main);
+    }
+
+    .versiculo {
+      padding: 1.25rem 1.5rem;
+      border-radius: 16px;
+      transition: all 0.3s var(--transition-smooth);
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+      border-left: 4px solid transparent;
+      position: relative;
+    }
+
+    .versiculo::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      transition: width 0.4s var(--transition-smooth);
+      border-radius: 16px 0 0 16px;
+      opacity: 0.1;
+    }
+
+    .versiculo:hover::before {
+      width: 100%;
+    }
+
+    .versiculo:hover {
+      background: rgba(212, 165, 116, 0.08);
+      border-left-color: var(--accent);
+      transform: translateX(8px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .versiculo.active {
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.15) 0%, rgba(212, 165, 116, 0.05) 100%);
+      border-left-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2), var(--shadow-md);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2), var(--shadow-md);
+      }
+      50% {
+        box-shadow: 0 0 0 6px rgba(212, 165, 116, 0.3), var(--shadow-lg);
+      }
+    }
+
+    .versiculo .num {
+      color: var(--accent);
+      font-weight: 700;
+      margin-right: 1rem;
+      font-size: 0.9em;
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* Palabras de Cristo en rojo */
+    .txt b {
+      color: #b91c1c;
+      font-weight: 600;
+    }
+
+    body.dark-mode .txt b {
+      color: #ff6b6b;
+    }
+
+    /* Estilos de resaltado mejorados */
+    .sub-yellow {
+      background: linear-gradient(135deg, #fff59d 0%, #ffeaa7 100%);
+      color: #1a202c;
+      padding: 0.3rem 0.6rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(255, 245, 157, 0.4);
+      transition: all 0.3s var(--transition-smooth);
+    }
+
+    .sub-green {
+      background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%);
+      color: #1a202c;
+      padding: 0.3rem 0.6rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(165, 214, 167, 0.4);
+      transition: all 0.3s var(--transition-smooth);
+    }
+
+    .sub-blue {
+      background: linear-gradient(135deg, #90caf9 0%, #64b5f6 100%);
+      color: #1a202c;
+      padding: 0.3rem 0.6rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(144, 202, 249, 0.4);
+      transition: all 0.3s var(--transition-smooth);
+    }
+
+    /* Menú de acciones flotante mejorado */
+    .menu-acciones {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(150px);
+      background: var(--surface-elevated);
+      backdrop-filter: blur(30px);
+      padding: 1.5rem 2rem;
+      border-radius: 30px;
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      gap: 1.25rem;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      border: 2px solid var(--accent);
+    }
+
+    .menu-acciones.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .btn-action {
+      background: var(--bg-main);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 1rem 1.25rem;
+      min-width: 75px;
+      cursor: pointer;
+      color: var(--text-main);
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s var(--transition-smooth);
+      font-weight: 600;
+      font-family: 'Crimson Text', serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-action::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
+      z-index: -1;
+    }
+
+    .btn-action:hover::before {
+      width: 200px;
+      height: 200px;
+    }
+
+    .btn-action span {
+      font-size: 1.75rem;
+      transition: transform 0.3s var(--transition-smooth);
+    }
+
+    .btn-action:hover {
+      color: #1a202c;
+      border-color: var(--accent);
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(212, 165, 116, 0.4);
+    }
+
+    .btn-action:hover span {
+      transform: scale(1.2);
+    }
+
+    .btn-action:active {
+      transform: translateY(-3px) scale(1);
+    }
+
+    /* Navegación mejorada */
+    .nav-buttons {
+      display: flex;
+      gap: 1.25rem;
+      margin-top: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-nav {
+      flex: 1;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #ffffff;
+      border: none;
+      padding: 1.25rem 2rem;
+      border-radius: 18px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s var(--transition-smooth);
+      font-family: 'Crimson Text', serif;
+      letter-spacing: 0.05em;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-nav::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-nav:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-nav:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-nav:active {
+      transform: translateY(-2px);
+    }
+
+    .btn-nav.btn-today {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      color: #1a202c;
+      flex: 0 0 auto;
+      min-width: 120px;
+    }
+
+    /* Modal biblioteca mejorado */
     #modalBiblioteca {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(15px); display: none; place-items: center; z-index: 1100; padding: 1rem;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(20px);
+      display: none;
+      place-items: center;
+      z-index: 1100;
+      padding: 1.5rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .modal-content {
-      background: var(--surface); width: 100%; max-width: 700px; max-height: 80vh;
-      padding: 2rem; border-radius: 24px; overflow-y: auto; border: 2px solid var(--accent);
+      background: var(--surface);
+      width: 100%;
+      max-width: 700px;
+      max-height: 85vh;
+      padding: 2.5rem;
+      border-radius: 32px;
+      border: 2px solid var(--accent);
+      box-shadow: var(--shadow-xl);
+      overflow-y: auto;
+      animation: modalSlideIn 0.4s var(--transition-smooth);
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .modal-content h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--primary);
+      font-weight: 700;
     }
 
     #gridLibros {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 1rem;
     }
 
-    .btn-libro-grid {
-      padding: 1rem; border: 1px solid var(--border); border-radius: 12px;
-      background: var(--bg-main); color: var(--text-main); cursor: pointer;
-      font-weight: 600; transition: 0.3s;
+    #gridLibros button {
+      padding: 1.25rem 1rem;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      background: var(--bg-main);
+      color: var(--text-main);
+      cursor: pointer;
+      font-family: 'Crimson Text', serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s var(--transition-smooth);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
     }
 
-    .btn-libro-grid:hover { background: var(--accent); color: white; transform: translateY(-3px); }
-
-    /* Verses */
-    .capitulo-acordeon { background: var(--surface); border-radius: 18px; margin-bottom: 1rem; border: 1px solid var(--border); overflow: hidden; }
-    .header-info { background: var(--primary); color: white; padding: 1rem 1.5rem; cursor: pointer; display: flex; justify-content: space-between; }
-    .versiculos { padding: 1.5rem; font-size: 20px; }
-    .versiculo { padding: 0.5rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-    .versiculo:hover { background: rgba(212, 165, 116, 0.1); }
-    .versiculo.active { border-left: 4px solid var(--accent); background: rgba(212, 165, 116, 0.1); }
-    .num { color: var(--accent); font-weight: 700; margin-right: 0.5rem; }
-
-    /* Actions Menu */
-    .menu-acciones {
-      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px);
-      background: var(--surface-elevated); padding: 1rem; border-radius: 20px;
-      display: flex; gap: 1rem; transition: 0.4s; border: 2px solid var(--accent); z-index: 1000; opacity: 0;
+    #gridLibros button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
+      z-index: -1;
     }
-    .menu-acciones.active { transform: translateX(-50%) translateY(0); opacity: 1; }
 
+    #gridLibros button:hover::before {
+      width: 200px;
+      height: 200px;
+    }
+
+    #gridLibros button:hover {
+      color: #1a202c;
+      border-color: var(--accent);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Toast notifications - NUEVO */
     .toast {
-      position: fixed; bottom: 2rem; right: 2rem; background: var(--surface);
-      padding: 1rem; border-radius: 12px; border: 2px solid var(--accent);
-      transform: translateX(200%); transition: 0.4s; z-index: 2000;
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--surface-elevated);
+      color: var(--text-main);
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      box-shadow: var(--shadow-xl);
+      border: 2px solid var(--accent);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      transform: translateX(400px);
+      transition: all 0.4s var(--transition-smooth);
     }
-    .toast.show { transform: translateX(0); }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .toast-icon {
+      font-size: 1.5rem;
+    }
+
+    .toast-message {
+      font-weight: 600;
+    }
+
+    /* Canvas helper oculto */
+    #canvas-helper {
+      position: fixed;
+      top: -9999px;
+      left: -9999px;
+      width: 800px;
+      padding: 80px;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      color: #ffffff;
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      border: 8px solid var(--accent);
+      border-radius: 20px;
+    }
+
+    /* Loading skeleton - NUEVO */
+    .skeleton {
+      background: linear-gradient(90deg, var(--border) 25%, rgba(212, 165, 116, 0.1) 50%, var(--border) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s infinite;
+      border-radius: 16px;
+    }
+
+    @keyframes skeleton-loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Responsive mejorado */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 1rem;
+      }
+
+      .progress-ring {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .ring-container {
+        width: 100px;
+        height: 100px;
+      }
+
+      .ring-day {
+        font-size: 1.75rem;
+      }
+
+      .progress-info {
+        text-align: center;
+      }
+
+      .control-panel {
+        padding: 1rem 1.25rem;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .control-group {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .btn-tool {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.85rem;
+      }
+
+      .versiculos {
+        padding: 1.5rem 1.25rem;
+        font-size: 18px;
+      }
+
+      .versiculo {
+        padding: 1rem;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .btn-nav {
+        padding: 1rem 1.5rem;
+      }
+
+      .menu-acciones {
+        padding: 1.25rem 1.5rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 90vw;
+      }
+
+      .btn-action {
+        min-width: 70px;
+        padding: 0.875rem 1rem;
+        font-size: 0.75rem;
+      }
+
+      .modal-content {
+        padding: 2rem 1.5rem;
+      }
+
+      #gridLibros {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.75rem;
+      }
+
+      .toast {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .app-title {
+        font-size: 2.5rem;
+      }
+
+      .header-info {
+        padding: 1.25rem 1.5rem;
+      }
+
+      #gridLibros {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Scrollbar personalizado */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-main);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 10px;
+      border: 2px solid var(--bg-main);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, var(--accent) 0%, var(--accent-light) 100%);
+    }
   </style>
 
   <div class="main-container">
@@ -145,143 +986,417 @@ import PageLayout from '../layouts/PageLayout.astro';
       <h1 class="app-title">BIBLIA 365</h1>
       <p class="app-subtitle">Tu Plan Anual de Lectura</p>
       
+      <!-- Progress Ring -->
       <div class="progress-ring">
         <div class="ring-container">
           <svg class="ring-svg" width="120" height="120">
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
+                <stop offset="100%" style="stop-color:var(--accent);stop-opacity:1" />
+              </linearGradient>
+            </defs>
             <circle class="ring-bg" cx="60" cy="60" r="52" />
-            <circle id="ringProgress" class="ring-progress" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7" />
+            <circle id="ringProgress" class="ring-progress" cx="60" cy="60" r="52" 
+                    stroke-dasharray="326.73" stroke-dashoffset="326.73" />
           </svg>
           <div class="ring-text">
             <div id="ringDay" class="ring-day">1</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted)">DE 365</div>
+            <div class="ring-label">de 365</div>
+          </div>
+        </div>
+        <div class="progress-info">
+          <div id="infoDate" class="info-date"></div>
+          <div class="info-stats">
+            <div class="stat-item">
+              <span>📖</span>
+              <span id="statChapters">0 capítulos hoy</span>
+            </div>
+            <div class="stat-item">
+              <span>✨</span>
+              <span id="statHighlights">0 versículos resaltados</span>
+            </div>
           </div>
         </div>
       </div>
     </header>
 
     <div class="control-panel">
-      <button class="btn-tool" onclick="abrirBiblioteca()">📚 Biblioteca</button>
-      <div style="display: flex; gap: 0.5rem;">
-        <button class="btn-tool" onclick="cambiarTamano(-2)">A-</button>
-        <button class="btn-tool" onclick="cambiarTamano(2)">A+</button>
-        <button class="btn-tool" onclick="toggleModo()">🌓</button>
+      <button class="btn-tool" onclick="abrirBiblioteca()">
+        <span>📚</span> Biblioteca
+      </button>
+      <div class="control-group">
+        <button class="btn-tool" onclick="cambiarFuente(-2)">A-</button>
+        <button class="btn-tool" onclick="cambiarFuente(2)">A+</button>
       </div>
+      <button class="btn-tool" onclick="toggleModo()">
+        <span>🌓</span> Tema
+      </button>
     </div>
 
-    <div id="lecturaContenedor">
-      </div>
-
-    <div style="display: flex; gap: 1rem; margin: 2rem 0;">
-      <button class="btn-tool" style="flex: 1" onclick="cambiarDia(-1)">◀ Anterior</button>
-      <button class="btn-tool" onclick="irAHoy()">Hoy</button>
-      <button class="btn-tool" style="flex: 1" onclick="cambiarDia(1)">Siguiente ▶</button>
+    <!-- Search Bar -->
+    <div class="search-container" style="display:none;" id="searchContainer">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Buscar versículo o libro..." 
+        id="searchInput"
+      />
     </div>
-  </div>
 
-  <div id="modalBiblioteca">
-    <div class="modal-content">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2 style="font-family: 'Playfair Display'">Libros de la Biblia</h2>
-        <button class="btn-tool" onclick="cerrarBiblioteca()">✕</button>
-      </div>
-      <input type="text" id="busquedaLibro" placeholder="Buscar libro..." oninput="filtrarLibros()" 
-             style="width: 100%; padding: 0.8rem; margin-top: 1rem; border-radius: 12px; border: 1px solid var(--border);">
-      <div id="gridLibros">
-        </div>
-    </div>
+    <div id="contenido"></div>
+
+    <nav class="nav-buttons">
+      <button class="btn-nav" onclick="cambiarDia(-1)">← ANTERIOR</button>
+      <button class="btn-nav btn-today" onclick="irAHoy()">HOY</button>
+      <button class="btn-nav" onclick="cambiarDia(1)">SIGUIENTE →</button>
+    </nav>
   </div>
 
   <div id="menuAcciones" class="menu-acciones">
-    <button class="btn-tool" onclick="resaltar('sub-yellow')">🟨</button>
-    <button class="btn-tool" onclick="resaltar('sub-green')">🟩</button>
-    <button class="btn-tool" onclick="resaltar('sub-blue')">🟦</button>
-    <button class="btn-tool" onclick="copiarVersiculo()">📋 Copiar</button>
+    <button class="btn-action" onclick="subrayar('sub-yellow')">
+      <span>✨</span>
+      Oro
+    </button>
+    <button class="btn-action" onclick="subrayar('sub-green')">
+      <span>🌿</span>
+      Vida
+    </button>
+    <button class="btn-action" onclick="subrayar('sub-blue')">
+      <span>💎</span>
+      Cielo
+    </button>
+    <button class="btn-action" onclick="generarImagen()">
+      <span>🖼️</span>
+      Imagen
+    </button>
+    <button class="btn-action" onclick="compartirWhatsApp()">
+      <span>💬</span>
+      Compartir
+    </button>
+    <button class="btn-action" onclick="desactivarMenu()">
+      <span>✕</span>
+      Cerrar
+    </button>
   </div>
 
+  <div id="canvas-helper">
+    <div style="font-size: 60px; color: var(--accent); margin-bottom: 30px;">"</div>
+    <div id="img-text" style="font-size: 36px; line-height: 1.6; font-style: italic;"></div>
+    <div style="font-size: 60px; color: var(--accent); margin-top: 20px;">"</div>
+    <div id="img-ref" style="margin-top: 50px; font-size: 24px; letter-spacing: 6px; border-top: 2px solid var(--accent); display: inline-block; padding-top: 20px;"></div>
+  </div>
+
+  <div id="modalBiblioteca" onclick="this.style.display='none'">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h2>📖 Biblioteca Sagrada</h2>
+      <div id="gridLibros"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
   <script is:inline>
-  // ... (aquí va tu lista de booksDB y la variable plan que ya tienes)
+    const URL_RAW = 'https://raw.githubusercontent.com/jair2471-blip/Mi-Amigo-Anhelado/refs/heads/main/biblia-final-perfecta.json';
+    let bibleData,
+      fechaActual = new Date(),
+      fontSize = 21,
+      selectedVersiculo = null,
+      selectedInfo = '',
+      highlights = JSON.parse(localStorage.getItem('biblia365_highlights') || '{}');
 
-  // 1. ESTA FUNCIÓN ES LA QUE CARGA LOS LIBROS EN EL CUADRO
-  function renderBiblioteca() {
-    const grid = document.getElementById('gridLibros');
-    if (!grid) return;
+    const booksDB = [
+      { n: 'Génesis', f: 'genesis', c: 50 },
+      { n: 'Éxodo', f: 'exodo', c: 40 },
+      { n: 'Levítico', f: 'levitico', c: 27 },
+      { n: 'Números', f: 'numeros', c: 36 },
+      { n: 'Deuteronomio', f: 'deuteronomio', c: 34 },
+      { n: 'Josué', f: 'josue', c: 24 },
+      { n: 'Jueces', f: 'jueces', c: 21 },
+      { n: 'Rut', f: 'rut', c: 4 },
+      { n: '1 Samuel', f: '1_samuel', c: 31 },
+      { n: '2 Samuel', f: '2_samuel', c: 24 },
+      { n: '1 Reyes', f: '1_reyes', c: 22 },
+      { n: '2 Reyes', f: '2_reyes', c: 25 },
+      { n: '1 Crónicas', f: '1_cronicas', c: 29 },
+      { n: '2 Crónicas', f: '2_cronicas', c: 36 },
+      { n: 'Esdras', f: 'esdras', c: 10 },
+      { n: 'Nehemías', f: 'nehemias', c: 13 },
+      { n: 'Ester', f: 'ester', c: 10 },
+      { n: 'Job', f: 'job', c: 42 },
+      { n: 'Salmos', f: 'salmos', c: 150 },
+      { n: 'Proverbios', f: 'proverbios', c: 31 },
+      { n: 'Eclesiastés', f: 'eclesiastes', c: 12 },
+      { n: 'Cantares', f: 'cantares', c: 8 },
+      { n: 'Isaías', f: 'isaias', c: 66 },
+      { n: 'Jeremías', f: 'jeremias', c: 52 },
+      { n: 'Lamentaciones', f: 'lamentaciones', c: 5 },
+      { n: 'Ezequiel', f: 'ezequiel', c: 48 },
+      { n: 'Daniel', f: 'daniel', c: 12 },
+      { n: 'Oseas', f: 'oseas', c: 14 },
+      { n: 'Joel', f: 'joel', c: 3 },
+      { n: 'Amós', f: 'amos', c: 9 },
+      { n: 'Abdías', f: 'abdias', c: 1 },
+      { n: 'Jonás', f: 'jonas', c: 4 },
+      { n: 'Miqueas', f: 'miqueas', c: 7 },
+      { n: 'Nahúm', f: 'nahum', c: 3 },
+      { n: 'Habacuc', f: 'habacuc', c: 3 },
+      { n: 'Sofonías', f: 'sofonias', c: 3 },
+      { n: 'Hageo', f: 'hageo', c: 2 },
+      { n: 'Zacarías', f: 'zacarias', c: 14 },
+      { n: 'Malaquías', f: 'malaquias', c: 4 },
+      { n: 'Mateo', f: 'mateo', c: 28 },
+      { n: 'Marcos', f: 'marcos', c: 16 },
+      { n: 'Lucas', f: 'lucas', c: 24 },
+      { n: 'Juan', f: 'juan', c: 21 },
+      { n: 'Hechos', f: 'hechos', c: 28 },
+      { n: 'Romanos', f: 'romanos', c: 16 },
+      { n: '1 Corintios', f: '1_corintios', c: 16 },
+      { n: '2 Corintios', f: '2_corintios', c: 13 },
+      { n: 'Gálatas', f: 'galatas', c: 6 },
+      { n: 'Efesios', f: 'efesios', c: 6 },
+      { n: 'Filipenses', f: 'filipenses', c: 4 },
+      { n: 'Colosenses', f: 'colosenses', c: 4 },
+      { n: '1 Tesalonicenses', f: '1_tesalonicenses', c: 5 },
+      { n: '2 Tesalonicenses', f: '2_tesalonicenses', c: 3 },
+      { n: '1 Timoteo', f: '1_timoteo', c: 6 },
+      { n: '2 Timoteo', f: '2_timoteo', c: 4 },
+      { n: 'Tito', f: 'tito', c: 3 },
+      { n: 'Filemón', f: 'filemon', c: 1 },
+      { n: 'Hebreos', f: 'hebreos', c: 13 },
+      { n: 'Santiago', f: 'santiago', c: 5 },
+      { n: '1 Pedro', f: '1_pedro', c: 5 },
+      { n: '2 Pedro', f: '2_pedro', c: 3 },
+      { n: '1 Juan', f: '1_juan', c: 5 },
+      { n: '2 Juan', f: '2_juan', c: 1 },
+      { n: '3 Juan', f: '3_juan', c: 1 },
+      { n: 'Judas', f: 'judas', c: 1 },
+      { n: 'Apocalipsis', f: 'apocalipsis', c: 22 },
+    ];
 
-    grid.innerHTML = booksDB.map(libro => `
-      <button onclick="seleccionarLibro('${libro.f}', '${libro.n}')">
-        ${libro.n}
-      </button>
-    `).join('');
-  }
+    let plan = [];
+    booksDB.forEach((b) => {
+      for (let i = 1; i <= b.c; i++) plan.push({ n: b.n, f: b.f, c: i });
+    });
 
-  // 2. MODIFICA TU FUNCIÓN DE ABRIR PARA QUE LLAME A LA ANTERIOR
-  window.abrirBiblioteca = () => {
-    document.getElementById('modalBiblioteca').style.display = 'grid';
-    renderBiblioteca(); // <--- Muy importante llamar esto aquí
-  };
-
-  window.cerrarBiblioteca = () => {
-    document.getElementById('modalBiblioteca').style.display = 'none';
-  };
-
-  // 3. FUNCIÓN PARA SELECCIONAR EL LIBRO
-  window.seleccionarLibro = (f, n) => {
-    cerrarBiblioteca();
-    // Cargamos el capítulo 1 del libro seleccionado
-    cargarLectura([{ n, f, c: 1 }]);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast(`Abriendo ${n}`, '📖');
-  };
-
-  // 4. ASEGÚRATE DE QUE TU FUNCIÓN cargarLectura USE LA API CORRECTA
-  async function cargarLectura(especifico = null) {
-    const contenedor = document.getElementById('lecturaContenedor');
-    contenedor.innerHTML = '<div class="skeleton" style="height:300px"></div>';
-
-    let items = especifico;
-    if (!especifico) {
-      const hoy = new Date();
-      const inicio = new Date(hoy.getFullYear(), 0, 0);
-      const diaDelAnio = Math.floor((hoy - inicio) / 86400000);
-      const startIdx = (diaDelAnio - 1) * 3;
-      items = plan.slice(startIdx, startIdx + 3);
-      updateProgressRing(diaDelAnio);
+    // Toast notification
+    function showToast(message, icon = '✓') {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span class="toast-message">${message}</span>
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
     }
 
-    let html = '';
-    for (const it of items) {
-      try {
-        // Usamos la API de Deno que es muy estable
-        const res = await fetch(`https://bible-api.deno.dev/api/read/rvv1960/${it.f}/${it.c}`);
-        const data = await res.json();
-        
-        html += `
-          <details open class="capitulo-acordeon">
+    // Update progress ring
+    function updateProgressRing(day) {
+      const circumference = 2 * Math.PI * 52;
+      const progress = (day / 365) * circumference;
+      const offset = circumference - progress;
+      
+      document.getElementById('ringProgress').style.strokeDashoffset = offset;
+      document.getElementById('ringDay').textContent = day;
+    }
+
+    // Update stats
+    function updateStats(chaptersCount) {
+      const highlightCount = Object.keys(highlights).length;
+      document.getElementById('statChapters').textContent = `${chaptersCount} ${chaptersCount === 1 ? 'capítulo' : 'capítulos'} hoy`;
+      document.getElementById('statHighlights').textContent = `${highlightCount} ${highlightCount === 1 ? 'versículo resaltado' : 'versículos resaltados'}`;
+    }
+
+    async function cargarLectura(custom = null) {
+      if (!bibleData) {
+        bibleData = await (await fetch(URL_RAW)).json();
+        document.getElementById('gridLibros').innerHTML = booksDB
+          .map((l) => `<button onclick="seleccionarLibro('${l.f}','${l.n}')">${l.n}</button>`)
+          .join('');
+      }
+
+      const start = new Date(fechaActual.getFullYear(), 0, 0);
+      const day = Math.floor((fechaActual - start) / 86400000);
+      
+      // Update progress ring
+      updateProgressRing(day);
+      
+      // Update date
+      const dateStr = fechaActual.toLocaleDateString('es-ES', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      document.getElementById('infoDate').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+
+      const lectura = custom || plan.slice(Math.floor(((day - 1) * 1189) / 365), Math.floor((day * 1189) / 365));
+      
+      // Update stats
+      updateStats(lectura.length);
+
+      document.getElementById('contenido').innerHTML = lectura
+        .map((it, idx) => {
+          const cap = bibleData[it.f.toLowerCase()]?.[it.c];
+          if (!cap) return '';
+
+          return `
+          <details ${idx === 0 ? 'open' : ''} class="capitulo-acordeon">
             <summary class="header-info">
-              <h2>${it.n} ${it.c}</h2>
+              <h2>${it.n} ${it.c} <span class="chapter-badge">${Object.keys(cap).length} v.</span></h2>
               <span>▼</span>
             </summary>
             <div class="versiculos">
-              ${data.vers.map(v => `
-                <div class="versiculo" onclick="activarMenu(this, '${it.n} ${it.c}:${v.number}', '${it.f}_${it.c}_${v.number}')">
-                  <span class="num">${v.number}</span>
-                  <span class="txt">${v.verse}</span>
-                </div>
-              `).join('')}
+              ${Object.entries(cap)
+                .map(
+                  ([n, t]) => {
+                    const vId = `${it.f}_${it.c}_${n}`;
+                    const highlightClass = highlights[vId] || '';
+                    return `
+                      <div class="versiculo" onclick="activarMenu(this, '${it.n} ${it.c}:${n}', '${vId}')">
+                        <span class="num">${n}</span>
+                        <span class="txt ${highlightClass}">${t}</span>
+                      </div>
+                    `;
+                  }
+                )
+                .join('')}
             </div>
           </details>
         `;
-      } catch (e) {
-        console.error("Error cargando:", it.n, e);
-      }
+        })
+        .join('');
     }
-    contenedor.innerHTML = html || '<p>Error al cargar la lectura. Revisa tu conexión.</p>';
-  }
 
-  // ... (el resto de tus funciones como activarMenu, resaltar, etc.)
+    window.activarMenu = (el, ref, vId) => {
+      selectedVersiculo = el;
+      selectedInfo = ref;
+      window.currentVId = vId;
 
-  // Iniciar la aplicación
-  document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.versiculo').forEach((v) => v.classList.remove('active'));
+      el.classList.add('active');
+
+      document.getElementById('menuAcciones').classList.add('active');
+      
+      // Scroll to verse smoothly
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    window.desactivarMenu = () => {
+      document.getElementById('menuAcciones').classList.remove('active');
+      document.querySelectorAll('.versiculo').forEach((v) => v.classList.remove('active'));
+    };
+
+    window.subrayar = (cls) => {
+      const txtElement = selectedVersiculo.querySelector('.txt');
+      const currentClasses = ['sub-yellow', 'sub-green', 'sub-blue'];
+      
+      // Remove all highlight classes
+      currentClasses.forEach(c => txtElement.classList.remove(c));
+      
+      // Toggle new class
+      if (highlights[window.currentVId] === cls) {
+        delete highlights[window.currentVId];
+        showToast('Resaltado eliminado', '🗑️');
+      } else {
+        txtElement.classList.add(cls);
+        highlights[window.currentVId] = cls;
+        showToast('Versículo resaltado', '✨');
+      }
+      
+      localStorage.setItem('biblia365_highlights', JSON.stringify(highlights));
+      updateStats(plan.slice(Math.floor(((Math.floor((fechaActual - new Date(fechaActual.getFullYear(), 0, 0)) / 86400000) - 1) * 1189) / 365), Math.floor(((Math.floor((fechaActual - new Date(fechaActual.getFullYear(), 0, 0)) / 86400000)) * 1189) / 365)).length);
+      desactivarMenu();
+    };
+
+    window.compartirWhatsApp = () => {
+      const texto = selectedVersiculo.querySelector('.txt').innerText;
+      window.open(`https://wa.me/?text=${encodeURIComponent('"' + texto + '" - ' + selectedInfo)}`);
+      showToast('Compartiendo en WhatsApp', '💬');
+      desactivarMenu();
+    };
+
+    window.generarImagen = () => {
+      const helper = document.getElementById('canvas-helper');
+      const texto = selectedVersiculo.querySelector('.txt').innerText;
+
+      document.getElementById('img-text').innerText = texto;
+      document.getElementById('img-ref').innerText = selectedInfo.toUpperCase();
+
+      html2canvas(helper, {
+        backgroundColor: null,
+        scale: 2,
+      }).then((canvas) => {
+        const link = document.createElement('a');
+        link.download = `${selectedInfo.replace(/:/g, '-')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('Imagen generada', '🖼️');
+      });
+
+      desactivarMenu();
+    };
+
+    window.cambiarFuente = (n) => {
+      fontSize += n;
+      if (fontSize < 16) fontSize = 16;
+      if (fontSize > 32) fontSize = 32;
+      document.querySelectorAll('.versiculos').forEach((v) => {
+        v.style.fontSize = fontSize + 'px';
+      });
+      localStorage.setItem('biblia365_fontsize', fontSize);
+      showToast(`Tamaño: ${fontSize}px`, '📏');
+    };
+
+    window.toggleModo = () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('biblia365_darkmode', isDark);
+      showToast(isDark ? 'Modo oscuro activado' : 'Modo claro activado', '🌓');
+    };
+
+    window.abrirBiblioteca = () => {
+      document.getElementById('modalBiblioteca').style.display = 'grid';
+    };
+
+    window.seleccionarLibro = (f, n) => {
+      document.getElementById('modalBiblioteca').style.display = 'none';
+      cargarLectura([{ n, f, c: 1 }]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast(`Leyendo ${n}`, '📖');
+    };
+
+    window.cambiarDia = (d) => {
+      fechaActual.setDate(fechaActual.getDate() + d);
+      cargarLectura();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.irAHoy = () => {
+      fechaActual = new Date();
+      cargarLectura();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast('Regresando a hoy', '📅');
+    };
+
+    // Load saved preferences
+    if (localStorage.getItem('biblia365_darkmode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+    
+    const savedFontSize = localStorage.getItem('biblia365_fontsize');
+    if (savedFontSize) {
+      fontSize = parseInt(savedFontSize);
+    }
+
     cargarLectura();
-  });
-</script>
+  </script>
 </PageLayout>
