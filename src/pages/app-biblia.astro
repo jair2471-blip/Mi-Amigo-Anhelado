@@ -1245,8 +1245,26 @@ import PageLayout from '../layouts/PageLayout.astro';
 
       document.getElementById('contenido').innerHTML = lectura
         .map((it, idx) => {
-          const cap = bibleData[it.f.toLowerCase()]?.[it.c];
-          if (!cap) return '';
+          // Intentar diferentes formatos de claves para buscar el capítulo
+          let cap = null;
+          const posiblesClaves = [
+            it.f.toLowerCase(),           // genesis
+            it.f.toUpperCase(),           // GENESIS
+            it.f,                         // Genesis (como está)
+            it.f.replace(/_/g, ' ')       // 1 samuel en lugar de 1_samuel
+          ];
+          
+          for (const clave of posiblesClaves) {
+            if (bibleData[clave] && bibleData[clave][it.c]) {
+              cap = bibleData[clave][it.c];
+              break;
+            }
+          }
+          
+          if (!cap) {
+            console.warn(`No se encontró: ${it.f} capítulo ${it.c}`);
+            return '';
+          }
 
           return `
           <details ${idx === 0 ? 'open' : ''} class="capitulo-acordeon">
@@ -1260,10 +1278,19 @@ import PageLayout from '../layouts/PageLayout.astro';
                   ([n, t]) => {
                     const vId = `${it.f}_${it.c}_${n}`;
                     const highlightClass = highlights[vId] || '';
+                    // LIMPIEZA PROFUNDA del texto
+                    const textoLimpio = t
+                      .replace(/_/g, '')           // Quitar guiones bajos
+                      .replace(/\\n/g, ' ')        // Quitar \n literales
+                      .replace(/\/n/g, ' ')        // Quitar /n literales  
+                      .replace(/\n/g, ' ')         // Quitar saltos de línea reales
+                      .replace(/\s+/g, ' ')        // Normalizar espacios múltiples
+                      .trim();                      // Quitar espacios al inicio/fin
+                    
                     return `
                       <div class="versiculo" onclick="activarMenu(this, '${it.n} ${it.c}:${n}', '${vId}')">
                         <span class="num">${n}</span>
-                        <span class="txt ${highlightClass}">${t}</span>
+                        <span class="txt ${highlightClass}">${textoLimpio}</span>
                       </div>
                     `;
                   }
@@ -1274,6 +1301,7 @@ import PageLayout from '../layouts/PageLayout.astro';
         `;
         })
         .join('');
+    }
     }
 
     window.activarMenu = (el, ref, vId) => {
