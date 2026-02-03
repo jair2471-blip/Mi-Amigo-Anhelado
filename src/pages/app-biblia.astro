@@ -134,7 +134,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 
     async function cargarArchivoJSON() {
       try {
-        const res = await fetch('/biblia.json'); 
+        const res = await fetch('/biblia-final-perfecta.json'); 
         bibliaJSON = await res.json();
         window.iniciarApp();
       } catch (e) {
