@@ -140,12 +140,28 @@ import PageLayout from '../layouts/PageLayout.astro';
       }
     }
 
-    function buscarLibro(nombre) {
+   function buscarLibro(nombre) {
       if (!bibliaJSON) return null;
-      if (bibliaJSON[nombre]) return bibliaJSON[nombre];
-      const keys = Object.keys(bibliaJSON);
-      const encontrada = keys.find(k => k.toLowerCase().includes(nombre.toLowerCase()) || nombre.toLowerCase().includes(k.toLowerCase()));
-      return encontrada ? bibliaJSON[encontrada] : null;
+      
+      const nombreNorm = nombre.toLowerCase().trim();
+      const llaves = Object.keys(bibliaJSON);
+
+      // 1. PRIORIDAD MÁXIMA: Coincidencia exacta
+      // Esto evita que "Juan" se confunda con "1 Juan"
+      const exacta = llaves.find(k => k.toLowerCase().trim() === nombreNorm);
+      if (exacta) return bibliaJSON[exacta];
+
+      // 2. SEGUNDA PRIORIDAD: Si no hay exacta, buscamos con "San" o "S." 
+      // (Por si en tu JSON Juan se llama "San Juan")
+      const conSan = llaves.find(k => {
+        const kLow = k.toLowerCase();
+        return kLow === `san ${nombreNorm}` || kLow === `s. ${nombreNorm}` || kLow === `s ${nombreNorm}`;
+      });
+      if (conSan) return bibliaJSON[conSan];
+
+      // 3. ÚLTIMO RECURSO: Búsqueda flexible pero cuidada
+      // Solo si no hubo match arriba, buscamos que contenga la palabra
+      return llaves.find(k => k.toLowerCase().includes(nombreNorm)) ? bibliaJSON[llaves.find(k => k.toLowerCase().includes(nombreNorm))] : null;
     }
 
     window.iniciarApp = () => {
