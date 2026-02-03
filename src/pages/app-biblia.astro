@@ -111,7 +111,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     // 2. Funciones de Carga
     async function cargarArchivoJSON() {
       try {
-        const res = await fetch('/biblia.json'); // Lee el archivo que subiste a public
+        const res = await fetch('/biblia-final-perfecta.json'); // Lee el archivo que subiste a public
         bibliaJSON = await res.json();
         window.iniciarApp();
       } catch (e) {
