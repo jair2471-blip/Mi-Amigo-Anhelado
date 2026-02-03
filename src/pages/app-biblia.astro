@@ -2,129 +2,83 @@
 import PageLayout from '../layouts/PageLayout.astro';
 ---
 
-<PageLayout title="Biblia 365 - Modo Acordeón">
+<PageLayout title="Biblia 365 - El Amigo Anhelado">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" is:inline></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
 
   <style is:inline>
-    :root {
-      --primary: #1a4d2e; --accent: #d4a574; --bg: #faf8f5; --text: #1a202c; --surface: #ffffff;
-    }
-    body.dark-mode {
-      --bg: #0a0e0d; --text: #f7fafc; --surface: #1a1f1e; --primary: #52b788;
-    }
+    :root { --primary: #1a4d2e; --accent: #d4a574; --bg: #faf8f5; --text: #1a202c; --surface: #ffffff; }
+    body.dark-mode { --bg: #0a0e0d; --text: #f7fafc; --surface: #1a1f1e; --primary: #52b788; }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Crimson Text', serif;
-      margin: 0; padding: 0;
-      display: flex; flex-direction: column; align-items: center; /* CENTRADO TOTAL */
-      min-height: 100vh;
+    body { 
+      background-color: var(--bg); color: var(--text); font-family: 'Crimson Text', serif; 
+      margin: 0; display: flex; flex-direction: column; align-items: center; 
     }
 
-    .main-wrapper {
-      width: 100%;
-      max-width: 700px; /* Ancho de lectura perfecto */
-      padding: 20px;
-      box-sizing: border-box;
-    }
+    .main-container { width: 100%; max-width: 700px; padding: 20px; box-sizing: border-box; }
 
-    .toolbar {
-      position: sticky; top: 10px;
-      background: var(--surface);
-      padding: 10px 20px;
-      border-radius: 50px;
-      display: flex; justify-content: space-between; align-items: center;
-      z-index: 100; border: 1px solid rgba(0,0,0,0.1);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-    }
+    /* Acordeón */
+    .acordeon-item { background: var(--surface); border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.1); overflow: hidden; }
+    .acordeon-header { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .acordeon-header h2 { margin: 0; font-family: 'Playfair Display'; color: var(--primary); }
+    .acordeon-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; padding: 0 25px; }
+    .acordeon-item.active .acordeon-content { max-height: 10000px; padding: 10px 25px 30px; border-top: 1px solid rgba(0,0,0,0.05); }
 
-    button {
-      padding: 8px 15px; border: none; border-radius: 20px;
-      background: var(--primary); color: white;
-      cursor: pointer; font-weight: bold; transition: 0.3s;
-    }
-
-    /* ESTILO DEL ACORDEÓN */
-    .acordeon-item {
-      background: var(--surface);
-      border-radius: 15px;
-      margin-bottom: 15px;
-      border: 1px solid rgba(0,0,0,0.08);
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-    }
-
-    .acordeon-header {
-      padding: 20px;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--surface);
-      transition: background 0.3s;
-    }
-
-    .acordeon-header:hover { background: rgba(212, 165, 116, 0.1); }
-
-    .acordeon-header h2 {
-      margin: 0; font-family: 'Playfair Display';
-      font-size: 1.6rem; color: var(--primary);
-    }
-
-    .acordeon-content {
-      max-height: 0; /* ESCONDIDO POR DEFECTO */
-      overflow: hidden;
-      transition: max-height 0.5s ease-out, padding 0.3s;
-      padding: 0 25px;
-      background: var(--surface);
-    }
-
-    /* Cuando se abre */
-    .acordeon-item.active .acordeon-content {
-      max-height: 5000px; /* Suficiente para capítulos largos */
-      padding: 10px 25px 30px 25px;
-      border-top: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .acordeon-item.active .icon-arrow { transform: rotate(180deg); }
-
-    .versiculo { font-size: var(--f-size, 20px); line-height: 1.8; margin-bottom: 12px; display: block; }
+    /* Versículos Interactivos */
+    .v-txt { font-size: var(--f-size, 20px); line-height: 1.8; margin-bottom: 8px; display: block; padding: 4px 8px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+    .v-txt:hover { background: rgba(212, 165, 116, 0.1); }
     .v-num { color: var(--accent); font-weight: bold; margin-right: 10px; font-size: 0.8em; }
 
-    .footer-nav { display: flex; gap: 10px; margin: 30px 0 100px; }
-    .footer-nav button { flex: 1; padding: 15px; border-radius: 12px; }
-    
-    .icon-arrow { transition: transform 0.3s; font-size: 1.2rem; color: var(--accent); }
+    /* Resaltados */
+    .resaltado-amarillo { background-color: #fef08a !important; color: #000 !important; }
+    .resaltado-verde { background-color: #bbf7d0 !important; color: #000 !important; }
+    .resaltado-azul { background-color: #bfdbfe !important; color: #000 !important; }
+
+    /* Menú de herramientas flotante */
+    #menuAcciones {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: var(--primary); padding: 10px 20px; border-radius: 50px;
+      display: none; gap: 15px; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .btn-tool { background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; }
+    .btn-tool i { font-size: 1.4rem; margin-bottom: 2px; }
+
+    /* Toolbar superior */
+    .toolbar { display: flex; justify-content: space-between; align-items: center; background: var(--surface); padding: 10px 20px; border-radius: 50px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.1); }
+    button.btn-top { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
   </style>
 
-  <div class="main-wrapper">
+  <div class="main-container">
     <div style="text-align:center; padding: 20px 0;">
-      <h1 style="font-family: 'Playfair Display'; font-size: 2.8rem; color: var(--primary); margin:0;">Biblia 365</h1>
-      <p style="color: var(--accent); font-weight: bold; letter-spacing: 2px;">DÍA <span id="numDia">1</span></p>
+      <h1 style="font-family: 'Playfair Display'; font-size: 2.5rem; color: var(--primary);">Biblia 365</h1>
+      <p style="color:var(--accent)">Día <span id="numDia">1</span></p>
     </div>
 
     <div class="toolbar">
-      <button onclick="window.irHoy()" style="background:var(--accent)">Hoy</button>
-      <div style="display:flex; gap:8px;">
-        <button onclick="window.zoom(-2)">A-</button>
-        <button onclick="window.zoom(2)">A+</button>
-        <button onclick="window.modoNoche()">🌓</button>
+      <button class="btn-top" onclick="window.irHoy()">Hoy</button>
+      <div style="display:flex; gap:10px;">
+        <button class="btn-top" onclick="window.zoom(2)">A+</button>
+        <button class="btn-top" onclick="window.modoNoche()">🌓</button>
       </div>
     </div>
 
-    <div id="contenedor-acordeon">
-      </div>
+    <div id="contenedor-lectura"></div>
 
-    <div class="footer-nav">
-      <button onclick="window.cambiarDia(-1)">Anterior</button>
-      <button onclick="window.cambiarDia(1)">Siguiente</button>
+    <div style="display:flex; gap:15px; margin: 30px 0 100px;">
+      <button class="btn-top" style="flex:1; padding: 15px;" onclick="window.cambiarDia(-1)">Ayer</button>
+      <button class="btn-top" style="flex:1; padding: 15px;" onclick="window.cambiarDia(1)">Mañana</button>
     </div>
   </div>
 
+  <div id="menuAcciones">
+    <button class="btn-tool" onclick="window.resaltar('amarillo')">🟡<span>Marcar</span></button>
+    <button class="btn-tool" onclick="window.copiarTexto()">📋<span>Copiar</span></button>
+    <button class="btn-tool" onclick="window.compartirImagen()">📸<span>Imagen</span></button>
+    <button class="btn-tool" onclick="window.limpiarSeleccion()">❌<span>Cerrar</span></button>
+  </div>
+
   <script is:inline>
-    const PLAN_LIBROS = [
+    const LIBROS_DATA = [
       {n:'Génesis', id:'genesis', c:50}, {n:'Éxodo', id:'exodo', c:40}, {n:'Levítico', id:'levitico', c:27},
       {n:'Números', id:'numeros', c:36}, {n:'Deuteronomio', id:'deuteronomio', c:34}, {n:'Josué', id:'josue', c:24},
       {n:'Jueces', id:'jueces', c:21}, {n:'Rut', id:'rut', c:4}, {n:'1 Samuel', id:'1-samuel', c:31},
@@ -150,60 +104,90 @@ import PageLayout from '../layouts/PageLayout.astro';
       {n:'Apocalipsis', id:'apocalipsis', c:22}
     ];
 
-    let db = null;
-    let fechaActual = new Date();
+    let bibliaJSON = null;
+    let fecha = new Date();
     let fontSize = 20;
+    let vSeleccionado = null;
     let planFull = [];
-    PLAN_LIBROS.forEach(l => { for(let i=1; i<=l.c; i++) planFull.push({n:l.n, id:l.id, c:i}); });
+    LIBROS_DATA.forEach(l => { for(let i=1; i<=l.c; i++) planFull.push({n:l.n, id:l.id, c:i}); });
 
     async function cargar() {
       const res = await fetch('/biblia.json');
-      db = await res.json();
+      bibliaJSON = await res.json();
       render();
     }
 
     function render() {
-      const diaAnio = Math.floor((fechaActual - new Date(fechaActual.getFullYear(), 0, 0)) / 86400000);
-      document.getElementById('numDia').innerText = diaAnio;
-      
-      const idx = (diaAnio - 1) * 3;
-      const lecturas = planFull.slice(idx, idx + 3);
+      const dia = Math.floor((fecha - new Date(fecha.getFullYear(), 0, 0)) / 86400000);
+      document.getElementById('numDia').innerText = dia;
+      const lecturas = planFull.slice((dia-1)*3, (dia-1)*3 + 3);
       
       let html = "";
-      lecturas.forEach((it, index) => {
-        const capData = db[it.id] ? db[it.id][it.c] : null;
-        if(capData) {
-          // El primer capítulo aparece abierto por defecto (opcional)
-          const isActive = index === 0 ? 'active' : ''; 
-          html += `
-            <div class="acordeon-item ${isActive}" id="cap-${index}">
-              <div class="acordeon-header" onclick="window.toggleAcordeon(${index})">
-                <h2>${it.n} ${it.c}</h2>
-                <span class="icon-arrow">▼</span>
-              </div>
-              <div class="acordeon-content">`;
-          
-          Object.entries(capData).forEach(([num, txt]) => {
+      lecturas.forEach((it, idx) => {
+        const cap = bibliaJSON[it.id] ? bibliaJSON[it.id][it.c] : null;
+        if(cap) {
+          html += `<div class="acordeon-item ${idx===0?'active':''}" id="ac-${idx}">
+            <div class="acordeon-header" onclick="window.toggleAc(${idx})">
+              <h2>${it.n} ${it.c}</h2><span>▼</span>
+            </div>
+            <div class="acordeon-content">`;
+          Object.entries(cap).forEach(([num, txt]) => {
             const limpio = txt.replace(/^\d+\/n/, '').replace(/\/n/g, '<br>');
-            html += `<span class="versiculo"><span class="v-num">${num}</span>${limpio}</span>`;
+            html += `<span class="v-txt" onclick="window.seleccionarV(this, '${it.n}', ${it.c}, ${num})">
+              <span class="v-num">${num}</span>${limpio}
+            </span>`;
           });
-          
           html += `</div></div>`;
         }
       });
-      document.getElementById('contenedor-acordeon').innerHTML = html;
+      document.getElementById('contenedor-lectura').innerHTML = html;
       window.scrollTo(0,0);
     }
 
-    window.toggleAcordeon = (idx) => {
-      const item = document.getElementById(`cap-${idx}`);
-      item.classList.toggle('active');
+    // Lógica de interacción
+    window.toggleAc = (idx) => document.getElementById(`ac-${idx}`).classList.toggle('active');
+    
+    window.seleccionarV = (el, libro, cap, num) => {
+      vSeleccionado = { el, texto: el.innerText, ref: `${libro} ${cap}:${num}` };
+      document.getElementById('menuAcciones').style.display = 'flex';
+      // Marcamos visualmente el seleccionado
+      document.querySelectorAll('.v-txt').forEach(v => v.style.border = 'none');
+      el.style.border = '1px dashed var(--accent)';
+    };
+
+    window.resaltar = (color) => {
+      if(vSeleccionado) vSeleccionado.el.classList.toggle(`resaltado-${color}`);
+      window.limpiarSeleccion();
+    };
+
+    window.copiarTexto = () => {
+      const t = `${vSeleccionado.texto} (${vSeleccionado.ref})`;
+      navigator.clipboard.writeText(t);
+      alert("Copiado al portapapeles");
+      window.limpiarSeleccion();
+    };
+
+    window.compartirImagen = () => {
+      const node = vSeleccionado.el;
+      html2canvas(node, { backgroundColor: '#faf8f5' }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `Versiculo-${vSeleccionado.ref}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+      window.limpiarSeleccion();
+    };
+
+    window.limpiarSeleccion = () => {
+      document.getElementById('menuAcciones').style.display = 'none';
+      if(vSeleccionado) vSeleccionado.el.style.border = 'none';
+      vSeleccionado = null;
     };
 
     window.zoom = (n) => { fontSize += n; document.documentElement.style.setProperty('--f-size', fontSize + 'px'); };
     window.modoNoche = () => document.body.classList.toggle('dark-mode');
-    window.cambiarDia = (n) => { fechaActual.setDate(fechaActual.getDate() + n); render(); };
-    window.irHoy = () => { fechaActual = new Date(); render(); };
+    window.cambiarDia = (n) => { fecha.setDate(fecha.getDate() + n); render(); };
+    window.irHoy = () => { fecha = new Date(); render(); };
 
     document.addEventListener('DOMContentLoaded', cargar);
   </script>
