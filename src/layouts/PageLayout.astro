@@ -1,5 +1,8 @@
 ---
 const { title } = Astro.props;
+// Definimos variables de color para que sea fácil cambiarlas después
+const primaryColor = "#1a4d2e";
+const accentColor = "#d4a574";
 ---
 
 <!DOCTYPE html>
@@ -7,65 +10,126 @@ const { title } = Astro.props;
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
     
     <title>{title} | Mi Amigo Anhelado</title>
     <meta name="description" content="La enseñanza pura de Dios y el Señor Jesucristo. Reflexiones bíblicas y plan de lectura 365 días para una vida transformada." />
-    <meta name="author" content="Mi Amigo Anhelado" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://miamigoanhelado.com/" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={title + " | Mi Amigo Anhelado"} />
-    <meta property="og:description" content="Mensajes bíblicos y reflexiones diferentes. Sin filtros humanos, solo la Verdad de las Escrituras." />
-    <meta property="og:url" content="https://tu-dominio.com/" />
-    <meta property="og:image" content="https://tu-dominio.com/og-image.jpg" />
+    <meta property="og:title" content={`${title} | Mi Amigo Anhelado`} />
+    <meta property="og:description" content="Mensajes bíblicos sin filtros humanos, solo la Verdad de las Escrituras." />
+    <meta property="og:image" content="https://miamigoanhelado.com/og-image.jpg" />
 
-    <style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style define:vars={{ primaryColor, accentColor }}>
+        :root {
+            --primary: var(--primaryColor);
+            --accent: var(--accentColor);
+            --bg-soft: #fdfdfd;
+            --text-dark: #1a202c;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Crimson Text', Georgia, serif; /* Un toque más elegante y bíblico */
-            line-height: 1.8;
+            font-family: 'Crimson Text', Georgia, serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-soft);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .layout-container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 1rem;
-            background-color: #fdfdfd;
-            color: #1a202c;
+            padding: 0 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+
+        /* Nav Optimizada */
         nav {
-            padding: 1rem 0;
+            padding: 2rem 0;
             text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
         }
+
         nav a {
             text-decoration: none;
-            color: #1a4d2e; /* El verde que nos gusta */
-            font-weight: bold;
-            margin: 0 0.5rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin: 0 1rem;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+            position: relative;
         }
+
         nav a:hover {
-            color: #d4a574; /* Dorado al pasar el mouse */
+            color: var(--accent);
         }
+
+        /* Indicador sutil de página activa */
+        nav a:active, nav a:focus {
+            color: var(--primary);
+        }
+
+        main {
+            flex: 1; /* Empuja el footer hacia abajo */
+        }
+
         footer {
             text-align: center;
-            margin-top: 3rem;
-            padding: 2rem;
-            font-size: 0.9rem;
+            margin-top: 4rem;
+            padding: 3rem 1rem;
+            font-size: 0.95rem;
             color: #718096;
-            border-top: 1px solid #eee;
+            border-top: 2px solid #f1ece4;
+        }
+
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Mejora para móviles */
+        @media (max-width: 600px) {
+            nav { display: flex; justify-content: space-around; padding: 1.5rem 0; }
+            nav a { margin: 0; font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="/">Inicio</a> | 
-            <a href="/app-biblia">Biblia</a> |
-            <a href="/reflexiones" style="color: #d4a574;">Reflexiones</a>
-        </nav>
-    </header>
-    
-    <main>
-        <slot /> 
-    </main>
+    <div class="layout-container">
+        <header>
+            <nav>
+                <a href="/">Inicio</a> 
+                <a href="/app-biblia">Biblia</a> 
+                <a href="/vivencias">Personajes</a>
+                <a href="/reflexiones" style="color: var(--accent);">Reflexiones</a>
+            </nav>
+        </header>
+        
+        <main>
+            <slot /> 
+        </main>
 
-    <footer>
-        <p>&copy; 2026 📖 Mi Amigo Anhelado - Enseñanza Pura</p>
-    </footer>
+        <footer>
+            <span class="footer-brand">Mi Amigo Anhelado</span>
+            <p>&copy; {new Date().getFullYear()} — La Verdad que Liberta</p>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Enseñanza pura de Dios y el Señor Jesucristo</p>
+        </footer>
+    </div>
 </body>
 </html>
