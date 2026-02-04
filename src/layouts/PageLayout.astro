@@ -61,15 +61,20 @@ const accentColor = "#d4a574";
             text-align: center;
             border-bottom: 1px solid rgba(0,0,0,0.05);
             margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         nav a {
             text-decoration: none;
             color: var(--text-dark);
             font-weight: 600;
-            margin: 0 1rem;
+            padding: 5px 10px;
             font-size: 1.1rem;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
             position: relative;
         }
 
@@ -77,13 +82,21 @@ const accentColor = "#d4a574";
             color: var(--accent);
         }
 
-        /* Indicador sutil de página activa */
-        nav a:active, nav a:focus {
-            color: var(--primary);
+        /* Estilo especial para el botón de Blog/Reflexiones */
+        nav a.nav-blog {
+            border: 1.5px solid var(--accent);
+            border-radius: 25px;
+            padding: 5px 20px;
+            color: var(--accent);
+        }
+
+        nav a.nav-blog:hover {
+            background-color: var(--accent);
+            color: white;
         }
 
         main {
-            flex: 1; /* Empuja el footer hacia abajo */
+            flex: 1; 
         }
 
         footer {
@@ -103,10 +116,10 @@ const accentColor = "#d4a574";
             margin-bottom: 0.5rem;
         }
 
-        /* Mejora para móviles */
         @media (max-width: 600px) {
-            nav { display: flex; justify-content: space-around; padding: 1.5rem 0; }
-            nav a { margin: 0; font-size: 1rem; }
+            nav { padding: 1.5rem 0; gap: 0.5rem; }
+            nav a { font-size: 0.95rem; padding: 5px; }
+            nav a.nav-blog { padding: 5px 12px; }
         }
     </style>
 </head>
@@ -117,7 +130,7 @@ const accentColor = "#d4a574";
                 <a href="/">Inicio</a> 
                 <a href="/app-biblia">Biblia</a> 
                 <a href="/vivencias">Personajes</a>
-                <a href="/reflexiones" style="color: var(--accent);">Reflexiones</a>
+                <a href="/blog" class="nav-blog">Reflexiones</a>
             </nav>
         </header>
         
