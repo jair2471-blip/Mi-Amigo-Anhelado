@@ -2,191 +2,130 @@
 import PageLayout from '../layouts/PageLayout.astro';
 ---
 
-<PageLayout title="Vivencias Bíblicas - Héroes de la Fe">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
-
-  <style is:inline>
-    :root { --primary: #1a4d2e; --accent: #d4a574; --bg: #faf8f5; --text: #1a202c; --surface: #ffffff; }
-    body.dark-mode { --bg: #0a0e0d; --text: #f7fafc; --surface: #1a1f1e; --primary: #52b788; }
-
-    html, body { 
-      margin: 0; padding: 0; width: 100%; min-height: 100vh; 
-      display: flex; flex-direction: column; align-items: center; 
-      background-color: var(--bg); color: var(--text); font-family: 'Crimson Text', serif; 
-    }
-
-    .main-container { width: 100%; max-width: 700px; padding: 20px; box-sizing: border-box; }
-
-    /* Buscador Pro */
-    .search-box {
-      width: 100%; padding: 18px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.1);
-      background: var(--surface); color: var(--text); font-size: 1.1rem;
-      margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); outline: none;
-    }
-
-    /* Estilo de Cajas (Tu "box" mejorado) */
-    .vivencia-card {
-      background: var(--surface); border-radius: 20px; padding: 30px;
-      border-left: 8px solid var(--primary); box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-      margin-bottom: 25px; animation: slideIn 0.4s ease-out;
-    }
-
-    @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-    .vivencia-card h2 { font-family: 'Playfair Display'; color: var(--primary); font-size: 2rem; margin-top: 0; }
-    .vivencia-card h3 { color: var(--accent); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; margin-bottom: 10px; }
-    
-    .section-divider { height: 1px; background: rgba(0,0,0,0.05); margin: 20px 0; }
-
-    .btn-nav {
-      width: 100%; padding: 18px; border-radius: 50px; border: none;
-      background: var(--primary); color: white; font-weight: bold;
-      cursor: pointer; font-size: 1rem; transition: 0.3s; margin-bottom: 15px;
-    }
-    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid rgba(0,0,0,0.1); }
-
-    .nav-links { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
-    .nav-links a { color: var(--accent); text-decoration: none; font-weight: bold; font-size: 0.9rem; }
-  </style>
+<PageLayout title="Vivencias - Héroes de la Fe">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
   <div class="main-container">
     <header style="text-align:center; padding: 40px 0;">
-      <h1 style="font-family: 'Playfair Display'; font-size: 2.5rem; color: var(--primary); margin:0;">Vivencias Bíblicas</h1>
-      <p id="contador" style="color:var(--accent); font-weight:bold; margin-top:10px;">Cargando devocionales...</p>
+      <h1 class="title">Mi Amigo Anhelado</h1>
+      <p class="subtitle">Historias que Transforman</p>
     </header>
 
-    <input type="text" id="buscador" class="search-box" placeholder="🔍 Buscar personaje (David, Ester, Pablo...)" />
+    <div id="loader" style="text-align:center; color: var(--primary);">Cargando historias...</div>
 
-    <div id="contenido-vivencia">
+    <div id="hero-gallery" style="display:none;">
       </div>
 
-    <button onclick="window.siguiente()" class="btn-nav">👉 Siguiente Historia</button>
-    <button onclick="window.toggleNoche()" class="btn-nav btn-secondary">🌓 Cambiar Ambiente</button>
-
-    <div class="nav-links">
-      <a href="/">🏠 Volver al Plan 365</a>
+    <div class="nav-actions">
+      <button onclick="window.prev()" class="btn-nav">← Anterior</button>
+      <button onclick="window.next()" class="btn-nav">Siguiente →</button>
     </div>
   </div>
 
-<script is:inline>
-  const url = "https://raw.githubusercontent.com/jair2471-blip/vivenciasbiblicas/main/vivencias-biblia.json";
-  let vivencias = []; // Aquí meteremos las 64 historias una por una
-  let indice = 0;
+  <style is:inline>
+    :root { --primary: #1a4d2e; --accent: #d4a574; --bg: #faf8f5; --text: #2c3e50; }
+    
+    .main-container { width: 100%; max-width: 650px; margin: 0 auto; padding: 20px; font-family: 'Crimson Text', serif; }
+    .title { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--primary); margin: 0; }
+    .subtitle { color: var(--accent); font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 3px; }
+    
+    .card {
+      background: white; border-radius: 25px; padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      border-top: 12px solid var(--primary);
+      animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
 
-  async function cargar() {
-    try {
-      const r = await fetch(url);
-      const data = await r.json();
+    .badge-tema {
+      background: rgba(212, 165, 116, 0.15); color: var(--accent);
+      padding: 6px 18px; border-radius: 50px; font-weight: bold; font-size: 0.9rem;
+    }
+
+    .historia-txt { font-size: 1.35rem; line-height: 1.8; color: var(--text); margin: 30px 0; text-align: justify; }
+
+    /* Estilo para los versículos múltiples */
+    .palabra-box { background: #fdfaf6; padding: 25px; border-radius: 20px; border: 1px solid #f1ece4; margin-bottom: 30px; }
+    .palabra-item { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(212, 165, 116, 0.2); }
+    .palabra-item:last-child { margin-bottom: 0; padding-bottom: 0; border: none; }
+    .v-texto { font-style: italic; font-size: 1.3rem; color: var(--primary); display: block; margin-bottom: 5px; }
+    .v-ref { font-weight: bold; color: var(--accent); font-size: 0.9rem; text-transform: uppercase; }
+
+    .oracion-box {
+      background: var(--primary); color: white; padding: 30px; border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(26, 77, 46, 0.15);
+    }
+    .oracion-box h4 { color: var(--accent); margin: 0 0 10px 0; letter-spacing: 1px; }
+
+    .nav-actions { display: flex; gap: 20px; margin-top: 40px; }
+    .btn-nav {
+      flex: 1; padding: 18px; border-radius: 50px; border: none;
+      background: white; color: var(--primary); font-weight: bold; font-size: 1rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s;
+    }
+    .btn-nav:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } }
+  </style>
+
+  <script is:inline>
+    // URL de su GitHub (Asegúrese de que el JSON tenga el formato del array [{},{}])
+    const GITHUB_URL = "https://raw.githubusercontent.com/jair2471-blip/vivenciasbiblicas/main/vivencias-biblia.json";
+    
+    let vivencias = [];
+    let currentIdx = 0;
+
+    async function init() {
+      try {
+        const response = await fetch(GITHUB_URL);
+        vivencias = await response.json();
+        
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('hero-gallery').style.display = 'block';
+        
+        render();
+      } catch (error) {
+        console.error("Error al orbitar los datos:", error);
+        document.getElementById('loader').innerText = "❌ No pudimos conectar con los datos en GitHub.";
+      }
+    }
+
+    function render() {
+      const v = vivencias[currentIdx];
+      const container = document.getElementById('hero-gallery');
       
-      vivencias = []; 
+      // Mapeamos los versículos del array "palabra"
+      const palabrasHTML = v.palabra.map(p => `
+        <div class="palabra-item">
+          <span class="v-texto">"${p.texto}"</span>
+          <span class="v-ref">${p.referencia}</span>
+        </div>
+      `).join('');
 
-      if (data && data.personajes) {
-        // 1. Entramos a los nombres (Josué, Moisés...)
-        for (const nombre in data.personajes) {
-          const bloquePersonaje = data.personajes[nombre];
+      container.innerHTML = `
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <h2 style="font-family:'Playfair Display'; margin:0; font-size:2.8rem; color:var(--primary); line-height:1;">${v.personaje}</h2>
+            <span class="badge-tema">${v.tema}</span>
+          </div>
           
-          // 2. Entramos a cada historia numerada (1, 2, 3... 10)
-          for (const num in bloquePersonaje) {
-            const v = bloquePersonaje[num];
-            
-            if (v) {
-              // IMPORTANTE: Si el objeto no trae el nombre adentro, 
-              // le ponemos el nombre de la "familia" (la clave del JSON)
-              if (!v.personaje) v.personaje = nombre;
-              
-              vivencias.push(v);
-            }
-          }
-        }
-      }
+          <p class="historia-txt">${v.historia}</p>
 
-      console.log("¡Motor cargado! Total de historias encontradas:", vivencias.length);
+          <div class="palabra-box">
+            <h4 style="margin:0 0 15px 0; color:var(--accent); font-size:0.8rem; letter-spacing:2px;">ESCRITURAS CLAVE</h4>
+            ${palabrasHTML}
+          </div>
 
-      // Configuración inicial
-      const params = new URLSearchParams(window.location.search);
-      const query = params.get('buscar');
-      
-      if (query) {
-        ejecutarBusqueda(query);
-      } else {
-        const hoy = Math.floor(Date.now() / 86400000);
-        indice = hoy % vivencias.length;
-        pintar();
-      }
-
-    } catch (e) {
-      console.error("Error en la carga:", e);
-      document.getElementById("contenido-vivencia").innerHTML = "❌ Error al conectar con el servidor de historias.";
-    }
-  }
-
-  function ejecutarBusqueda(texto) {
-    if (!texto || vivencias.length === 0) return;
-    const t = texto.toLowerCase().trim();
-    
-    // El buscador ahora encuentra la PRIMERA coincidencia de ese personaje
-    const nuevoIndice = vivencias.findIndex(v => 
-      v.personaje.toLowerCase().includes(t) || 
-      (v.categoria && v.categoria.toLowerCase().includes(t))
-    );
-
-    if (nuevoIndice !== -1) {
-      indice = nuevoIndice;
-      pintar();
-    }
-  }
-
-  function pintar() {
-    const v = vivencias[indice];
-    if (!v) return;
-
-    // Actualizamos el contador para que el usuario sepa en qué número va
-    const contElem = document.getElementById("contador");
-    if (contElem) contElem.innerText = `📖 HISTORIA ${indice + 1} DE ${vivencias.length}`;
-    
-    const area = document.getElementById("contenido-vivencia");
-    area.innerHTML = `
-      <div class="vivencia-card" style="animation: slideUp 0.4s ease;">
-        <h3 style="color:var(--accent); text-transform:uppercase; letter-spacing:1px;">🌟 Devocional de Personaje</h3>
-        <h2 style="font-family:'Playfair Display'; font-size:2.8rem; color:var(--primary); margin:10px 0;">${v.personaje}</h2>
-        
-        <div style="background:var(--accent); color:white; display:inline-block; padding:4px 12px; border-radius:4px; font-size:0.8rem; font-weight:bold; margin-bottom:20px;">
-          TEMA: ${v.categoria || 'Vivencia'}
+          <div class="oracion-box">
+            <h4>🙏 ORACIÓN</h4>
+            <p style="margin:0; font-size:1.15rem; line-height:1.6; font-style: italic;">${v.oracion}</p>
+          </div>
         </div>
-        
-        <div style="font-size:1.3rem; line-height:1.8; color:var(--text); text-align:justify; margin-bottom:30px;">
-          ${v.vivencia}
-        </div>
-        
-        <div style="background:rgba(0,0,0,0.03); padding:25px; border-radius:15px; border-left:6px solid var(--primary); margin-bottom:25px;">
-          <h3 style="margin-top:0; color:var(--primary);">✝️ LA PALABRA</h3>
-          <p style="font-style:italic; font-size:1.4rem;">"${v.versiculo}"</p>
-          <p style="margin-bottom:0; font-weight:bold; color:var(--accent);"><small>${v.extra || ''}</small></p>
-        </div>
-
-        <div style="background:var(--primary); color:white; padding:25px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1);">
-          <h3 style="margin-top:0; color:var(--accent);">🙏 ORACIÓN</h3>
-          <p style="font-size:1.1rem; line-height:1.6; margin:0;">${v.oracion}</p>
-        </div>
-      </div>
-    `;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // BOTÓN SIGUIENTE: Ahora navegará por las 64 historias una tras otra
-  window.siguiente = () => {
-    if (vivencias.length > 0) {
-      indice = (indice + 1) % vivencias.length;
-      pintar();
+      `;
     }
-  };
 
-  document.addEventListener('DOMContentLoaded', () => {
-    cargar();
-    const inputB = document.getElementById("buscador");
-    if (inputB) {
-      inputB.addEventListener("input", (e) => ejecutarBusqueda(e.target.value));
-    }
-  });
-</script>
+    window.next = () => { currentIdx = (currentIdx + 1) % vivencias.length; render(); window.scrollTo({top:0, behavior:'smooth'}); }
+    window.prev = () => { currentIdx = (currentIdx - 1 + vivencias.length) % vivencias.length; render(); window.scrollTo({top:0, behavior:'smooth'}); }
+
+    init();
+  </script>
 </PageLayout>
