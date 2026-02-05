@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# No queremos que indexen archivos de configuración o carpetas vacías
+Disallow: /npm-debug.log
+Disallow: /node_modules/
+
+# Le decimos dónde está el mapa de la mina de oro
+Sitemap: https://miamigoanhelado.com/sitemap-index.xml
