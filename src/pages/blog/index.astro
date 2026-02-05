@@ -2,94 +2,144 @@
 import { getCollection } from 'astro:content';
 import PageLayout from '../../layouts/PageLayout.astro';
 
+// Traemos los posts y los ordenamos por fecha
 const posts = (await getCollection('blog')).sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 ---
 
-<PageLayout title="Blog de Reflexiones">
-    <main class="blog-main">
-        <section class="intro-text">
-            <h1>Reflexiones de Fe</h1>
-            <p>Enseñanza pura para una vida transformada.</p>
-        </section>
+<PageLayout title="Reflexiones Bíblicas">
+    <main class="blog-container">
+        <header class="blog-header">
+            <span class="subtitle">ENSEÑANZA PURA</span>
+            <h1>Crónicas de la Verdad</h1>
+            <div class="header-line"></div>
+            <p class="description">Artículos directos basados únicamente en la Palabra, sin filtros ni interpretaciones humanas.</p>
+        </header>
 
-        <section>
-            <ul>
-                {
-                    posts.map((post) => (
-                        <li>
-                            <a href={`/blog/${post.id}/`}>
-                                {post.data.heroImage ? (
-                                    <img width={720} height={360} src={post.data.heroImage} alt={post.data.title} />
-                                ) : (
-                                    /* ESTO SE MUESTRA SI NO HAY IMAGEN */
-                                    <div class="placeholder-img">
-                                        <span>📖</span>
-                                    </div>
-                                )}
-                                <div class="post-info">
-                                    <h4 class="title">{post.data.title}</h4>
-                                    <p class="date">
-                                        {post.data.pubDate.toLocaleDateString('es-ES', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric',
-                                        })}
-                                    </p>
-                                </div>
-                            </a>
-                        </li>
-                    ))
-                }
-            </ul>
+        <section class="posts-list">
+            {posts.map((post) => (
+                <article class="post-item">
+                    <a href={`/blog/${post.id}/`}>
+                        <div class="post-content">
+                            <span class="post-date">
+                                {post.data.pubDate.toLocaleDateString('es-ES', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                })}
+                            </span>
+                            <h2>{post.data.title}</h2>
+                            <p>{post.data.description}</p>
+                            <span class="read-link">Continuar leyendo →</span>
+                        </div>
+                    </a>
+                </article>
+            ))}
         </section>
     </main>
 </PageLayout>
 
 <style>
-    .blog-main { width: 100%; max-width: 960px; margin: 0 auto; padding: 3rem 1rem; }
-    .intro-text { text-align: center; margin-bottom: 3rem; }
-    .intro-text h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: #1a4d2e; }
-    
-    ul { display: flex; flex-wrap: wrap; gap: 2rem; list-style-type: none; margin: 0; padding: 0; }
-    ul li { 
-        width: calc(50% - 1rem); background: white; border-radius: 15px; 
-        overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-        transition: transform 0.3s ease; border: 1px solid rgba(0,0,0,0.05);
+    .blog-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem;
     }
-    ul li:hover { transform: translateY(-5px); border-color: #d4a574; }
-    ul li:first-child { width: 100%; margin-bottom: 1rem; text-align: center; }
-    
-    /* ESTILO DEL REEMPLAZO DE IMAGEN */
-    .placeholder-img {
-        width: 100%;
-        height: 240px;
-        background: linear-gradient(135deg, #1a4d2e 0%, #0d2b1a 100%);
+
+    .blog-header {
+        text-align: center;
+        margin-bottom: 5rem;
+    }
+
+    .subtitle {
+        color: var(--accent);
+        font-weight: 700;
+        letter-spacing: 3px;
+        font-size: 0.85rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        color: var(--primary);
+        margin: 0;
+    }
+
+    .header-line {
+        width: 100px;
+        height: 3px;
+        background: var(--accent);
+        margin: 1.5rem auto;
+    }
+
+    .description {
+        font-style: italic;
+        color: #555;
+        font-size: 1.2rem;
+    }
+
+    .posts-list {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 4rem;
+        flex-direction: column;
+        gap: 4rem;
+    }
+
+    .post-item a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .post-content {
+        padding: 2rem;
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 12px;
+        background: #fff;
+        transition: all 0.3s ease;
         position: relative;
     }
-    .placeholder-img::after {
-        content: "";
-        position: absolute;
-        inset: 15px;
-        border: 1px solid rgba(212, 165, 116, 0.3);
-        border-radius: 10px;
+
+    .post-content:hover {
+        border-color: var(--accent);
+        box-shadow: 0 10px 30px rgba(26, 77, 46, 0.05);
+        transform: translateY(-3px);
     }
-    ul li:first-child .placeholder-img { height: 360px; }
 
-    img { width: 100%; height: auto; object-fit: cover; }
-    .post-info { padding: 1.5rem; }
-    .title { margin: 0; color: #1a4d2e; line-height: 1.2; font-size: 1.5rem; font-family: 'Playfair Display', serif; }
-    .date { margin-top: 0.5rem; color: #d4a574; font-weight: bold; font-size: 0.9rem; }
-    ul li a { text-decoration: none; }
+    .post-date {
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
 
-    @media (max-width: 720px) {
-        ul { gap: 1rem; }
-        ul li { width: 100%; }
-        .placeholder-img { height: 180px; }
+    h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        color: var(--primary);
+        margin: 0.8rem 0;
+        line-height: 1.2;
+    }
+
+    .post-content p {
+        color: #4a5568;
+        font-size: 1.15rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .read-link {
+        font-weight: 700;
+        color: var(--primary);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+
+    @media (max-width: 600px) {
+        h1 { font-size: 2.5rem; }
+        .blog-container { padding-top: 2rem; }
     }
 </style>
