@@ -14,13 +14,17 @@ Jesús fue implacable con el sistema religioso de su época. A los líderes que 
 
 Pero nota la diferencia: Jesús atacaba la **estructura**, la **mentira** y el **orgullo** de los que mandaban, no a la gente que estaba ahí buscando consuelo.
 
-## El corazón del buscador sincero
+### El corazón del buscador sincero
 
 Mientras Jesús denunciaba al sistema religioso, Su mirada hacia las personas era de profunda compasión:
 
 > "Y al ver las multitudes, tuvo compasión de ellas; porque estaban desamparadas y dispersas como ovejas que no tienen pastor." (Mateo 9:36)
 
-En muchas de esas iglesias que hoy criticamos, hay personas que están orando con lágrimas, que aman a Dios con sinceridad y que simplemente no han tenido a nadie que les enseñe la **enseñanza pura** sin filtros humanos. 
+En muchas de esas iglesias que hoy criticamos, hay personas que están orando con lágrimas, que aman a Dios con sinceridad y que simplemente no han tenido a nadie que les enseñe la **enseñanza pura** sin filtros humanos.
+
+**Amar a la oveja no significa bendecir el error ni decir que todo camino es válido.** Jesús nunca dejó a las personas donde las encontró: al paralítico lo sanó, pero también le dijo “no peques más”; a la mujer samaritana la escuchó, pero no confirmó su confusión. La compasión verdadera no anestesia la conciencia, la despierta. El amor real no te deja en la mentira; te da la mano para sacarte de ella.
+
+Amar a la oveja no significa bendecir el error ni decir que todo camino es válido. Jesús nunca dejó a las personas donde las encontró: al paralítico lo sanó, pero también le dijo “no peques más”; a la mujer samaritana la escuchó, pero no confirmó su confusión. La compasión verdadera no anestesia la conciencia, la despierta.
 
 ## Crítica vacía vs. Luz transformadora
 
