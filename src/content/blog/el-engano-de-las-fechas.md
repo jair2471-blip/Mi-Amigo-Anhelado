@@ -6,8 +6,6 @@ heroImage: ""
 tags: ["Profecía", "Jesucristo", "Madurez Espiritual"]
 ---
 
-# El fin del mundo: La trampa de las fechas y la Verdad de Jesucristo
-
 Cada cierto tiempo aparece un nuevo "iluminado" o un movimiento religioso con una fecha exacta, un cálculo matemático o una "revelación especial" sobre el día en que todo terminará. Y cada vez, sin falta, el tiempo pasa y sus afirmaciones terminan en el basurero de la historia.
 
 Como lectores de la Biblia y buscadores de la **enseñanza pura**, debemos preguntarnos: ¿Por qué tantos caen en este engaño?
