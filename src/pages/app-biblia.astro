@@ -123,15 +123,14 @@ import PageLayout from '../layouts/PageLayout.astro';
     </footer>
   </div>
 
-  <div id="canvas-render">
-    <div style="border: 2px solid #d4a574; padding: 40px; background: white;">
-      <span style="color: #d4a574; font-size: 4rem; font-family: 'Playfair Display'; line-height: 0;">“</span>
-      <p id="render-texto" style="font-family: 'Crimson Text'; font-size: 2.2rem; color: #1a4d2e; line-height: 1.5; margin: 20px 0; font-style: italic;"></p>
-      <div style="width: 50px; height: 2px; background: #d4a574; margin: 20px auto;"></div>
-      <p id="render-ref" style="font-family: 'Playfair Display'; font-size: 1.2rem; color: #d4a574; text-transform: uppercase; letter-spacing: 3px;"></p>
-      <p style="margin-top: 40px; font-size: 0.8rem; color: #aaa; letter-spacing: 2px;">MI AMIGO ANHELADO</p>
-    </div>
+  <div id="render-card" style="border: 15px solid #1a4d2e; padding: 60px; background: #faf8f5; transition: all 0.3s;">
+    <span id="render-quote" style="color: #d4a574; font-size: 4rem; font-family: 'Playfair Display'; line-height: 0;">“</span>
+    <p id="render-texto" style="font-family: 'Crimson Text'; font-size: 2.2rem; color: #1a4d2e; line-height: 1.5; margin: 20px 0; font-style: italic;"></p>
+    <div id="render-divider" style="width: 50px; height: 2px; background: #d4a574; margin: 20px auto;"></div>
+    <p id="render-ref" style="font-family: 'Playfair Display'; font-size: 1.2rem; color: #d4a574; text-transform: uppercase; letter-spacing: 3px;"></p>
+    <p style="margin-top: 40px; font-size: 0.8rem; color: #aaa; letter-spacing: 2px;">BIBLIA 365</p>
   </div>
+</div>
 
   <div id="modalBib" onclick="if(event.target==this) window.cerrarBib()">
     <div class="modal-box" id="contenidoModal"></div>
@@ -284,26 +283,7 @@ import PageLayout from '../layouts/PageLayout.astro';
       window.cerrarMenu(); 
     };
 
-    window.descargarImg = () => {
-  document.getElementById('render-texto').innerText = vSel.texto;
-  document.getElementById('render-ref').innerText = vSel.ref;
-  
-  const target = document.getElementById('canvas-render');
-  
-  // Agregamos opciones para velocidad
-  html2canvas(target, { 
-    scale: 2, // 3 era mucho, 2 es perfecto para WhatsApp
-    useCORS: true,
-    logging: false,
-    backgroundColor: null 
-  }).then(canvas => {
-    const a = document.createElement('a');
-    a.download = `Biblia365-${vSel.ref}.png`;
-    a.href = canvas.toDataURL("image/png");
-    a.click();
-    window.cerrarMenu();
-  });
-};
+   v
 
     window.cerrarMenu = () => { 
       document.getElementById('menuAcciones').style.display = 'none'; 
