@@ -109,7 +109,12 @@ import PageLayout from '../layouts/PageLayout.astro';
       </div>
     </nav>
 
-    <main id="contenedor-lectura"></main>
+   <main id="contenedor-lectura">
+  <div style="text-align:center; padding:50px; opacity:0.5;">
+    <p>Iniciando Interfaz Neural...</p>
+    <div class="spinner"></div>
+  </div>
+</main>
 
     <footer style="display:flex; gap:15px; margin: 40px 0 120px; width: 100%;">
       <button class="btn-top" style="flex:1; padding: 18px;" onclick="window.cambiarDia(-1)">◀ Ayer</button>
@@ -174,14 +179,30 @@ import PageLayout from '../layouts/PageLayout.astro';
     let planFull = [];
     LIBROS.forEach(l => { for(let i=1; i<=l.c; i++) planFull.push({n:l.n, id:l.id, c:i}); });
 
-    async function iniciar() {
-      try {
-        const res = await fetch('/biblia.json');
-        db = await res.json();
-        renderPlan();
-      } catch(e) { console.error("Error", e); }
+   async function iniciar() {
+  try {
+    // 1. Intentar cargar desde la memoria del navegador (Rápido)
+    const cached = localStorage.getItem('biblia_data');
+    if (cached) {
+      db = JSON.parse(cached);
+      renderPlan(); // Renderiza de una vez
     }
 
+    // 2. Descargar en segundo plano para actualizar si es necesario
+    const res = await fetch('/biblia.json');
+    db = await res.json();
+    
+    // Guardar para la próxima vez
+    localStorage.setItem('biblia_data', JSON.stringify(db));
+    
+    // Si no había nada en caché, renderizamos ahora
+    if (!cached) renderPlan();
+    
+  } catch(e) { 
+    console.error("Error de conexión", e); 
+    document.getElementById('contenedor-lectura').innerHTML = "Error al conectar con la base de datos.";
+  }
+}
     function renderPlan() {
       const start = new Date(fecha.getFullYear(), 0, 0);
       const diff = fecha - start;
@@ -264,19 +285,25 @@ import PageLayout from '../layouts/PageLayout.astro';
     };
 
     window.descargarImg = () => {
-      // Preparamos el renderizador invisible
-      document.getElementById('render-texto').innerText = vSel.texto;
-      document.getElementById('render-ref').innerText = vSel.ref;
-      
-      const target = document.getElementById('canvas-render');
-      html2canvas(target, { scale: 3 }).then(canvas => {
-        const a = document.createElement('a');
-        a.download = `Biblia365-${vSel.ref}.png`;
-        a.href = canvas.toDataURL("image/png");
-        a.click();
-      });
-      window.cerrarMenu();
-    };
+  document.getElementById('render-texto').innerText = vSel.texto;
+  document.getElementById('render-ref').innerText = vSel.ref;
+  
+  const target = document.getElementById('canvas-render');
+  
+  // Agregamos opciones para velocidad
+  html2canvas(target, { 
+    scale: 2, // 3 era mucho, 2 es perfecto para WhatsApp
+    useCORS: true,
+    logging: false,
+    backgroundColor: null 
+  }).then(canvas => {
+    const a = document.createElement('a');
+    a.download = `Biblia365-${vSel.ref}.png`;
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+    window.cerrarMenu();
+  });
+};
 
     window.cerrarMenu = () => { 
       document.getElementById('menuAcciones').style.display = 'none'; 
