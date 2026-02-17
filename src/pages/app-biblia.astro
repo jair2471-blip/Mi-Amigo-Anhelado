@@ -33,10 +33,9 @@ import PageLayout from '../layouts/PageLayout.astro';
     .main-container { 
       width: 100%; max-width: 750px; padding: 20px;
       box-sizing: border-box; display: flex; flex-direction: column;
-      min-height: 100vh; /* Evita que el footer suba al inicio */
+      min-height: 100vh;
     }
 
-    /* BARRA DE PROGRESO FIJA */
     .progress-container {
       position: sticky; top: 0; z-index: 1000;
       width: 100%; background: var(--bg); padding: 10px 0;
@@ -61,12 +60,15 @@ import PageLayout from '../layouts/PageLayout.astro';
       background: var(--card-bg); border-radius: 24px; margin-bottom: 25px; 
       border: 1px solid rgba(0,0,0,0.05); overflow: hidden; 
       box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      transition: border-color 0.3s;
     }
     .acordeon-item.active { border-color: var(--accent); }
     .acordeon-header { padding: 20px 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
     .acordeon-header h2 { margin: 0; font-family: 'Playfair Display'; color: var(--primary); font-size: 1.5rem; }
+    .acordeon-header span { transition: transform 0.3s; }
+    .acordeon-item.active .acordeon-header span { transform: rotate(180deg); }
 
-    .acordeon-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; padding: 0 30px; }
+    .acordeon-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease, padding 0.3s; padding: 0 30px; }
     .acordeon-item.active .acordeon-content { max-height: 20000px; padding: 10px 30px 40px; }
 
     .v-txt { 
@@ -76,16 +78,12 @@ import PageLayout from '../layouts/PageLayout.astro';
     .v-txt.read { opacity: 0.5; }
     .v-num { color: var(--accent); font-weight: bold; margin-right: 10px; }
 
-    /* MENU FLOTANTE */
     #menuAcciones { 
       position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
       background: var(--primary); padding: 12px 25px; border-radius: 50px; 
       display: none; gap: 20px; z-index: 2000; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     }
     .btn-tool { background: none; border: none; color: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; }
-
-    /* LOADER */
-    #loader { text-align: center; padding: 50px; font-family: 'Playfair Display'; color: var(--accent); }
   </style>
 
   <div class="main-container">
@@ -107,7 +105,7 @@ import PageLayout from '../layouts/PageLayout.astro';
       </div>
     </nav>
 
-    <div id="loader">Un momento, preparando tu lectura...</div>
+    <div id="loader" style="text-align:center; padding:50px; color:var(--accent);">Preparando lectura...</div>
     <main id="contenedor-lectura"></main>
 
     <footer style="display:flex; gap:10px; margin: 40px 0 100px; width: 100%;">
@@ -167,14 +165,9 @@ import PageLayout from '../layouts/PageLayout.astro';
         document.getElementById('loader').style.display = 'none';
         renderPlan();
         
-        // RECUPERAR SCROLL CON SEGURIDAD
         const sPos = localStorage.getItem('b365_scroll');
-        if(sPos) {
-            setTimeout(() => window.scrollTo(0, parseInt(sPos)), 100);
-        }
-      } catch(e) { 
-        document.getElementById('loader').innerText = "Error al cargar la Biblia. Revisa tu conexión.";
-      }
+        if(sPos) setTimeout(() => window.scrollTo(0, parseInt(sPos)), 150);
+      } catch(e) { console.error(e); }
     }
 
     function renderPlan() {
@@ -182,7 +175,6 @@ import PageLayout from '../layouts/PageLayout.astro';
       const diff = fecha - start;
       const diaAnio = Math.floor(diff / 86400000);
       document.getElementById('labelDia').innerText = `DÍA ${diaAnio}`;
-      
       const hoy = planFull.slice((diaAnio-1)*3, (diaAnio-1)*3 + 3);
       dibujarLectura(hoy);
       actualizarProgreso();
@@ -215,11 +207,23 @@ import PageLayout from '../layouts/PageLayout.astro';
       document.getElementById('contenedor-lectura').innerHTML = html;
     }
 
+    // --- CORRECCIÓN AQUÍ ---
     window.toggleAc = (i) => {
-        document.querySelectorAll('.acordeon-item').forEach((el, idx) => {
-            el.classList.toggle('active', idx === i);
-            if(idx === i) localStorage.setItem('b365_acIndex', i);
-        });
+        const items = document.querySelectorAll('.acordeon-item');
+        const target = items[i];
+        const wasActive = target.classList.contains('active');
+
+        // Cerramos todos
+        items.forEach(el => el.classList.remove('active'));
+
+        // Si NO estaba activo, lo abrimos
+        if (!wasActive) {
+            target.classList.add('active');
+            localStorage.setItem('b365_acIndex', i);
+        } else {
+            // Si ya estaba activo y lo tocamos, se queda todo cerrado
+            localStorage.setItem('b365_acIndex', -1);
+        }
     };
 
     window.seleccionarV = (el, ref) => {
@@ -242,7 +246,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     function actualizarProgreso() {
         const total = document.querySelectorAll('.v-txt').length;
         const read = document.querySelectorAll('.v-txt.read').length;
-        document.getElementById('progreso-valor').style.width = (read/total*100) + '%';
+        if(total > 0) document.getElementById('progreso-valor').style.width = (read/total*100) + '%';
     }
 
     window.zoom = (n) => { 
@@ -268,7 +272,7 @@ import PageLayout from '../layouts/PageLayout.astro';
         if(resaltados[ref]) delete resaltados[ref];
         else resaltados[ref] = true;
         localStorage.setItem('b365_favs', JSON.stringify(resaltados));
-        renderPlan(); // Refresca visualmente
+        renderPlan();
         window.cerrarMenu();
     };
 
