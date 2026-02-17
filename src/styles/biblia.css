@@ -1,3 +1,7 @@
+/* =========================
+   VARIABLES DE TEMA
+========================= */
+
 :root { 
   --primary: #1a4d2e; 
   --accent: #d4a574; 
@@ -5,7 +9,12 @@
   --text: #1a202c; 
   --surface: #ffffff; 
   --card-bg: #ffffff;
+  --border: rgba(0,0,0,0.08);
 }
+
+/* =========================
+   MODO OSCURO
+========================= */
 
 body.dark-mode { 
   --bg: #0d1110; 
@@ -13,4 +22,20 @@ body.dark-mode {
   --surface: #1a1f1e; 
   --card-bg: #161b1a;
   --primary: #52b788; 
+  --border: rgba(255,255,255,0.05);
+}
+
+/* =========================
+   RESET BASE
+========================= */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+  font-family: 'Crimson Text', serif;
 }
