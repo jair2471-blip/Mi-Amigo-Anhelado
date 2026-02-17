@@ -8,20 +8,13 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   <style is:inline>
     :root { 
-      --primary: #1a4d2e; 
-      --accent: #d4a574; 
-      --bg: #faf8f5; 
-      --text: #1a202c; 
-      --surface: rgba(255, 255, 255, 0.9); 
-      --card-bg: #ffffff;
-      --f-size: 21px;
+      --primary: #1a4d2e; --accent: #d4a574; --bg: #faf8f5; --text: #1a202c; 
+      --surface: rgba(255, 255, 255, 0.9); --card-bg: #ffffff; --f-size: 21px;
     }
-
     body.dark-mode { 
       --bg: #0d1110; --text: #e2e8f0; --surface: rgba(26, 31, 30, 0.9); 
       --card-bg: #161b1a; --primary: #52b788; 
     }
-
     html, body {
       margin: 0; padding: 0; width: 100%; min-height: 100vh;
       display: flex; flex-direction: column; align-items: center;
@@ -29,61 +22,53 @@ import PageLayout from '../layouts/PageLayout.astro';
       transition: background 0.3s ease; font-family: 'Crimson Text', serif;
       scroll-behavior: smooth;
     }
+    .main-container { width: 100%; max-width: 750px; padding: 20px; box-sizing: border-box; min-height: 100vh; }
 
-    .main-container { 
-      width: 100%; max-width: 750px; padding: 20px;
-      box-sizing: border-box; display: flex; flex-direction: column;
-      min-height: 100vh;
-    }
-
-    .progress-container {
-      position: sticky; top: 0; z-index: 1000;
-      width: 100%; background: var(--bg); padding: 10px 0;
-    }
+    /* PROGRESO */
+    .progress-container { position: sticky; top: 0; z-index: 1000; width: 100%; background: var(--bg); padding: 10px 0; }
     .progress-bar { height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
     #progreso-valor { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s; }
 
+    /* TOOLBAR */
     .toolbar { 
       display: flex; justify-content: space-between; align-items: center; 
       background: var(--surface); padding: 12px 20px; border-radius: 50px; 
-      margin: 10px 0 30px; border: 1px solid rgba(0,0,0,0.1); 
-      box-shadow: 0 8px 32px rgba(0,0,0,0.05); backdrop-filter: blur(10px);
+      margin: 10px 0 30px; border: 1px solid rgba(0,0,0,0.1); backdrop-filter: blur(10px);
     }
+    .btn-top { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; }
 
-    .btn-top { 
-      background: var(--primary); color: white; border: none; 
-      padding: 10px 18px; border-radius: 20px; cursor: pointer; 
-      font-weight: bold; transition: transform 0.2s;
-    }
-
-    .acordeon-item { 
-      background: var(--card-bg); border-radius: 24px; margin-bottom: 25px; 
-      border: 1px solid rgba(0,0,0,0.05); overflow: hidden; 
-      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-      transition: border-color 0.3s;
-    }
+    /* ACORDEON */
+    .acordeon-item { background: var(--card-bg); border-radius: 24px; margin-bottom: 25px; border: 1px solid rgba(0,0,0,0.05); overflow: hidden; transition: 0.3s; }
     .acordeon-item.active { border-color: var(--accent); }
     .acordeon-header { padding: 20px 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
     .acordeon-header h2 { margin: 0; font-family: 'Playfair Display'; color: var(--primary); font-size: 1.5rem; }
-    .acordeon-header span { transition: transform 0.3s; }
-    .acordeon-item.active .acordeon-header span { transform: rotate(180deg); }
-
-    .acordeon-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease, padding 0.3s; padding: 0 30px; }
+    .acordeon-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; padding: 0 30px; }
     .acordeon-item.active .acordeon-content { max-height: 20000px; padding: 10px 30px 40px; }
 
-    .v-txt { 
-      font-size: var(--f-size); line-height: 1.7; margin-bottom: 8px; 
-      display: block; padding: 10px; border-radius: 12px; cursor: pointer; 
-    }
+    /* TEXTO */
+    .v-txt { font-size: var(--f-size); line-height: 1.7; margin-bottom: 8px; display: block; padding: 10px; border-radius: 12px; cursor: pointer; }
     .v-txt.read { opacity: 0.5; }
     .v-num { color: var(--accent); font-weight: bold; margin-right: 10px; }
 
+    /* MENÚ FLOTANTE */
     #menuAcciones { 
       position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
       background: var(--primary); padding: 12px 25px; border-radius: 50px; 
-      display: none; gap: 20px; z-index: 2000; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      display: none; gap: 15px; z-index: 2000; box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     }
-    .btn-tool { background: none; border: none; color: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; }
+    .btn-tool { background: none; border: none; color: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; gap: 4px; }
+
+    /* MODAL BIBLIOTECA */
+    #modalBib { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; place-items: center; z-index: 3000; padding: 20px; }
+    .modal-box { background: var(--bg); padding: 30px; border-radius: 30px; width: 100%; max-width: 600px; max-height: 80vh; overflow-y: auto; }
+    .grid-libros, .grid-caps { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
+    .btn-lib { background: var(--card-bg); border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 15px; cursor: pointer; color: var(--text); font-weight: 600; }
+
+    /* RENDER PARA IMAGEN (OCULTO) */
+    #canvas-render {
+      position: absolute; left: -9999px; top: 0; width: 600px; padding: 60px; background: #faf8f5;
+      text-align: center; border: 15px solid #1a4d2e;
+    }
   </style>
 
   <div class="main-container">
@@ -97,7 +82,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     </header>
 
     <nav class="toolbar">
-      <button class="btn-top" onclick="window.abrirBib()">📚 Libros</button>
+      <button class="btn-top" onclick="window.abrirBib()">📚 Biblioteca</button>
       <div style="display:flex; gap:8px;">
         <button class="btn-top" onclick="window.zoom(-2)">A-</button>
         <button class="btn-top" onclick="window.zoom(2)">A+</button>
@@ -105,7 +90,6 @@ import PageLayout from '../layouts/PageLayout.astro';
       </div>
     </nav>
 
-    <div id="loader" style="text-align:center; padding:50px; color:var(--accent);">Preparando lectura...</div>
     <main id="contenedor-lectura"></main>
 
     <footer style="display:flex; gap:10px; margin: 40px 0 100px; width: 100%;">
@@ -115,16 +99,26 @@ import PageLayout from '../layouts/PageLayout.astro';
     </footer>
   </div>
 
+  <div id="canvas-render">
+    <div style="border: 2px solid #d4a574; padding: 40px; background: white;">
+      <p id="render-texto" style="font-family: 'Crimson Text'; font-size: 2rem; color: #1a4d2e; font-style: italic;"></p>
+      <p id="render-ref" style="font-family: 'Playfair Display'; font-size: 1.2rem; color: #d4a574; margin-top: 20px;"></p>
+    </div>
+  </div>
+
+  <div id="modalBib" onclick="if(event.target==this) window.cerrarBib()">
+    <div class="modal-box" id="contenidoModal"></div>
+  </div>
+
   <div id="menuAcciones">
     <button class="btn-tool" onclick="window.resaltar()">🟡<span>Marca</span></button>
     <button class="btn-tool" onclick="window.compartir()">📤<span>Enviar</span></button>
+    <button class="btn-tool" onclick="window.descargarImg()">📸<span>Foto</span></button>
     <button class="btn-tool" onclick="window.leerVoz()">🔊<span>Oír</span></button>
     <button class="btn-tool" onclick="window.cerrarMenu()">❌<span>Cerrar</span></button>
   </div>
 
   <script is:inline>
-    let db = null;
-    let planFull = [];
     const LIBROS = [
       {n:'Génesis', id:'genesis', c:50}, {n:'Éxodo', id:'exodo', c:40}, {n:'Levítico', id:'levitico', c:27},
       {n:'Números', id:'numeros', c:36}, {n:'Deuteronomio', id:'deuteronomio', c:34}, {n:'Josué', id:'josue', c:24},
@@ -151,23 +145,24 @@ import PageLayout from '../layouts/PageLayout.astro';
       {n:'Apocalipsis', id:'apocalipsis', c:22}
     ];
 
+    let db = null;
+    let planFull = [];
     LIBROS.forEach(l => { for(let i=1; i<=l.c; i++) planFull.push({n:l.n, id:l.id, c:i}); });
 
     let fecha = localStorage.getItem('b365_fecha') ? new Date(localStorage.getItem('b365_fecha')) : new Date();
     let resaltados = JSON.parse(localStorage.getItem('b365_favs')) || {};
     let leidos = JSON.parse(localStorage.getItem('b365_leidos')) || [];
     let fontSize = parseInt(localStorage.getItem('b365_fsize')) || 21;
+    let vSel = null;
 
     async function iniciar() {
       try {
         const res = await fetch('/biblia.json');
         db = await res.json();
-        document.getElementById('loader').style.display = 'none';
         renderPlan();
-        
         const sPos = localStorage.getItem('b365_scroll');
-        if(sPos) setTimeout(() => window.scrollTo(0, parseInt(sPos)), 150);
-      } catch(e) { console.error(e); }
+        if(sPos) setTimeout(() => window.scrollTo(0, parseInt(sPos)), 200);
+      } catch(e) { console.error("Error cargando Biblia", e); }
     }
 
     function renderPlan() {
@@ -184,7 +179,6 @@ import PageLayout from '../layouts/PageLayout.astro';
     function dibujarLectura(items) {
       let html = "";
       const acOpen = localStorage.getItem('b365_acIndex') || 0;
-
       items.forEach((it, idx) => {
         const cap = db[it.id] ? db[it.id][it.c] : null;
         if(cap) {
@@ -207,27 +201,20 @@ import PageLayout from '../layouts/PageLayout.astro';
       document.getElementById('contenedor-lectura').innerHTML = html;
     }
 
-    // --- CORRECCIÓN AQUÍ ---
     window.toggleAc = (i) => {
-        const items = document.querySelectorAll('.acordeon-item');
-        const target = items[i];
-        const wasActive = target.classList.contains('active');
-
-        // Cerramos todos
-        items.forEach(el => el.classList.remove('active'));
-
-        // Si NO estaba activo, lo abrimos
-        if (!wasActive) {
-            target.classList.add('active');
-            localStorage.setItem('b365_acIndex', i);
-        } else {
-            // Si ya estaba activo y lo tocamos, se queda todo cerrado
-            localStorage.setItem('b365_acIndex', -1);
-        }
+      const items = document.querySelectorAll('.acordeon-item');
+      const wasActive = items[i].classList.contains('active');
+      items.forEach(el => el.classList.remove('active'));
+      if (!wasActive) {
+        items[i].classList.add('active');
+        localStorage.setItem('b365_acIndex', i);
+      } else {
+        localStorage.setItem('b365_acIndex', -1);
+      }
     };
 
     window.seleccionarV = (el, ref) => {
-      window.vSel = { el, texto: el.innerText.replace(/^\d+/, '').trim(), ref };
+      vSel = { el, texto: el.innerText.replace(/^\d+/, '').trim(), ref };
       document.getElementById('menuAcciones').style.display = 'flex';
       if(!leidos.includes(ref)) {
           leidos.push(ref);
@@ -237,68 +224,88 @@ import PageLayout from '../layouts/PageLayout.astro';
       }
     };
 
-    window.addEventListener('scroll', () => {
-        if(document.getElementById('contenedor-lectura').innerHTML !== "") {
-            localStorage.setItem('b365_scroll', window.scrollY);
-        }
-    }, { passive: true });
-
-    function actualizarProgreso() {
-        const total = document.querySelectorAll('.v-txt').length;
-        const read = document.querySelectorAll('.v-txt.read').length;
-        if(total > 0) document.getElementById('progreso-valor').style.width = (read/total*100) + '%';
-    }
-
-    window.zoom = (n) => { 
-        fontSize += n; 
-        document.documentElement.style.setProperty('--f-size', fontSize+'px');
-        localStorage.setItem('b365_fsize', fontSize);
+    window.descargarImg = () => {
+      document.getElementById('render-texto').innerText = vSel.texto;
+      document.getElementById('render-ref').innerText = vSel.ref;
+      const target = document.getElementById('canvas-render');
+      html2canvas(target, { scale: 2 }).then(canvas => {
+        const a = document.createElement('a');
+        a.download = `Biblia365-${vSel.ref}.png`;
+        a.href = canvas.toDataURL("image/png");
+        a.click();
+      });
+      window.cerrarMenu();
     };
 
-    window.cambiarDia = (n) => { 
-        fecha.setDate(fecha.getDate()+n); 
-        localStorage.setItem('b365_scroll', 0);
-        renderPlan(); window.scrollTo(0,0); 
+    window.abrirBib = () => {
+      const modal = document.getElementById('contenidoModal');
+      modal.innerHTML = `<h2 style="text-align:center; font-family:'Playfair Display';">Libros</h2>
+        <div class="grid-libros">${LIBROS.map(l => `<button class="btn-lib" onclick="window.verCaps('${l.id}', '${l.n}', ${l.c})">${l.n}</button>`).join('')}</div>`;
+      document.getElementById('modalBib').style.display = 'grid';
     };
 
-    window.irHoy = () => { 
-        fecha = new Date(); 
-        localStorage.setItem('b365_scroll', 0);
-        renderPlan(); window.scrollTo(0,0); 
+    window.verCaps = (id, n, total) => {
+      const modal = document.getElementById('contenidoModal');
+      let caps = "";
+      for(let i=1; i<=total; i++) caps += `<button class="btn-lib" onclick="window.irACap('${id}','${n}',${i})">${i}</button>`;
+      modal.innerHTML = `<button onclick="window.abrirBib()" style="background:none; border:none; color:var(--accent); font-weight:bold; cursor:pointer;">◀ Volver</button>
+        <h2 style="text-align:center; font-family:'Playfair Display';">${n}</h2>
+        <div class="grid-caps" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(60px,1fr)); gap:10px;">${caps}</div>`;
     };
+
+    window.irACap = (id, n, c) => {
+      window.cerrarBib();
+      dibujarLectura([{id, n, c}]);
+      localStorage.setItem('b365_scroll', 0);
+      window.scrollTo(0,0);
+    };
+
+    window.cerrarBib = () => document.getElementById('modalBib').style.display = 'none';
 
     window.resaltar = () => {
-        const ref = window.vSel.ref;
-        if(resaltados[ref]) delete resaltados[ref];
-        else resaltados[ref] = true;
-        localStorage.setItem('b365_favs', JSON.stringify(resaltados));
-        renderPlan();
-        window.cerrarMenu();
+      if(resaltados[vSel.ref]) delete resaltados[vSel.ref];
+      else resaltados[vSel.ref] = true;
+      localStorage.setItem('b365_favs', JSON.stringify(resaltados));
+      renderPlan(); window.cerrarMenu();
     };
 
     window.compartir = async () => {
-        const msg = `"${window.vSel.texto}" (${window.vSel.ref})`;
-        if(navigator.share) await navigator.share({title:'Biblia 365', text:msg});
-        window.cerrarMenu();
+      const msg = `"${vSel.texto}" (${vSel.ref})`;
+      if(navigator.share) await navigator.share({title:'Biblia 365', text:msg});
+      window.cerrarMenu();
     };
 
     window.leerVoz = () => {
-        window.speechSynthesis.cancel();
-        const m = new SpeechSynthesisUtterance(window.vSel.texto);
-        m.lang = 'es-ES'; window.speechSynthesis.speak(m);
+      window.speechSynthesis.cancel();
+      const m = new SpeechSynthesisUtterance(vSel.texto);
+      m.lang = 'es-ES'; window.speechSynthesis.speak(m);
+    };
+
+    window.zoom = (n) => { 
+      fontSize += n; document.documentElement.style.setProperty('--f-size', fontSize+'px');
+      localStorage.setItem('b365_fsize', fontSize);
     };
 
     window.modoNoche = () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('b365_tema', document.body.classList.contains('dark-mode') ? 'oscuro' : 'claro');
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('b365_tema', document.body.classList.contains('dark-mode') ? 'oscuro' : 'claro');
     };
 
+    window.cambiarDia = (n) => { fecha.setDate(fecha.getDate()+n); localStorage.setItem('b365_scroll', 0); renderPlan(); window.scrollTo(0,0); };
+    window.irHoy = () => { fecha = new Date(); localStorage.setItem('b365_scroll', 0); renderPlan(); window.scrollTo(0,0); };
     window.cerrarMenu = () => document.getElementById('menuAcciones').style.display = 'none';
+    window.addEventListener('scroll', () => { if(document.getElementById('contenedor-lectura').innerHTML) localStorage.setItem('b365_scroll', window.scrollY); }, { passive: true });
+
+    function actualizarProgreso() {
+      const total = document.querySelectorAll('.v-txt').length;
+      const read = document.querySelectorAll('.v-txt.read').length;
+      if(total > 0) document.getElementById('progreso-valor').style.width = (read/total*100) + '%';
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
-        if(localStorage.getItem('b365_tema') === 'oscuro') document.body.classList.add('dark-mode');
-        document.documentElement.style.setProperty('--f-size', fontSize+'px');
-        iniciar();
+      if(localStorage.getItem('b365_tema') === 'oscuro') document.body.classList.add('dark-mode');
+      document.documentElement.style.setProperty('--f-size', fontSize+'px');
+      iniciar();
     });
   </script>
 </PageLayout>
