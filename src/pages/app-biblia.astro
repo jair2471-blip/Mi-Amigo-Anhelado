@@ -131,12 +131,12 @@ import PageLayout from '../layouts/PageLayout.astro';
   </div>
 
   <div id="menuAcciones">
-    <button class="btn-tool" onclick="window.resaltar()">🟡<span>Marca</span></button>
-    <button class="btn-tool" onclick="window.compartir()">📤<span>Enviar</span></button>
-    <button class="btn-tool" onclick="window.descargarImg()">📸<span>Foto</span></button>
-    <button class="btn-tool" onclick="window.leerVoz()">🔊<span>Oír</span></button>
-    <button class="btn-tool" onclick="window.cerrarMenu()">❌<span>Cerrar</span></button>
-  </div>
+  <button class="btn-tool" onclick="window.resaltar()">🟡<span>Marca</span></button>
+  <button class="btn-tool" onclick="window.compartir()">📤<span>Texto</span></button>
+  <button class="btn-tool" onclick="window.generarImagen('feed')" style="color:#d4a574;">🖼️<span>Feed</span></button>
+  <button class="btn-tool" onclick="window.generarImagen('historia')" style="color:#d4a574;">📱<span>Story</span></button>
+  <button class="btn-tool" onclick="window.cerrarMenu()">❌<span>Cerrar</span></button>
+</div>
 
   <script is:inline>
     const LIBROS = [
@@ -258,18 +258,34 @@ import PageLayout from '../layouts/PageLayout.astro';
       }
     };
 
-    window.descargarImg = () => {
-      document.getElementById('render-texto').innerText = vSel.texto;
-      document.getElementById('render-ref').innerText = vSel.ref;
-      const target = document.getElementById('canvas-render');
-      html2canvas(target, { scale: 2 }).then(canvas => {
+   // --- FUNCIÓN DE IMAGEN MULTIFORMATO ---
+window.generarImagen = (tipo) => {
+  // 1. Preparamos el texto
+  document.getElementById('render-texto').innerText = vSel.texto;
+  document.getElementById('render-ref').innerText = vSel.ref;
+  
+  const target = document.getElementById('canvas-render');
+  
+  // 2. Limpiamos clases viejas y aplicamos el formato deseado
+  target.classList.remove('formato-feed', 'formato-historia');
+  if (tipo === 'feed') {
+      target.classList.add('formato-feed');
+  } else {
+      target.classList.add('formato-historia');
+  }
+
+  // 3. Esperamos un micro-segundo para que el navegador aplique los estilos y tomamos la foto
+  setTimeout(() => {
+      // Usamos escala 2 para que la imagen salga en alta definición (retina)
+      html2canvas(target, { scale: 2, backgroundColor: null }).then(canvas => {
         const a = document.createElement('a');
-        a.download = `Biblia365-${vSel.ref}.png`;
+        a.download = `Biblia365-${tipo}-${vSel.ref.replace(':','-')}.png`;
         a.href = canvas.toDataURL("image/png");
         a.click();
+        window.cerrarMenu();
       });
-      window.cerrarMenu();
-    };
+  }, 100);
+};
 
     window.abrirBib = () => {
       const modal = document.getElementById('contenidoModal');
