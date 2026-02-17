@@ -157,6 +157,21 @@ import PageLayout from '../layouts/PageLayout.astro';
   <div id="modalBib" onclick="if(event.target==this) window.cerrarBib()">
     <div class="modal-box" id="contenidoModal"></div>
   </div>
+  <div id="modalExito">
+  <div class="box-exito">
+    <span class="corona">👑</span>
+    <h2 style="font-family:'Playfair Display'; color:var(--primary); font-size: 2rem; margin:0;">¡Misión Cumplida!</h2>
+    <p style="color:var(--text); font-size: 1.1rem; margin: 15px 0;">Has terminado las lecturas de hoy.</p>
+    
+    <div style="background: #f0ede9; padding: 20px; border-radius: 20px; margin: 20px 0;">
+      <p style="margin:0; font-weight:bold; color:var(--accent);">AVANCE TOTAL</p>
+      <h3 id="txt-progreso-total" style="font-size: 2.5rem; margin:5px 0; color:var(--primary);">0%</h3>
+      <p style="font-size: 0.8rem; opacity: 0.7;">del camino a la eternidad completado</p>
+    </div>
+
+    <button class="btn-continuar" onclick="document.getElementById('modalExito').style.display='none'">Recibir Recompensa</button>
+  </div>
+</div>
 
   <div id="menuAcciones">
   <button class="btn-tool" onclick="window.resaltar()">🟡<span>Marca</span></button>
