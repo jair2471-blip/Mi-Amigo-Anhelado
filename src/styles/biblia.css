@@ -1,0 +1,16 @@
+:root { 
+  --primary: #1a4d2e; 
+  --accent: #d4a574; 
+  --bg: #faf8f5; 
+  --text: #1a202c; 
+  --surface: #ffffff; 
+  --card-bg: #ffffff;
+}
+
+body.dark-mode { 
+  --bg: #0d1110; 
+  --text: #e2e8f0; 
+  --surface: #1a1f1e; 
+  --card-bg: #161b1a;
+  --primary: #52b788; 
+}
