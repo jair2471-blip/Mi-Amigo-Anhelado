@@ -420,14 +420,16 @@ function actualizarProgreso() {
   const totalHoy = document.querySelectorAll('.v-txt').length;
   const leidosHoy = document.querySelectorAll('.v-txt.read').length;
   
-  // Barra de progreso superior
   if(totalHoy > 0) {
       const porcentajeHoy = (leidosHoy / totalHoy * 100);
       document.getElementById('progreso-valor').style.width = porcentajeHoy + '%';
 
-      // --- DETECTOR DE MISIÓN CUMPLIDA ---
-      // Si leyó todo lo de hoy y no lo hemos felicitado ya en esta navegación
-      if (porcentajeHoy === 100 && !sessionStorage.getItem('felicitado_dia_' + document.getElementById('labelDia').innerText)) {
+      // --- EL CANDADO CELESTIAL ---
+      // Solo mostramos la celebración si el porcentaje es 100% 
+      // Y si NO estamos en una vista de capítulo suelto de la biblioteca
+      const esVistaBiblioteca = document.getElementById('contenedor-lectura').dataset.modo === 'libre';
+      
+      if (porcentajeHoy === 100 && !esVistaBiblioteca && !sessionStorage.getItem('felicitado_dia_' + document.getElementById('labelDia').innerText)) {
           mostrarCelebracion();
       }
   }
