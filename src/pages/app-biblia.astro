@@ -415,11 +415,37 @@ window.generarImagen = (tipo) => {
       if(document.getElementById('contenedor-lectura').innerHTML) localStorage.setItem('b365_scroll', window.scrollY); 
     }, { passive: true });
 
-    function actualizarProgreso() {
-      const total = document.querySelectorAll('.v-txt').length;
-      const read = document.querySelectorAll('.v-txt.read').length;
-      if(total > 0) document.getElementById('progreso-valor').style.width = (read/total*100) + '%';
-    }
+    // Actualizamos esta función para que sea más inteligente
+function actualizarProgreso() {
+  const totalHoy = document.querySelectorAll('.v-txt').length;
+  const leidosHoy = document.querySelectorAll('.v-txt.read').length;
+  
+  // Barra de progreso superior
+  if(totalHoy > 0) {
+      const porcentajeHoy = (leidosHoy / totalHoy * 100);
+      document.getElementById('progreso-valor').style.width = porcentajeHoy + '%';
+
+      // --- DETECTOR DE MISIÓN CUMPLIDA ---
+      // Si leyó todo lo de hoy y no lo hemos felicitado ya en esta navegación
+      if (porcentajeHoy === 100 && !sessionStorage.getItem('felicitado_dia_' + document.getElementById('labelDia').innerText)) {
+          mostrarCelebracion();
+      }
+  }
+}
+
+function mostrarCelebracion() {
+  // Calculamos el progreso GLOBAL (de toda la Biblia)
+  // Total versículos Biblia aprox: 31,102
+  const totalVersiculosBiblia = 31102; 
+  const totalLeidos = leidos.length;
+  const progresoGlobal = ((totalLeidos / totalVersiculosBiblia) * 100).toFixed(2);
+  
+  document.getElementById('txt-progreso-total').innerText = progresoGlobal + '%';
+  document.getElementById('modalExito').style.display = 'grid';
+  
+  // Guardamos que ya lo felicitamos por este día para no ser intensos
+  sessionStorage.setItem('felicitado_dia_' + document.getElementById('labelDia').innerText, 'true');
+}
 
     document.addEventListener('DOMContentLoaded', () => {
       if(localStorage.getItem('b365_tema') === 'oscuro') document.body.classList.add('dark-mode');
