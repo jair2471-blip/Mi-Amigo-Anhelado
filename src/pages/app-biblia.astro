@@ -58,10 +58,34 @@ import PageLayout from '../layouts/PageLayout.astro';
     .grid-libros, .grid-caps { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
     .btn-lib { background: var(--card-bg); border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 15px; cursor: pointer; color: var(--text); font-weight: 600; }
 
-    #canvas-render {
-      position: absolute; left: -9999px; top: 0; width: 600px; padding: 60px; background: #faf8f5;
-      text-align: center; border: 15px solid #1a4d2e;
-    }
+    /* RENDER PARA IMAGEN (OCULTO) - BASE */
+#canvas-render {
+  position: absolute; left: -9999px; top: 0;
+  background: #faf8f5; border: 20px solid #1a4d2e;
+  display: flex; justify-content: center; align-items: center;
+  box-sizing: border-box;
+}
+
+/* CLASE PARA FEED (CUADRADO) */
+/* Base de 800x800, al exportar con escala 2 queda en 1600x1600 HD */
+.formato-feed {
+  width: 800px;
+  height: 800px;
+  padding: 50px;
+}
+
+/* CLASE PARA HISTORIA (VERTICAL 9:16) */
+/* Base de 600x1066, al exportar queda en HD vertical */
+.formato-historia {
+  width: 600px;
+  height: 1066px;
+  padding: 80px 40px;
+}
+
+/* Ajuste interno para que el marco dorado se vea bien */
+#canvas-render .marco-interno {
+    border: 3px solid #d4a574; padding: 40px; background: white; width: 100%; box-sizing: border-box; text-align: center;
+}
   </style>
 
   <div class="main-container">
