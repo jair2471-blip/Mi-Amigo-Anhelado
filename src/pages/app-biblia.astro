@@ -117,11 +117,14 @@ import PageLayout from '../layouts/PageLayout.astro';
   </div>
 
   <div id="canvas-render">
-    <div style="border: 2px solid #d4a574; padding: 40px; background: white;">
-      <p id="render-texto" style="font-family: 'Crimson Text'; font-size: 2rem; color: #1a4d2e; font-style: italic;"></p>
-      <p id="render-ref" style="font-family: 'Playfair Display'; font-size: 1.2rem; color: #d4a574; margin-top: 20px;"></p>
-    </div>
+  <div class="marco-interno">
+    <span style="color: #d4a574; font-size: 5rem; font-family: 'Playfair Display'; line-height: 1; display:block; margin-bottom:-20px;">“</span>
+    <p id="render-texto" style="font-family: 'Crimson Text'; font-size: 2.2rem; color: #1a4d2e; font-style: italic; line-height: 1.4;"></p>
+    <div style="width: 60px; height: 3px; background: #d4a574; margin: 30px auto;"></div>
+    <p id="render-ref" style="font-family: 'Playfair Display'; font-size: 1.3rem; color: #d4a574; text-transform: uppercase; letter-spacing: 2px; font-weight:bold;"></p>
+    <p style="margin-top: 30px; font-size: 0.9rem; color: #1a4d2e; opacity: 0.7;">BIBLIA 365</p>
   </div>
+</div>
 
   <div id="modalBib" onclick="if(event.target==this) window.cerrarBib()">
     <div class="modal-box" id="contenidoModal"></div>
