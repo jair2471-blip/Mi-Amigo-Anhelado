@@ -24,12 +24,10 @@ import PageLayout from '../layouts/PageLayout.astro';
     }
     .main-container { width: 100%; max-width: 750px; padding: 20px; box-sizing: border-box; min-height: 100vh; }
 
-    /* PROGRESO */
     .progress-container { position: sticky; top: 0; z-index: 1000; width: 100%; background: var(--bg); padding: 10px 0; }
     .progress-bar { height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
     #progreso-valor { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s; }
 
-    /* TOOLBAR */
     .toolbar { 
       display: flex; justify-content: space-between; align-items: center; 
       background: var(--surface); padding: 12px 20px; border-radius: 50px; 
@@ -37,7 +35,6 @@ import PageLayout from '../layouts/PageLayout.astro';
     }
     .btn-top { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; }
 
-    /* ACORDEON */
     .acordeon-item { background: var(--card-bg); border-radius: 24px; margin-bottom: 25px; border: 1px solid rgba(0,0,0,0.05); overflow: hidden; transition: 0.3s; }
     .acordeon-item.active { border-color: var(--accent); }
     .acordeon-header { padding: 20px 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
@@ -45,12 +42,10 @@ import PageLayout from '../layouts/PageLayout.astro';
     .acordeon-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; padding: 0 30px; }
     .acordeon-item.active .acordeon-content { max-height: 20000px; padding: 10px 30px 40px; }
 
-    /* TEXTO */
     .v-txt { font-size: var(--f-size); line-height: 1.7; margin-bottom: 8px; display: block; padding: 10px; border-radius: 12px; cursor: pointer; }
     .v-txt.read { opacity: 0.5; }
     .v-num { color: var(--accent); font-weight: bold; margin-right: 10px; }
 
-    /* MENÚ FLOTANTE */
     #menuAcciones { 
       position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
       background: var(--primary); padding: 12px 25px; border-radius: 50px; 
@@ -58,13 +53,11 @@ import PageLayout from '../layouts/PageLayout.astro';
     }
     .btn-tool { background: none; border: none; color: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; gap: 4px; }
 
-    /* MODAL BIBLIOTECA */
     #modalBib { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; place-items: center; z-index: 3000; padding: 20px; }
     .modal-box { background: var(--bg); padding: 30px; border-radius: 30px; width: 100%; max-width: 600px; max-height: 80vh; overflow-y: auto; }
     .grid-libros, .grid-caps { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
     .btn-lib { background: var(--card-bg); border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 15px; cursor: pointer; color: var(--text); font-weight: 600; }
 
-    /* RENDER PARA IMAGEN (OCULTO) */
     #canvas-render {
       position: absolute; left: -9999px; top: 0; width: 600px; padding: 60px; background: #faf8f5;
       text-align: center; border: 15px solid #1a4d2e;
@@ -149,7 +142,13 @@ import PageLayout from '../layouts/PageLayout.astro';
     let planFull = [];
     LIBROS.forEach(l => { for(let i=1; i<=l.c; i++) planFull.push({n:l.n, id:l.id, c:i}); });
 
-    let fecha = localStorage.getItem('b365_fecha') ? new Date(localStorage.getItem('b365_fecha')) : new Date();
+    // --- LÓGICA DE INICIO PERSONALIZADO ---
+    if(!localStorage.getItem('b365_fecha_inicio')) {
+      localStorage.setItem('b365_fecha_inicio', new Date().toISOString());
+    }
+    let fechaInicio = new Date(localStorage.getItem('b365_fecha_inicio'));
+    let fechaNav = localStorage.getItem('b365_fecha_nav') ? new Date(localStorage.getItem('b365_fecha_nav')) : new Date();
+
     let resaltados = JSON.parse(localStorage.getItem('b365_favs')) || {};
     let leidos = JSON.parse(localStorage.getItem('b365_leidos')) || [];
     let fontSize = parseInt(localStorage.getItem('b365_fsize')) || 21;
@@ -166,23 +165,23 @@ import PageLayout from '../layouts/PageLayout.astro';
     }
 
     function renderPlan() {
-  const start = new Date(fecha.getFullYear(), 0, 0);
-  const diff = fecha - start;
-  const diaAnio = Math.floor(diff / 86400000);
-  document.getElementById('labelDia').innerText = `DÍA ${diaAnio}`;
+      // Calculamos qué día de misión es hoy (Basado en la fecha de inicio del usuario)
+      const diffTime = fechaNav - fechaInicio;
+      const diaMision = Math.max(1, Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1);
+      
+      document.getElementById('labelDia').innerText = `DÍA ${diaMision}`;
 
-  // MATEMÁTICA PARA 365 DÍAS EXACTOS
-  // Total capítulos: 1189. Días: 365.
-  const promedio = planFull.length / 365; 
-  const inicioIndex = Math.floor((diaAnio - 1) * promedio);
-  const finIndex = Math.floor(diaAnio * promedio);
+      // MATEMÁTICA PARA 365 DÍAS EXACTOS (1189 capítulos / 365 días ≈ 3.25 caps/día)
+      const promedio = planFull.length / 365; 
+      const inicioIndex = Math.floor((diaMision - 1) * promedio);
+      const finIndex = Math.floor(diaMision * promedio);
 
-  const hoy = planFull.slice(inicioIndex, finIndex);
-  
-  dibujarLectura(hoy);
-  actualizarProgreso();
-  localStorage.setItem('b365_fecha', fecha.toISOString());
-}
+      const hoy = planFull.slice(inicioIndex, finIndex);
+      
+      dibujarLectura(hoy);
+      actualizarProgreso();
+      localStorage.setItem('b365_fecha_nav', fechaNav.toISOString());
+    }
 
     function dibujarLectura(items) {
       let html = "";
@@ -247,7 +246,8 @@ import PageLayout from '../layouts/PageLayout.astro';
 
     window.abrirBib = () => {
       const modal = document.getElementById('contenidoModal');
-      modal.innerHTML = `<h2 style="text-align:center; font-family:'Playfair Display';">Libros</h2>
+      modal.innerHTML = `<h2 style="text-align:center; font-family:'Playfair Display';">Biblioteca</h2>
+        <button class="btn-lib" style="width:100%; margin-bottom:20px; background:var(--accent); color:white;" onclick="window.reiniciarPlan()">Reiniciar Plan a hoy (Día 1)</button>
         <div class="grid-libros">${LIBROS.map(l => `<button class="btn-lib" onclick="window.verCaps('${l.id}', '${l.n}', ${l.c})">${l.n}</button>`).join('')}</div>`;
       document.getElementById('modalBib').style.display = 'grid';
     };
@@ -266,6 +266,16 @@ import PageLayout from '../layouts/PageLayout.astro';
       dibujarLectura([{id, n, c}]);
       localStorage.setItem('b365_scroll', 0);
       window.scrollTo(0,0);
+    };
+
+    window.reiniciarPlan = () => {
+      if(confirm("¿Quieres establecer hoy como tu Día 1 de lectura?")) {
+        localStorage.setItem('b365_fecha_inicio', new Date().toISOString());
+        fechaInicio = new Date();
+        fechaNav = new Date();
+        window.cerrarBib();
+        renderPlan();
+      }
     };
 
     window.cerrarBib = () => document.getElementById('modalBib').style.display = 'none';
@@ -299,10 +309,25 @@ import PageLayout from '../layouts/PageLayout.astro';
       localStorage.setItem('b365_tema', document.body.classList.contains('dark-mode') ? 'oscuro' : 'claro');
     };
 
-    window.cambiarDia = (n) => { fecha.setDate(fecha.getDate()+n); localStorage.setItem('b365_scroll', 0); renderPlan(); window.scrollTo(0,0); };
-    window.irHoy = () => { fecha = new Date(); localStorage.setItem('b365_scroll', 0); renderPlan(); window.scrollTo(0,0); };
+    window.cambiarDia = (n) => { 
+      fechaNav.setDate(fechaNav.getDate()+n); 
+      localStorage.setItem('b365_scroll', 0); 
+      renderPlan(); 
+      window.scrollTo(0,0); 
+    };
+
+    window.irHoy = () => { 
+      fechaNav = new Date(); 
+      localStorage.setItem('b365_scroll', 0); 
+      renderPlan(); 
+      window.scrollTo(0,0); 
+    };
+
     window.cerrarMenu = () => document.getElementById('menuAcciones').style.display = 'none';
-    window.addEventListener('scroll', () => { if(document.getElementById('contenedor-lectura').innerHTML) localStorage.setItem('b365_scroll', window.scrollY); }, { passive: true });
+    
+    window.addEventListener('scroll', () => { 
+      if(document.getElementById('contenedor-lectura').innerHTML) localStorage.setItem('b365_scroll', window.scrollY); 
+    }, { passive: true });
 
     function actualizarProgreso() {
       const total = document.querySelectorAll('.v-txt').length;
