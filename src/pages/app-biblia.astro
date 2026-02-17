@@ -235,23 +235,16 @@ import PageLayout from '../layouts/PageLayout.astro';
     }
 
     function renderPlan() {
-      // Calculamos qué día de misión es hoy (Basado en la fecha de inicio del usuario)
-      const diffTime = fechaNav - fechaInicio;
-      const diaMision = Math.max(1, Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1);
-      
-      document.getElementById('labelDia').innerText = `DÍA ${diaMision}`;
-
-      // MATEMÁTICA PARA 365 DÍAS EXACTOS (1189 capítulos / 365 días ≈ 3.25 caps/día)
-      const promedio = planFull.length / 365; 
-      const inicioIndex = Math.floor((diaMision - 1) * promedio);
-      const finIndex = Math.floor(diaMision * promedio);
-
-      const hoy = planFull.slice(inicioIndex, finIndex);
-      
-      dibujarLectura(hoy);
-      actualizarProgreso();
-      localStorage.setItem('b365_fecha_nav', fechaNav.toISOString());
-    }
+  // ... tu lógica de fechas actual ...
+  
+  // Limpiamos el modo "libre" para que vuelva a contar para el premio
+  document.getElementById('contenedor-lectura').dataset.modo = 'plan';
+  
+  const hoy = planFull.slice(inicioIndex, finIndex);
+  dibujarLectura(hoy);
+  actualizarProgreso();
+  localStorage.setItem('b365_fecha_nav', fechaNav.toISOString());
+}
 
     function dibujarLectura(items) {
       let html = "";
@@ -348,11 +341,13 @@ window.generarImagen = (tipo) => {
     };
 
     window.irACap = (id, n, c) => {
-      window.cerrarBib();
-      dibujarLectura([{id, n, c}]);
-      localStorage.setItem('b365_scroll', 0);
-      window.scrollTo(0,0);
-    };
+  window.cerrarBib();
+  // Marcamos que esta vista es "libre" (biblioteca), no el plan diario
+  document.getElementById('contenedor-lectura').dataset.modo = 'libre'; 
+  dibujarLectura([{id, n, c}]);
+  localStorage.setItem('b365_scroll', 0);
+  window.scrollTo(0,0);
+};
 
     window.reiniciarPlan = () => {
       if(confirm("¿Quieres establecer hoy como tu Día 1 de lectura?")) {
