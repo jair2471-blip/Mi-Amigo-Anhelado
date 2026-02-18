@@ -32,5 +32,5 @@ Tener la Biblia en casa no basta. Leerla, meditarla y vivirla es lo que realment
 
 Si deseas aprender el método práctico paso a paso, te recomiendo leer también:
 
-👉 [Cómo Leer la Biblia Correctamente para que Transforme tu Vida](/blog/como-leer-la-biblia-correctamente-para-que-transforme-tu-vida)
+👉 [Cómo Leer la Biblia Correctamente para que Transforme tu Vida](/blog/como-leer-la-biblia-correctamente-transforme-tu-vida)
 
