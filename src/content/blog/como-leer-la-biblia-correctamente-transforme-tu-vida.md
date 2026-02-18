@@ -7,8 +7,6 @@ image: "/images/como-leer-biblia-correctamente.jpg"
 tags: ["Cómo leer la Biblia", "Estudio bíblico", "Crecimiento espiritual", "Disciplina espiritual", "Devocional diario"]
 ---
 
-# Cómo Leer la Biblia Correctamente para que Transforme tu Vida
-
 Muchas personas intentan leer la Biblia, pero pocas saben **cómo leer la Biblia correctamente** para que produzca una transformación real.
 
 No se trata solo de leer capítulos al azar.  
