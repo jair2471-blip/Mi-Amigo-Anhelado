@@ -172,7 +172,7 @@ Si este artículo te enseñó cómo leer la Biblia correctamente, el siguiente p
 
 Te recomiendo leer también nuestro artículo:
 
-👉 [como-la-biblia-cambia-tu-vida](/blog/como-la-biblia-puede-transformar-tu-vida-en-365-dias)
+👉 [Cómo la Biblia Puede Transformar Tu Vida en 365 Días](/blog/como-la-biblia-puede-transformar-tu-vida-en-365-dias)
 
 Allí descubrirás cómo crear un plan estructurado para que la lectura diaria se convierta en una transformación real a lo largo de todo el año.
 
