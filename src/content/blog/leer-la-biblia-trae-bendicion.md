@@ -2,8 +2,7 @@
 title: "Leer la Biblia: La Clave para Servir a Dios y Recibir Bendiciones Verdaderas"
 description: "Descubre por qué tener la Biblia en casa no basta. La verdadera bendición llega cuando lees, meditas y vives la Palabra de Dios con fe y transformación."
 pubDate: 2026-02-17
-heroImage: "https://images.weserv.nl/?url=pixabay.com/get/gba1f939a89723dbe225798a3f5e566bd5760730e9a5678503797bddb57ca6653a2f4af6c31180c9f34dd0ed999b2242cc8296be3a897436df96a7af8378707ba_1920.jpg&w=1200&h=630&fit=crop
-"
+heroImage: "https://images.weserv.nl/?url=pixabay.com/get/gba1f939a89723dbe225798a3f5e566bd5760730e9a5678503797bddb57ca6653a2f4af6c31180c9f34dd0ed999b2242cc8296be3a897436df96a7af8378707ba_1920.jpg&w=1200&h=630&fit=crop"
 tags: ["Fe", "Biblia", "Espiritualidad", "Transformación", "Bendición"]
 ---
 
