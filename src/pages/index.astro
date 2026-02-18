@@ -2,30 +2,38 @@
 import PageLayout from '../layouts/PageLayout.astro';
 ---
 
-<PageLayout title="Mi Amigo Anhelado - Inicio">
+<PageLayout title="Mi Amigo Anhelado | La Paz que Transforma tu Vida">
   <section class="hero">
     <div class="hero-overlay"></div>
+
     <div class="hero-content">
-      <span class="fade-in subtitle">UNA EXPERIENCIA DE PAZ</span>
-      <h1 class="fade-in title">Mi Amigo Anhelado</h1>
-      
+      <span class="fade-in subtitle">UNA EXPERIENCIA DE ENCUENTRO REAL</span>
+
+      <h1 class="fade-in title">
+        Mi Amigo Anhelado
+      </h1>
+
       <p class="fade-in description">
-        La enseñanza pura de nuestro Señor Jesucristo, <br class="desktop-only"/> 
-        sin ruido, sin filtros. La Verdad que liberta tu alma.
+        Aquí no encontrarás religión vacía ni ruido humano.
+        <br class="desktop-only"/>
+        Solo la voz eterna de Jesucristo hablando directo a tu corazón.
       </p>
 
       <div class="mana-diario fade-in">
         <div class="mana-content">
           <span class="mana-badge">Versículo del Momento</span>
-          <p id="versiculo-texto">"Cargad con mi yugo y aprended de mí..."</p>
+          <p id="versiculo-texto">
+            "Cargad con mi yugo y aprended de mí..."
+          </p>
           <small id="versiculo-cita">— Mateo 11:29</small>
         </div>
       </div>
-      
+
       <div class="hero-actions fade-in">
         <a href="/app-biblia" class="btn-primary">
           <span class="icon">📖</span> Comenzar Lectura
         </a>
+
         <a href="/vivencias" class="btn-secondary">
           <span class="icon">🧔</span> Personajes
         </a>
@@ -33,33 +41,58 @@ import PageLayout from '../layouts/PageLayout.astro';
     </div>
   </section>
 
+  <!-- SECCIÓN IDENTIDAD -->
+  <section class="identity">
+    <div class="identity-content">
+      <h2>Esto no es un blog. Es un encuentro.</h2>
+      <p>
+        Mi Amigo Anhelado nace para quienes buscan algo más que información.
+        Es para el alma cansada, para el corazón que necesita dirección,
+        para quien sabe que existe una verdad más alta que el ruido del mundo.
+      </p>
+    </div>
+  </section>
+
+  <!-- CARACTERÍSTICAS -->
   <section class="features">
     <div class="feature-card">
       <div class="icon-wrap">📖</div>
       <h3>Escritura Pura</h3>
-      <p>Navega por las palabras del Maestro en una interfaz limpia, diseñada para la meditación profunda.</p>
+      <p>
+        Accede a las palabras del Maestro en un entorno limpio,
+        pensado para la meditación profunda y la reflexión sincera.
+      </p>
     </div>
+
     <div class="feature-card">
       <div class="icon-wrap">✨</div>
       <h3>Sin Distracciones</h3>
-      <p>Un espacio libre de publicidad y opiniones humanas. Solo tú y la Palabra de Vida.</p>
+      <p>
+        Sin publicidad invasiva. Sin polémicas.
+        Solo tú, el silencio interior y la Palabra que transforma.
+      </p>
     </div>
+
     <div class="feature-card">
       <div class="icon-wrap">🌱</div>
       <h3>Crecimiento Ordenado</h3>
-      <p>Un plan de 365 días para recorrer todo el consejo de Dios de manera profunda y constante.</p>
+      <p>
+        Un recorrido estructurado de 365 días para caminar
+        paso a paso por todo el consejo de Dios.
+      </p>
     </div>
   </section>
 
   <style>
-    /* VARIABLES DE COLOR */
     :root {
       --primary: #1a4d2e;
       --accent: #d4a574;
       --text-soft: #5d6d7e;
       --bg-warm: #faf8f5;
+      --max-width: 1200px;
     }
 
+    /* HERO */
     .hero {
       min-height: 95vh;
       display: flex;
@@ -68,67 +101,55 @@ import PageLayout from '../layouts/PageLayout.astro';
       text-align: center;
       position: relative;
       background-color: var(--bg-warm);
-      /* Textura sutil de papel antiguo */
       background-image: url("https://www.transparenttextures.com/patterns/handmade-paper.png");
       padding: 2rem;
       overflow: hidden;
     }
 
-    /* Decoración de fondo */
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -10%; left: -10%;
-      width: 40%; height: 40%;
-      background: radial-gradient(circle, rgba(212,165,116,0.1) 0%, rgba(255,255,255,0) 70%);
-      z-index: 0;
-    }
-
-    .hero-content { 
-      max-width: 850px; 
-      width: 100%; 
+    .hero-content {
+      max-width: 850px;
+      width: 100%;
       position: relative;
       z-index: 10;
     }
 
-    .subtitle { 
-      color: var(--accent); 
-      letter-spacing: 6px; 
-      font-weight: 700; 
-      font-size: 0.85rem; 
-      display: block; 
+    .subtitle {
+      color: var(--accent);
+      letter-spacing: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
       margin-bottom: 1.5rem;
-      opacity: 0.9;
     }
-    
+
     .title {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 10vw, 5rem);
+      font-size: clamp(3rem, 9vw, 5.2rem);
       color: var(--primary);
       margin-bottom: 1.5rem;
       line-height: 1;
       font-weight: 700;
     }
 
-    .description { 
-      font-size: 1.25rem; 
-      color: var(--text-soft); 
-      margin: 0 auto 2.5rem; 
-      line-height: 1.7;
-      max-width: 600px;
+    .description {
+      font-size: 1.3rem;
+      color: var(--text-soft);
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+      max-width: 650px;
     }
 
-    /* TARJETA MANÁ DIARIO */
+    /* MANA */
     .mana-diario {
       margin: 3rem auto;
-      max-width: 500px;
+      max-width: 520px;
       padding: 2.5rem;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
       border-radius: 30px;
       border: 1px solid rgba(212, 165, 116, 0.3);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.05);
       position: relative;
+      transition: opacity 1s ease;
     }
 
     .mana-badge {
@@ -145,27 +166,28 @@ import PageLayout from '../layouts/PageLayout.astro';
       text-transform: uppercase;
     }
 
-    .mana-content p { 
-      font-size: 1.5rem; 
-      color: var(--primary); 
-      font-style: italic; 
-      font-family: 'Crimson Text', serif; 
+    .mana-content p {
+      font-size: 1.6rem;
+      color: var(--primary);
+      font-style: italic;
+      font-family: 'Crimson Text', serif;
       margin: 0.5rem 0 1rem;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
-    .mana-content small { 
-      color: var(--accent); 
-      font-weight: bold; 
+    .mana-content small {
+      color: var(--accent);
+      font-weight: bold;
       letter-spacing: 1px;
     }
 
     /* BOTONES */
-    .hero-actions { 
-      display: flex; 
-      gap: 1.2rem; 
-      justify-content: center; 
-      margin-top: 2rem; 
+    .hero-actions {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
     }
 
     .btn-primary, .btn-secondary {
@@ -176,13 +198,13 @@ import PageLayout from '../layouts/PageLayout.astro';
       display: flex;
       align-items: center;
       gap: 10px;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: all 0.35s ease;
     }
 
     .btn-primary {
       background: var(--primary);
       color: white;
-      box-shadow: 0 10px 25px rgba(26, 77, 46, 0.3);
+      box-shadow: 0 12px 30px rgba(26, 77, 46, 0.3);
     }
 
     .btn-secondary {
@@ -191,63 +213,106 @@ import PageLayout from '../layouts/PageLayout.astro';
       border: 2px solid var(--primary);
     }
 
-    .btn-primary:hover { transform: translateY(-5px) scale(1.02); background: #246b40; }
-    .btn-secondary:hover { background: #f0f4f1; transform: translateY(-5px); }
-
-    /* CARACTERÍSTICAS */
-    .features { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-      gap: 4rem; 
-      padding: 6rem 2rem; 
-      background: white; 
-      max-width: 1200px; 
-      margin: 0 auto; 
+    .btn-primary:hover {
+      transform: translateY(-4px);
+      background: #246b40;
     }
 
-    .feature-card { 
-      text-align: center; 
+    .btn-secondary:hover {
+      background: #f0f4f1;
+      transform: translateY(-4px);
+    }
+
+    /* IDENTIDAD */
+    .identity {
+      background: #ffffff;
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .identity-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .identity h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .identity p {
+      font-size: 1.2rem;
+      color: var(--text-soft);
+      line-height: 1.8;
+    }
+
+    /* FEATURES */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 4rem;
+      padding: 6rem 2rem;
+      background: var(--bg-warm);
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      text-align: center;
       padding: 30px;
       transition: 0.3s;
     }
 
-    .icon-wrap { 
-      font-size: 3.5rem; 
-      margin-bottom: 1.5rem; 
+    .icon-wrap {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
       display: inline-block;
       transition: 0.3s;
     }
-    
-    .feature-card:hover .icon-wrap { transform: scale(1.2) rotate(5deg); }
 
-    .feature-card h3 { 
-      font-family: 'Playfair Display', serif; 
-      font-size: 1.6rem; 
-      color: #1a202c; 
+    .feature-card:hover .icon-wrap {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    .feature-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: #1a202c;
       margin-bottom: 1rem;
     }
 
     .feature-card p {
       color: var(--text-soft);
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
-    /* ANIMACIONES */
-    .fade-in { animation: fadeIn ease 1.2s both; }
-    .fade-in:nth-child(1) { animation-delay: 0.2s; }
-    .fade-in:nth-child(2) { animation-delay: 0.4s; }
-    
-    @keyframes fadeIn { 
-      0% { opacity: 0; transform: translateY(30px); } 
-      100% { opacity: 1; transform: translateY(0); } 
+    /* ANIMACIÓN */
+    .fade-in {
+      animation: fadeIn 1.2s ease both;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
-      .hero-actions { flex-direction: column; width: 100%; max-width: 300px; margin: 2rem auto 0; }
-      .title { font-size: 3rem; }
-      .desktop-only { display: none; }
-      .hero { padding: 4rem 1.5rem; }
+      .hero-actions {
+        flex-direction: column;
+        max-width: 300px;
+        margin: 2rem auto 0;
+      }
+
+      .title {
+        font-size: 3rem;
+      }
+
+      .desktop-only {
+        display: none;
+      }
     }
   </style>
 
@@ -263,18 +328,16 @@ import PageLayout from '../layouts/PageLayout.astro';
 
     function cargarVersiculo() {
       const container = document.querySelector('.mana-diario');
-      // Efecto sutil de parpadeo al cambiar
       container.style.opacity = '0';
-      
+
       setTimeout(() => {
         const indice = Math.floor(Math.random() * versiculos.length);
         document.getElementById('versiculo-texto').innerText = `"${versiculos[indice].texto}"`;
         document.getElementById('versiculo-cita').innerText = `— ${versiculos[indice].cita}`;
         container.style.opacity = '1';
-        container.style.transition = 'opacity 1s';
       }, 300);
     }
-    
+
     document.addEventListener('DOMContentLoaded', cargarVersiculo);
   </script>
 </PageLayout>
