@@ -2,82 +2,279 @@
 import PageLayout from '../layouts/PageLayout.astro';
 ---
 
-<PageLayout title="Mi Amigo Anhelado | La Palabra que Transforma">
-
-  <!-- HERO -->
+<PageLayout title="Mi Amigo Anhelado - Inicio">
   <section class="hero">
+    <div class="hero-overlay"></div>
     <div class="hero-content">
-
-      <span class="subtitle fade-in">NO ES RELIGIÓN. ES TRANSFORMACIÓN.</span>
-
-      <h1 class="title fade-in">
-        La Palabra que<br/>
-        renueva tu mente<br/>
-        y cambia tu destino
-      </h1>
-
-      <p class="description fade-in">
-        Un espacio para volver a la enseñanza pura de Dios y del Señor Jesucristo.
-        Sin ruido. Sin espectáculo. Sin opiniones humanas.
-        Solo Verdad que liberta.
+      <span class="fade-in subtitle">UNA EXPERIENCIA DE PAZ</span>
+      <h1 class="fade-in title">Mi Amigo Anhelado</h1>
+      
+      <p class="fade-in description">
+        La enseñanza pura de nuestro Señor Jesucristo, <br class="desktop-only"/> 
+        sin ruido, sin filtros. La Verdad que liberta tu alma.
       </p>
 
-      <div class="hero-actions fade-in">
-        <a href="/app-biblia" class="btn-primary">📖 Comenzar los 365 Días</a>
-        <a href="/blog" class="btn-secondary">🔥 Leer Enseñanzas</a>
+      <div class="mana-diario fade-in">
+        <div class="mana-content">
+          <span class="mana-badge">Versículo del Momento</span>
+          <p id="versiculo-texto">"Cargad con mi yugo y aprended de mí..."</p>
+          <small id="versiculo-cita">— Mateo 11:29</small>
+        </div>
       </div>
-
+      
+      <div class="hero-actions fade-in">
+        <a href="/app-biblia" class="btn-primary">
+          <span class="icon">📖</span> Comenzar Lectura
+        </a>
+        <a href="/vivencias" class="btn-secondary">
+          <span class="icon">🧔</span> Personajes
+        </a>
+      </div>
     </div>
   </section>
 
-
-  <!-- MANIFIESTO -->
-  <section class="manifesto">
-    <div class="manifesto-content">
-      <h2>¿Por qué existe Mi Amigo Anhelado?</h2>
-      <p>
-        Porque la fe no necesita gritos.
-        Necesita profundidad.
-        <br/><br/>
-        Porque la transformación no nace del espectáculo,
-        sino del encuentro diario con la Palabra.
-        <br/><br/>
-        Porque un corazón renovado puede cambiar una vida,
-        y una vida transformada puede impactar generaciones.
-      </p>
-    </div>
-  </section>
-
-
-  <!-- MANA DIARIO -->
-  <section class="mana-section">
-    <div class="mana-diario">
-      <span class="mana-icon">✨</span>
-      <p id="versiculo-texto">"Cargad con mi yugo y aprended de mí..."</p>
-      <small id="versiculo-cita">— Mateo 11:29</small>
-    </div>
-  </section>
-
-
-  <!-- EXPERIENCIA -->
   <section class="features">
     <div class="feature-card">
-      <div class="icon">📖</div>
-      <h3>Escritura sin Distracciones</h3>
-      <p>Una interfaz limpia diseñada para que medites, reflexiones y escuches la voz de Dios sin interrupciones.</p>
+      <div class="icon-wrap">📖</div>
+      <h3>Escritura Pura</h3>
+      <p>Navega por las palabras del Maestro en una interfaz limpia, diseñada para la meditación profunda.</p>
     </div>
-
     <div class="feature-card">
-      <div class="icon">🔥</div>
-      <h3>Enseñanza Profunda</h3>
-      <p>Artículos que confrontan, despiertan y alinean tu vida con la verdad bíblica.</p>
+      <div class="icon-wrap">✨</div>
+      <h3>Sin Distracciones</h3>
+      <p>Un espacio libre de publicidad y opiniones humanas. Solo tú y la Palabra de Vida.</p>
     </div>
-
     <div class="feature-card">
-      <div class="icon">🌱</div>
-      <h3>Transformación Diaria</h3>
-      <p>Un recorrido de 365 días que fortalece tu carácter, disciplina y fe paso a paso.</p>
+      <div class="icon-wrap">🌱</div>
+      <h3>Crecimiento Ordenado</h3>
+      <p>Un plan de 365 días para recorrer todo el consejo de Dios de manera profunda y constante.</p>
     </div>
   </section>
 
+  <style>
+    /* VARIABLES DE COLOR */
+    :root {
+      --primary: #1a4d2e;
+      --accent: #d4a574;
+      --text-soft: #5d6d7e;
+      --bg-warm: #faf8f5;
+    }
+
+    .hero {
+      min-height: 95vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      background-color: var(--bg-warm);
+      /* Textura sutil de papel antiguo */
+      background-image: url("https://www.transparenttextures.com/patterns/handmade-paper.png");
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    /* Decoración de fondo */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -10%; left: -10%;
+      width: 40%; height: 40%;
+      background: radial-gradient(circle, rgba(212,165,116,0.1) 0%, rgba(255,255,255,0) 70%);
+      z-index: 0;
+    }
+
+    .hero-content { 
+      max-width: 850px; 
+      width: 100%; 
+      position: relative;
+      z-index: 10;
+    }
+
+    .subtitle { 
+      color: var(--accent); 
+      letter-spacing: 6px; 
+      font-weight: 700; 
+      font-size: 0.85rem; 
+      display: block; 
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
+    
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 10vw, 5rem);
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .description { 
+      font-size: 1.25rem; 
+      color: var(--text-soft); 
+      margin: 0 auto 2.5rem; 
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    /* TARJETA MANÁ DIARIO */
+    .mana-diario {
+      margin: 3rem auto;
+      max-width: 500px;
+      padding: 2.5rem;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+      border: 1px solid rgba(212, 165, 116, 0.3);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .mana-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: white;
+      padding: 4px 15px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .mana-content p { 
+      font-size: 1.5rem; 
+      color: var(--primary); 
+      font-style: italic; 
+      font-family: 'Crimson Text', serif; 
+      margin: 0.5rem 0 1rem;
+      line-height: 1.4;
+    }
+
+    .mana-content small { 
+      color: var(--accent); 
+      font-weight: bold; 
+      letter-spacing: 1px;
+    }
+
+    /* BOTONES */
+    .hero-actions { 
+      display: flex; 
+      gap: 1.2rem; 
+      justify-content: center; 
+      margin-top: 2rem; 
+    }
+
+    .btn-primary, .btn-secondary {
+      padding: 1.2rem 2.8rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 10px 25px rgba(26, 77, 46, 0.3);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-primary:hover { transform: translateY(-5px) scale(1.02); background: #246b40; }
+    .btn-secondary:hover { background: #f0f4f1; transform: translateY(-5px); }
+
+    /* CARACTERÍSTICAS */
+    .features { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 4rem; 
+      padding: 6rem 2rem; 
+      background: white; 
+      max-width: 1200px; 
+      margin: 0 auto; 
+    }
+
+    .feature-card { 
+      text-align: center; 
+      padding: 30px;
+      transition: 0.3s;
+    }
+
+    .icon-wrap { 
+      font-size: 3.5rem; 
+      margin-bottom: 1.5rem; 
+      display: inline-block;
+      transition: 0.3s;
+    }
+    
+    .feature-card:hover .icon-wrap { transform: scale(1.2) rotate(5deg); }
+
+    .feature-card h3 { 
+      font-family: 'Playfair Display', serif; 
+      font-size: 1.6rem; 
+      color: #1a202c; 
+      margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    /* ANIMACIONES */
+    .fade-in { animation: fadeIn ease 1.2s both; }
+    .fade-in:nth-child(1) { animation-delay: 0.2s; }
+    .fade-in:nth-child(2) { animation-delay: 0.4s; }
+    
+    @keyframes fadeIn { 
+      0% { opacity: 0; transform: translateY(30px); } 
+      100% { opacity: 1; transform: translateY(0); } 
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero-actions { flex-direction: column; width: 100%; max-width: 300px; margin: 2rem auto 0; }
+      .title { font-size: 3rem; }
+      .desktop-only { display: none; }
+      .hero { padding: 4rem 1.5rem; }
+    }
+  </style>
+
+  <script is:inline>
+    const versiculos = [
+      { texto: "No se turbe vuestro corazón; creéis en Dios, creed también en mí.", cita: "Juan 14:1" },
+      { texto: "Yo soy el camino, y la verdad, y la vida.", cita: "Juan 14:6" },
+      { texto: "La paz os dejo, mi paz os doy; yo no os la doy como el mundo la da.", cita: "Juan 14:27" },
+      { texto: "He aquí yo estoy con vosotros todos los días, hasta el fin del mundo.", cita: "Mateo 28:20" },
+      { texto: "Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.", cita: "Mateo 11:28" },
+      { texto: "Si permanecéis en mi palabra, seréis verdaderamente mis discípulos.", cita: "Juan 8:31" }
+    ];
+
+    function cargarVersiculo() {
+      const container = document.querySelector('.mana-diario');
+      // Efecto sutil de parpadeo al cambiar
+      container.style.opacity = '0';
+      
+      setTimeout(() => {
+        const indice = Math.floor(Math.random() * versiculos.length);
+        document.getElementById('versiculo-texto').innerText = `"${versiculos[indice].texto}"`;
+        document.getElementById('versiculo-cita').innerText = `— ${versiculos[indice].cita}`;
+        container.style.opacity = '1';
+        container.style.transition = 'opacity 1s';
+      }, 300);
+    }
+    
+    document.addEventListener('DOMContentLoaded', cargarVersiculo);
+  </script>
 </PageLayout>
