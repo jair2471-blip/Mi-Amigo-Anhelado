@@ -162,4 +162,4 @@ Si decides hoy aprender cómo leer la Biblia correctamente, no solo estarás ley
 
 Estarás construyendo una nueva versión de ti mismo.
 
-Y eso, compa, cambia todo.
+Y eso, hermano, cambia todo.
