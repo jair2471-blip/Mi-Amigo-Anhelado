@@ -2,98 +2,78 @@
 import PageLayout from '../layouts/PageLayout.astro';
 ---
 
-<PageLayout title="Mi Amigo Anhelado | Un Encuentro con la Verdad que Transforma">
+<PageLayout title="Mi Amigo Anhelado | Un Encuentro que Transforma">
+
+  <!-- BARRA PROGRESO ESPIRITUAL -->
+  <div class="progress-bar"></div>
+
   <section class="hero">
     <div class="hero-glow"></div>
 
-    <div class="hero-content">
-      <span class="fade-in subtitle">UN ESPACIO PARA EL ALMA</span>
+    <div class="hero-content reveal">
+      <span class="subtitle">UN ESPACIO PARA EL ALMA</span>
 
-      <h1 class="fade-in title">
+      <h1 class="title">
         Mi Amigo Anhelado
       </h1>
 
-      <p class="fade-in description">
-        En medio del ruido del mundo, existe una Voz que no grita…
+      <p class="description">
+        Cuando el mundo grita, Dios susurra.
         <br class="desktop-only"/>
-        pero transforma para siempre al que decide escucharla.
+        Y quien aprende a escuchar, jamás vuelve a ser el mismo.
       </p>
 
-      <div class="mana-diario fade-in">
+      <div class="mana-diario">
         <div class="mana-content">
           <span class="mana-badge">Palabra Viva</span>
           <p id="versiculo-texto">
-            "Venid a mí todos los que estáis trabajados y cargados..."
+            "Yo soy el camino, y la verdad, y la vida."
           </p>
-          <small id="versiculo-cita">— Mateo 11:28</small>
+          <small id="versiculo-cita">— Juan 14:6</small>
         </div>
       </div>
 
-      <div class="hero-actions fade-in">
+      <div class="hero-actions">
         <a href="/app-biblia" class="btn-primary">
           📖 Iniciar Recorrido
         </a>
-
         <a href="/vivencias" class="btn-secondary">
-          ✨ Explorar Personajes
+          ✨ Explorar
         </a>
-      </div>
-
-      <div class="scroll-indicator">
-        <span></span>
       </div>
     </div>
   </section>
 
-  <!-- SECCIÓN PROPÓSITO -->
-  <section class="purpose">
-    <div class="purpose-content">
-      <h2>Esto no es contenido. Es dirección.</h2>
-      <p>
-        Mi Amigo Anhelado nace para quienes están cansados de respuestas superficiales.
-        Aquí no buscamos entretenerte, buscamos despertarte.
-        No imponemos religión; proponemos encuentro.
-      </p>
-      <p>
-        Cada palabra, cada lectura, cada pausa,
-        está pensada para llevarte a una transformación silenciosa pero real.
-      </p>
-    </div>
+  <!-- PROPÓSITO -->
+  <section class="section reveal">
+    <h2>Esto no es información. Es transformación.</h2>
+    <p>
+      Este espacio fue creado para quienes sienten que hay algo más profundo
+      que la rutina, más real que la religión superficial y más eterno que las tendencias.
+    </p>
   </section>
 
   <!-- EXPERIENCIA -->
   <section class="experience">
-    <div class="experience-grid">
-      <div class="exp-card">
-        <h3>Lectura Profunda</h3>
-        <p>
-          Interfaz limpia, tipografía contemplativa y ritmo visual pensado
-          para que tu mente desacelere.
-        </p>
-      </div>
+    <div class="exp-card reveal">
+      <h3>Silencio Digital</h3>
+      <p>Sin distracciones. Sin ruido comercial. Solo presencia.</p>
+    </div>
 
-      <div class="exp-card">
-        <h3>Silencio Digital</h3>
-        <p>
-          Sin anuncios invasivos.
-          Sin distracciones innecesarias.
-          Solo tú y la Palabra.
-        </p>
-      </div>
+    <div class="exp-card reveal">
+      <h3>Ritmo Contemplativo</h3>
+      <p>Tipografía, espacios y transiciones pensadas para desacelerar tu mente.</p>
+    </div>
 
-      <div class="exp-card">
-        <h3>Proceso de 365 Días</h3>
-        <p>
-          Un recorrido estructurado para formar disciplina espiritual,
-          no solo emoción momentánea.
-        </p>
-      </div>
+    <div class="exp-card reveal">
+      <h3>Proceso de 365 Días</h3>
+      <p>Una disciplina espiritual progresiva y visible.</p>
     </div>
   </section>
 
-  <!-- LLAMADO FINAL -->
-  <section class="cta-final">
-    <h2>Si has llegado hasta aquí… no es casualidad.</h2>
+  <!-- CTA FINAL -->
+  <section class="cta reveal">
+    <h2>Si estás aquí… no es casualidad.</h2>
     <a href="/app-biblia" class="btn-primary large">
       Comenzar Ahora
     </a>
@@ -103,13 +83,32 @@ import PageLayout from '../layouts/PageLayout.astro';
     :root {
       --primary: #173d2a;
       --accent: #d4a574;
-      --bg: #fdfaf6;
-      --text-soft: #5d6d7e;
-      --max-width: 1200px;
+      --bg-light: #fdfaf6;
+      --bg-dark: #0f1c16;
+      --text-light: #5d6d7e;
+      --text-dark: #cfd8d3;
     }
 
     body {
-      background: var(--bg);
+      background: var(--bg-light);
+      transition: background 0.6s ease, color 0.6s ease;
+    }
+
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    /* PROGRESS BAR */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--accent);
+      width: 0%;
+      z-index: 9999;
+      transition: width 0.2s ease;
     }
 
     /* HERO */
@@ -119,8 +118,8 @@ import PageLayout from '../layouts/PageLayout.astro';
       align-items: center;
       justify-content: center;
       text-align: center;
-      position: relative;
       padding: 2rem;
+      position: relative;
       overflow: hidden;
     }
 
@@ -129,102 +128,72 @@ import PageLayout from '../layouts/PageLayout.astro';
       width: 600px;
       height: 600px;
       background: radial-gradient(circle, rgba(212,165,116,0.15) 0%, transparent 70%);
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       animation: pulse 8s infinite ease-in-out;
     }
 
     @keyframes pulse {
-      0%,100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.08); }
-    }
-
-    .hero-content {
-      max-width: 850px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .subtitle {
-      letter-spacing: 6px;
-      font-size: 0.8rem;
-      color: var(--accent);
-      margin-bottom: 1.5rem;
-      font-weight: bold;
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
     }
 
     .title {
       font-family: 'Playfair Display', serif;
       font-size: clamp(3rem, 8vw, 5.5rem);
       color: var(--primary);
-      margin-bottom: 1.5rem;
-      line-height: 1;
+    }
+
+    body.dark .title {
+      color: white;
     }
 
     .description {
       font-size: 1.3rem;
-      color: var(--text-soft);
-      margin-bottom: 3rem;
-      line-height: 1.8;
+      margin: 1.5rem 0 3rem;
+      color: var(--text-light);
+    }
+
+    body.dark .description {
+      color: var(--text-dark);
     }
 
     /* MANA */
     .mana-diario {
-      margin: 0 auto 3rem;
       padding: 2.5rem;
       max-width: 550px;
-      background: rgba(255,255,255,0.8);
+      margin: 0 auto 3rem;
+      border-radius: 25px;
       backdrop-filter: blur(15px);
-      border-radius: 30px;
-      border: 1px solid rgba(212,165,116,0.3);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.05);
-      transition: opacity 1s ease;
+      background: rgba(255,255,255,0.7);
+      transition: 0.5s ease;
     }
 
-    .mana-badge {
-      display: inline-block;
-      margin-bottom: 1rem;
-      font-size: 0.75rem;
-      letter-spacing: 2px;
-      color: var(--accent);
-      font-weight: bold;
+    body.dark .mana-diario {
+      background: rgba(255,255,255,0.05);
     }
 
     .mana-content p {
-      font-size: 1.6rem;
       font-family: 'Crimson Text', serif;
       font-style: italic;
-      color: var(--primary);
-      line-height: 1.5;
+      font-size: 1.6rem;
     }
 
-    .mana-content small {
-      display: block;
-      margin-top: 0.8rem;
-      color: var(--accent);
-      font-weight: bold;
-    }
-
-    /* BOTONES */
+    /* BUTTONS */
     .btn-primary, .btn-secondary {
       padding: 1.2rem 2.5rem;
       border-radius: 50px;
       font-weight: bold;
       text-decoration: none;
-      transition: all 0.3s ease;
+      transition: 0.3s ease;
       display: inline-block;
     }
 
     .btn-primary {
       background: var(--primary);
       color: white;
-      box-shadow: 0 15px 35px rgba(23,61,42,0.3);
     }
 
     .btn-primary:hover {
       transform: translateY(-4px);
-      background: #1f5337;
     }
 
     .btn-secondary {
@@ -233,144 +202,92 @@ import PageLayout from '../layouts/PageLayout.astro';
       margin-left: 1rem;
     }
 
-    .btn-secondary:hover {
-      background: var(--primary);
-      color: white;
-    }
-
-    .large {
-      padding: 1.5rem 3.5rem;
-      font-size: 1.1rem;
-    }
-
-    /* PURPOSE */
-    .purpose {
+    /* SECTIONS */
+    .section, .cta {
       padding: 7rem 2rem;
       text-align: center;
       max-width: 800px;
       margin: auto;
     }
 
-    .purpose h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
-      color: var(--primary);
-      margin-bottom: 2rem;
-    }
-
-    .purpose p {
-      font-size: 1.2rem;
-      color: var(--text-soft);
-      line-height: 1.9;
-      margin-bottom: 1.5rem;
-    }
-
-    /* EXPERIENCE */
     .experience {
       padding: 6rem 2rem;
-      background: white;
-    }
-
-    .experience-grid {
-      max-width: var(--max-width);
-      margin: auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
       gap: 3rem;
+      max-width: 1100px;
+      margin: auto;
     }
 
     .exp-card {
       padding: 2rem;
       border-radius: 20px;
-      background: var(--bg);
-      transition: 0.3s;
+      background: var(--bg-light);
+      transition: 0.4s ease;
+    }
+
+    body.dark .exp-card {
+      background: rgba(255,255,255,0.05);
     }
 
     .exp-card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.05);
     }
 
-    .exp-card h3 {
-      font-family: 'Playfair Display', serif;
-      color: var(--primary);
-      margin-bottom: 1rem;
+    /* REVEAL ANIMATION */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: 1s ease;
     }
 
-    .exp-card p {
-      color: var(--text-soft);
-      line-height: 1.7;
-    }
-
-    /* CTA FINAL */
-    .cta-final {
-      padding: 7rem 2rem;
-      text-align: center;
-      background: var(--primary);
-      color: white;
-    }
-
-    .cta-final h2 {
-      font-family: 'Playfair Display', serif;
-      margin-bottom: 2rem;
-      font-size: 2.3rem;
-    }
-
-    .cta-final .btn-primary {
-      background: white;
-      color: var(--primary);
-      box-shadow: none;
-    }
-
-    .cta-final .btn-primary:hover {
-      background: var(--accent);
-      color: white;
-    }
-
-    /* SCROLL INDICATOR */
-    .scroll-indicator {
-      margin-top: 4rem;
-    }
-
-    .scroll-indicator span {
-      display: block;
-      width: 2px;
-      height: 40px;
-      background: var(--accent);
-      margin: auto;
-      animation: scroll 2s infinite;
-    }
-
-    @keyframes scroll {
-      0% { opacity: 0; transform: translateY(-10px); }
-      50% { opacity: 1; }
-      100% { opacity: 0; transform: translateY(10px); }
-    }
-
-    @media (max-width: 768px) {
-      .btn-secondary {
-        display: block;
-        margin: 1rem 0 0 0;
-      }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 
   <script is:inline>
+    // Versículos dinámicos
     const versiculos = [
       { texto: "Yo soy el camino, y la verdad, y la vida.", cita: "Juan 14:6" },
       { texto: "La paz os dejo, mi paz os doy.", cita: "Juan 14:27" },
-      { texto: "Si permanecéis en mi palabra, seréis verdaderamente mis discípulos.", cita: "Juan 8:31" },
       { texto: "Venid a mí todos los que estáis trabajados y cargados.", cita: "Mateo 11:28" }
     ];
 
     function cargarVersiculo() {
-      const indice = Math.floor(Math.random() * versiculos.length);
-      document.getElementById('versiculo-texto').innerText =
-        `"${versiculos[indice].texto}"`;
-      document.getElementById('versiculo-cita').innerText =
-        `— ${versiculos[indice].cita}`;
+      const i = Math.floor(Math.random() * versiculos.length);
+      document.getElementById("versiculo-texto").innerText =
+        `"${versiculos[i].texto}"`;
+      document.getElementById("versiculo-cita").innerText =
+        `— ${versiculos[i].cita}`;
     }
 
-    document.addEventListener('DOMContentLoaded', cargarVersiculo);
+    document.addEventListener("DOMContentLoaded", cargarVersiculo);
+
+    // Scroll progress bar
+    window.addEventListener("scroll", () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.querySelector(".progress-bar").style.width = scrolled + "%";
+    });
+
+    // Reveal animation
+    const reveals = document.querySelectorAll(".reveal");
+    window.addEventListener("scroll", () => {
+      reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const elementTop = el.getBoundingClientRect().top;
+        if (elementTop < windowHeight - 100) {
+          el.classList.add("active");
+        }
+      });
+    });
+
+    // Auto Dark Mode
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.body.classList.add('dark');
+    }
   </script>
+
 </PageLayout>
