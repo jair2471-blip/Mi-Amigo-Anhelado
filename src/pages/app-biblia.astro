@@ -24,6 +24,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     }
     .main-container { width: 100%; max-width: 750px; padding: 20px; box-sizing: border-box; min-height: 100vh; }
 
+    /* --- UI COMPONENTS --- */
     .progress-container { position: sticky; top: 0; z-index: 1000; width: 100%; background: var(--bg); padding: 10px 0; }
     .progress-bar { height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
     #progreso-valor { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s; }
@@ -63,60 +64,31 @@ import PageLayout from '../layouts/PageLayout.astro';
     .grid-libros, .grid-caps { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
     .btn-lib { background: var(--card-bg); border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 15px; cursor: pointer; color: var(--text); font-weight: 600; }
 
-   /* --- AJUSTES PARA ALTA RESOLUCIÓN --- */
-#canvas-render { 
-  position: absolute; 
-  left: -9999px; 
-  top: 0; 
-  background: #faf8f5; 
-  border: 40px solid #1a4d2e; /* Borde más grueso para 1080p */
-  box-sizing: border-box; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-}
+    /* --- BLOQUE DE ALTA RESOLUCIÓN (CORREGIDO) --- */
+    #canvas-render { 
+      position: absolute; left: -9999px; top: 0; 
+      background: #faf8f5; border: 40px solid #1a4d2e; 
+      box-sizing: border-box; display: flex; justify-content: center; align-items: center; 
+    }
+    .formato-feed { width: 1080px; height: 1080px; padding: 80px; }
+    .formato-historia { width: 1080px; height: 1920px; padding: 150px 80px; }
+    
+    #canvas-render .marco-interno { 
+      border: 6px solid #d4a574; padding: 60px; 
+      background: white; width: 100%; text-align: center; 
+    }
+    #render-texto { 
+      font-family: 'Crimson Text', serif; font-size: 60px !important; 
+      color: #1a4d2e; font-style: italic; line-height: 1.3; margin: 30px 0;
+    }
+    #render-ref { 
+      font-family: 'Playfair Display', serif; font-size: 34px !important; 
+      color: #d4a574; text-transform: uppercase; letter-spacing: 4px; font-weight: bold; 
+    }
 
-/* Formato cuadrado estándar de Instagram */
-.formato-feed { 
-  width: 1080px; 
-  height: 1080px; 
-  padding: 80px; 
-}
-
-/* Formato 9:16 perfecto para Stories */
-.formato-historia { 
-  width: 1080px; 
-  height: 1920px; 
-  padding: 150px 80px; 
-}
-
-#canvas-render .marco-interno { 
-  border: 5px solid #d4a574; 
-  padding: 60px; 
-  background: white; 
-  width: 100%; 
-  text-align: center; 
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
-
-/* Ajuste de fuentes para el lienzo grande */
-#render-texto { 
-  font-family: 'Crimson Text'; 
-  font-size: 58px !important; /* Más grande para que se lea bien */
-  color: #1a4d2e; 
-  font-style: italic; 
-  line-height: 1.3; 
-  margin: 20px 0;
-}
-
-#render-ref { 
-  font-family: 'Playfair Display'; 
-  font-size: 32px !important; 
-  color: #d4a574; 
-  text-transform: uppercase; 
-  letter-spacing: 4px; 
-  font-weight: bold; 
-}
+    .corona { font-size: 6rem; display: block; margin-bottom: 15px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
+    .btn-continuar { background: var(--primary); color: white; border: none; padding: 18px 30px; border-radius: 40px; font-weight: bold; cursor: pointer; margin-top: 25px; width: 100%; }
   </style>
 
   <div class="main-container">
@@ -174,10 +146,10 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   <div id="canvas-render">
     <div class="marco-interno">
-      <span style="color: #d4a574; font-size: 5rem; font-family: 'Playfair Display'; line-height: 1; display:block; margin-bottom:-20px;">“</span>
-      <p id="render-texto" style="font-family: 'Crimson Text'; font-size: 2.2rem; color: #1a4d2e; font-style: italic; line-height: 1.4;"></p>
-      <div style="width: 60px; height: 3px; background: #d4a574; margin: 30px auto;"></div>
-      <p id="render-ref" style="font-family: 'Playfair Display'; font-size: 1.3rem; color: #d4a574; text-transform: uppercase; letter-spacing: 2px; font-weight:bold;"></p>
+      <span style="color: #d4a574; font-size: 80px; font-family: 'Playfair Display'; line-height: 1; display:block; margin-bottom:-10px;">“</span>
+      <p id="render-texto"></p>
+      <div style="width: 80px; height: 4px; background: #d4a574; margin: 40px auto;"></div>
+      <p id="render-ref"></p>
     </div>
   </div>
 
@@ -194,171 +166,4 @@ import PageLayout from '../layouts/PageLayout.astro';
       {n:'Lamentaciones', id:'lamentaciones', c:5}, {n:'Ezequiel', id:'ezequiel', c:48}, {n:'Daniel', id:'daniel', c:12},
       {n:'Oseas', id:'oseas', c:14}, {n:'Joel', id:'joel', c:3}, {n:'Amós', id:'amos', c:9},
       {n:'Abdías', id:'abdias', c:1}, {n:'Jonás', id:'jonas', c:4}, {n:'Miqueas', id:'miqueas', c:7},
-      {n:'Nahúm', id:'nahum', c:3}, {n:'Habacuc', id:'habacuc', c:3}, {n:'Sofonías', id:'sofonias', c:3},
-      {n:'Hageo', id:'hageo', c:2}, {n:'Zacarías', id:'zacarias', c:14}, {n:'Malaquías', id:'malaquias', c:4},
-      {n:'Mateo', id:'mateo', c:28}, {n:'Marcos', id:'marcos', c:16}, {n:'Lucas', id:'lucas', c:24},
-      {n:'Juan', id:'juan', c:21}, {n:'Hechos', id:'hechos', c:28}, {n:'Romanos', id:'romanos', c:16},
-      {n:'1 Corintios', id:'1-corintios', c:16}, {n:'2 Corintios', id:'2-corintios', c:13}, {n:'Gálatas', id:'galatas', c:6},
-      {n:'Efesios', id:'efesios', c:6}, {n:'Filipenses', id:'filipenses', c:4}, {n:'Colosenses', id:'colosenses', c:4},
-      {n:'1 Tesalonicenses', id:'1-tesalonicenses', c:5}, {n:'2 Tesalonicenses', id:'2-tesalonicenses', c:3},
-      {n:'1 Timoteo', id:'1-timoteo', c:6}, {n:'2 Timoteo', id:'2-timoteo', c:4}, {n:'Tito', id:'tito', c:3},
-      {n:'Filemón', id:'filemon', c:1}, {n:'Hebreos', id:'hebreos', c:13}, {n:'Santiago', id:'santiago', c:5},
-      {n:'1 Pedro', id:'1-pedro', c:5}, {n:'2 Pedro', id:'2-pedro', c:3}, {n:'1 Juan', id:'1-juan', c:5},
-      {n:'2 Juan', id:'2-juan', c:1}, {n:'3 Juan', id:'3-juan', c:1}, {n:'Judas', id:'judas', c:1},
-      {n:'Apocalipsis', id:'apocalipsis', c:22}
-    ];
-
-    let db = null;
-    let planFull = [];
-    LIBROS.forEach(l => { for(let i=1; i<=l.c; i++) planFull.push({n:l.n, id:l.id, c:i}); });
-
-    let fechaInicio = new Date(localStorage.getItem('b365_fecha_inicio') || new Date().toISOString());
-    if(!localStorage.getItem('b365_fecha_inicio')) localStorage.setItem('b365_fecha_inicio', fechaInicio.toISOString());
-    let fechaNav = localStorage.getItem('b365_fecha_nav') ? new Date(localStorage.getItem('b365_fecha_nav')) : new Date();
-
-    let resaltados = JSON.parse(localStorage.getItem('b365_favs')) || {};
-    let leidos = JSON.parse(localStorage.getItem('b365_leidos')) || [];
-    let fontSize = parseInt(localStorage.getItem('b365_fsize')) || 21;
-    let vSel = null;
-
-    async function iniciar() {
-      try {
-        const res = await fetch('/biblia.json');
-        db = await res.json();
-        renderPlan();
-      } catch(e) { console.error("Error cargando Biblia", e); }
-    }
-
-    function renderPlan() {
-      const diffTime = Math.abs(fechaNav - fechaInicio);
-      const diaMision = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      document.getElementById('labelDia').innerText = `DÍA ${diaMision}`;
-      document.getElementById('contenedor-lectura').dataset.modo = 'plan';
-
-      const promedio = planFull.length / 365; 
-      const inicioIndex = Math.floor((diaMision - 1) * promedio);
-      const finIndex = Math.floor(diaMision * promedio);
-      dibujarLectura(planFull.slice(inicioIndex, finIndex));
-      actualizarProgreso();
-      localStorage.setItem('b365_fecha_nav', fechaNav.toISOString());
-    }
-
-    function dibujarLectura(items) {
-      let html = "";
-      items.forEach((it, idx) => {
-        const cap = db[it.id] ? db[it.id][it.c] : null;
-        if(cap) {
-          html += `<div class="acordeon-item ${idx == 0 ? 'active' : ''}" id="ac-${idx}">
-            <div class="acordeon-header" onclick="window.toggleAc(${idx})">
-              <h2>${it.n} ${it.c}</h2><span>▼</span>
-            </div>
-            <div class="acordeon-content">`;
-          Object.entries(cap).forEach(([n, t]) => {
-            const ref = `${it.n} ${it.c}:${n}`;
-            const isFav = resaltados[ref] ? 'style="background:#fef08a; color:#000;"' : '';
-            const isRead = leidos.includes(ref) ? 'read' : '';
-            html += `<span class="v-txt ${isRead}" ${isFav} onclick="window.seleccionarV(this, '${ref}')">
-              <span class="v-num">${n}</span>${t.replace(/^\d+\/n/, '').replace(/\/n/g, '<br>')}
-            </span>`;
-          });
-          html += `</div></div>`;
-        }
-      });
-      document.getElementById('contenedor-lectura').innerHTML = html;
-    }
-
-    window.toggleAc = (i) => {
-      const items = document.querySelectorAll('.acordeon-item');
-      const wasActive = items[i].classList.contains('active');
-      items.forEach(el => el.classList.remove('active'));
-      if (!wasActive) items[i].classList.add('active');
-    };
-
-    window.seleccionarV = (el, ref) => {
-      vSel = { el, texto: el.innerText.replace(/^\d+/, '').trim(), ref };
-      document.getElementById('menuAcciones').style.display = 'flex';
-      if(!leidos.includes(ref)) {
-          leidos.push(ref);
-          el.classList.add('read');
-          localStorage.setItem('b365_leidos', JSON.stringify(leidos));
-          actualizarProgreso();
-      }
-    };
-
-    function actualizarProgreso() {
-      const totalHoy = document.querySelectorAll('.v-txt').length;
-      const leidosHoy = document.querySelectorAll('.v-txt.read').length;
-      if(totalHoy > 0) {
-        const porc = (leidosHoy / totalHoy * 100);
-        document.getElementById('progreso-valor').style.width = porc + '%';
-        if (porc === 100 && document.getElementById('contenedor-lectura').dataset.modo === 'plan' && !sessionStorage.getItem('fec_'+document.getElementById('labelDia').innerText)) {
-          document.getElementById('txt-progreso-total').innerText = ((leidos.length / 31102) * 100).toFixed(2) + '%';
-          document.getElementById('modalExito').style.display = 'grid';
-          sessionStorage.setItem('fec_'+document.getElementById('labelDia').innerText, 'true');
-        }
-      }
-    }
-
-    window.generarImagen = (tipo) => {
-  // Mostramos un aviso visual (opcional)
-  const btnOriginal = event.currentTarget.innerHTML;
-  const btn = event.currentTarget;
-  btn.innerHTML = "⏳...";
-
-  document.getElementById('render-texto').innerText = vSel.texto;
-  document.getElementById('render-ref').innerText = vSel.ref;
-  
-  const t = document.getElementById('canvas-render');
-  t.className = tipo === 'feed' ? 'formato-feed' : 'formato-historia';
-  
-  // Damos un respiro al navegador para aplicar los estilos
-  setTimeout(() => {
-    html2canvas(t, { 
-      scale: 3, // Calidad Ultra-HD
-      useCORS: true,
-      backgroundColor: '#faf8f5'
-    }).then(c => {
-      const a = document.createElement('a');
-      a.download = `Biblia365-${vSel.ref.replace(/[: ]/g, '-')}.png`;
-      a.href = c.toDataURL("image/png", 1.0);
-      a.click();
-      btn.innerHTML = btnOriginal;
-      window.cerrarMenu();
-    });
-  }, 200);
-};
-
-    window.abrirBib = () => {
-      const m = document.getElementById('contenidoModal');
-      m.innerHTML = `<h2 style="text-align:center;">Biblioteca</h2>
-        <button class="btn-lib" style="width:100%; margin-bottom:20px; background:var(--accent); color:white;" onclick="window.reiniciarPlan()">Reiniciar al Día 1</button>
-        <div class="grid-libros">${LIBROS.map(l => `<button class="btn-lib" onclick="window.verCaps('${l.id}', '${l.n}', ${l.c})">${l.n}</button>`).join('')}</div>`;
-      document.getElementById('modalBib').style.display = 'grid';
-    };
-
-    window.verCaps = (id, n, total) => {
-      let c = "";
-      for(let i=1; i<=total; i++) c += `<button class="btn-lib" onclick="window.irACap('${id}','${n}',${i})">${i}</button>`;
-      document.getElementById('contenidoModal').innerHTML = `<button onclick="window.abrirBib()" style="background:none; border:none; color:var(--accent); cursor:pointer;">◀ Volver</button><h2 style="text-align:center;">${n}</h2><div class="grid-caps">${c}</div>`;
-    };
-
-    window.irACap = (id, n, c) => {
-      window.cerrarBib();
-      document.getElementById('contenedor-lectura').dataset.modo = 'libre'; 
-      dibujarLectura([{id, n, c}]);
-      window.scrollTo(0,0);
-    };
-
-    window.cambiarDia = (n) => { fechaNav.setDate(fechaNav.getDate()+n); renderPlan(); window.scrollTo(0,0); };
-    window.irHoy = () => { fechaNav = new Date(); renderPlan(); window.scrollTo(0,0); };
-    window.cerrarBib = () => document.getElementById('modalBib').style.display = 'none';
-    window.cerrarMenu = () => document.getElementById('menuAcciones').style.display = 'none';
-    window.modoNoche = () => document.body.classList.toggle('dark-mode');
-    window.zoom = (n) => { fontSize += n; document.documentElement.style.setProperty('--f-size', fontSize+'px'); };
-    window.resaltar = () => { if(resaltados[vSel.ref]) delete resaltados[vSel.ref]; else resaltados[vSel.ref]=true; localStorage.setItem('b365_favs', JSON.stringify(resaltados)); renderPlan(); window.cerrarMenu(); };
-    window.compartir = async () => { await navigator.share({title:'Biblia 365', text:`"${vSel.texto}" (${vSel.ref})`}); window.cerrarMenu(); };
-    window.reiniciarPlan = () => { if(confirm("¿Día 1?")) { localStorage.setItem('b365_fecha_inicio', new Date().toISOString()); location.reload(); } };
-
-    document.addEventListener('DOMContentLoaded', iniciar);
-  </script>
-</PageLayout>
+      {n:'Nahúm', id:'nah
