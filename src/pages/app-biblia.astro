@@ -63,14 +63,60 @@ import PageLayout from '../layouts/PageLayout.astro';
     .grid-libros, .grid-caps { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
     .btn-lib { background: var(--card-bg); border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 15px; cursor: pointer; color: var(--text); font-weight: 600; }
 
-    #canvas-render { position: absolute; left: -9999px; top: 0; background: #faf8f5; border: 20px solid #1a4d2e; box-sizing: border-box; display: flex; justify-content: center; align-items: center; }
-    .formato-feed { width: 800px; height: 800px; padding: 50px; }
-    .formato-historia { width: 600px; height: 1066px; padding: 80px 40px; }
-    #canvas-render .marco-interno { border: 3px solid #d4a574; padding: 40px; background: white; width: 100%; text-align: center; }
+   /* --- AJUSTES PARA ALTA RESOLUCIÓN --- */
+#canvas-render { 
+  position: absolute; 
+  left: -9999px; 
+  top: 0; 
+  background: #faf8f5; 
+  border: 40px solid #1a4d2e; /* Borde más grueso para 1080p */
+  box-sizing: border-box; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
 
-    .corona { font-size: 5rem; display: block; margin-bottom: 10px; animation: bounce 2s infinite; }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-    .btn-continuar { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%; }
+/* Formato cuadrado estándar de Instagram */
+.formato-feed { 
+  width: 1080px; 
+  height: 1080px; 
+  padding: 80px; 
+}
+
+/* Formato 9:16 perfecto para Stories */
+.formato-historia { 
+  width: 1080px; 
+  height: 1920px; 
+  padding: 150px 80px; 
+}
+
+#canvas-render .marco-interno { 
+  border: 5px solid #d4a574; 
+  padding: 60px; 
+  background: white; 
+  width: 100%; 
+  text-align: center; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* Ajuste de fuentes para el lienzo grande */
+#render-texto { 
+  font-family: 'Crimson Text'; 
+  font-size: 58px !important; /* Más grande para que se lea bien */
+  color: #1a4d2e; 
+  font-style: italic; 
+  line-height: 1.3; 
+  margin: 20px 0;
+}
+
+#render-ref { 
+  font-family: 'Playfair Display'; 
+  font-size: 32px !important; 
+  color: #d4a574; 
+  text-transform: uppercase; 
+  letter-spacing: 4px; 
+  font-weight: bold; 
+}
   </style>
 
   <div class="main-container">
@@ -254,20 +300,33 @@ import PageLayout from '../layouts/PageLayout.astro';
     }
 
     window.generarImagen = (tipo) => {
-      document.getElementById('render-texto').innerText = vSel.texto;
-      document.getElementById('render-ref').innerText = vSel.ref;
-      const t = document.getElementById('canvas-render');
-      t.className = tipo === 'feed' ? 'formato-feed' : 'formato-historia';
-      setTimeout(() => {
-        html2canvas(t, { scale: 2 }).then(c => {
-          const a = document.createElement('a');
-          a.download = `Biblia365-${vSel.ref}.png`;
-          a.href = c.toDataURL();
-          a.click();
-          window.cerrarMenu();
-        });
-      }, 100);
-    };
+  // Mostramos un aviso visual (opcional)
+  const btnOriginal = event.currentTarget.innerHTML;
+  const btn = event.currentTarget;
+  btn.innerHTML = "⏳...";
+
+  document.getElementById('render-texto').innerText = vSel.texto;
+  document.getElementById('render-ref').innerText = vSel.ref;
+  
+  const t = document.getElementById('canvas-render');
+  t.className = tipo === 'feed' ? 'formato-feed' : 'formato-historia';
+  
+  // Damos un respiro al navegador para aplicar los estilos
+  setTimeout(() => {
+    html2canvas(t, { 
+      scale: 3, // Calidad Ultra-HD
+      useCORS: true,
+      backgroundColor: '#faf8f5'
+    }).then(c => {
+      const a = document.createElement('a');
+      a.download = `Biblia365-${vSel.ref.replace(/[: ]/g, '-')}.png`;
+      a.href = c.toDataURL("image/png", 1.0);
+      a.click();
+      btn.innerHTML = btnOriginal;
+      window.cerrarMenu();
+    });
+  }, 200);
+};
 
     window.abrirBib = () => {
       const m = document.getElementById('contenidoModal');
