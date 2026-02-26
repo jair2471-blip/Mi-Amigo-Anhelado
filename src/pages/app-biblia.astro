@@ -24,7 +24,6 @@ import PageLayout from '../layouts/PageLayout.astro';
     }
     .main-container { width: 100%; max-width: 750px; padding: 20px; box-sizing: border-box; min-height: 100vh; }
 
-    /* --- UI COMPONENTS --- */
     .progress-container { position: sticky; top: 0; z-index: 1000; width: 100%; background: var(--bg); padding: 10px 0; }
     .progress-bar { height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
     #progreso-valor { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s; }
@@ -64,7 +63,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     .grid-libros, .grid-caps { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
     .btn-lib { background: var(--card-bg); border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 15px; cursor: pointer; color: var(--text); font-weight: 600; }
 
-    /* --- BLOQUE DE ALTA RESOLUCIÓN (CORREGIDO) --- */
+    /* --- ESTILOS DE RENDER HD --- */
     #canvas-render { 
       position: absolute; left: -9999px; top: 0; 
       background: #faf8f5; border: 40px solid #1a4d2e; 
@@ -146,24 +145,193 @@ import PageLayout from '../layouts/PageLayout.astro';
 
   <div id="canvas-render">
     <div class="marco-interno">
-      <span style="color: #d4a574; font-size: 80px; font-family: 'Playfair Display'; line-height: 1; display:block; margin-bottom:-10px;">“</span>
+      <span style="color: #d4a574; font-size: 80px; font-family: 'Playfair Display'; line-height: 1; display:block; margin-bottom:-10px;">"</span>
       <p id="render-texto"></p>
       <div style="width: 80px; height: 4px; background: #d4a574; margin: 40px auto;"></div>
       <p id="render-ref"></p>
     </div>
   </div>
 
-  <script>
+  <script is:inline>
     const LIBROS = [
-      {n:'Génesis', id:'genesis', c:50}, {n:'Éxodo', id:'exodo', c:40}, {n:'Levítico', id:'levitico', c:27},
-      {n:'Números', id:'numeros', c:36}, {n:'Deuteronomio', id:'deuteronomio', c:34}, {n:'Josué', id:'josue', c:24},
-      {n:'Jueces', id:'jueces', c:21}, {n:'Rut', id:'rut', c:4}, {n:'1 Samuel', id:'1-samuel', c:31},
-      {n:'2 Samuel', id:'2-samuel', c:24}, {n:'1 Reyes', id:'1-reyes', c:22}, {n:'2 Reyes', id:'2-reyes', c:25},
-      {n:'1 Crónicas', id:'1-cronicas', c:29}, {n:'2 Crónicas', id:'2-cronicas', c:36}, {n:'Esdras', id:'esdras', c:10},
-      {n:'Nehemías', id:'nehemias', c:13}, {n:'Ester', id:'ester', c:10}, {n:'Job', id:'job', c:42},
-      {n:'Salmos', id:'salmos', c:150}, {n:'Proverbios', id:'proverbios', c:31}, {n:'Eclesiastés', id:'eclesiastes', c:12},
-      {n:'Cantares', id:'cantares', c:8}, {n:'Isaías', id:'isaias', c:66}, {n:'Jeremías', id:'jeremias', c:52},
-      {n:'Lamentaciones', id:'lamentaciones', c:5}, {n:'Ezequiel', id:'ezequiel', c:48}, {n:'Daniel', id:'daniel', c:12},
-      {n:'Oseas', id:'oseas', c:14}, {n:'Joel', id:'joel', c:3}, {n:'Amós', id:'amos', c:9},
-      {n:'Abdías', id:'abdias', c:1}, {n:'Jonás', id:'jonas', c:4}, {n:'Miqueas', id:'miqueas', c:7},
-      {n:'Nahúm', id:'nah
+      {n:"Génesis", id:"genesis", c:50}, {n:"Éxodo", id:"exodo", c:40}, {n:"Levítico", id:"levitico", c:27},
+      {n:"Números", id:"numeros", c:36}, {n:"Deuteronomio", id:"deuteronomio", c:34}, {n:"Josué", id:"josue", c:24},
+      {n:"Jueces", id:"jueces", c:21}, {n:"Rut", id:"rut", c:4}, {n:"1 Samuel", id:"1-samuel", c:31},
+      {n:"2 Samuel", id:"2-samuel", c:24}, {n:"1 Reyes", id:"1-reyes", c:22}, {n:"2 Reyes", id:"2-reyes", c:25},
+      {n:"1 Crónicas", id:"1-cronicas", c:29}, {n:"2 Crónicas", id:"2-cronicas", c:36}, {n:"Esdras", id:"esdras", c:10},
+      {n:"Nehemías", id:"nehemias", c:13}, {n:"Ester", id:"ester", c:10}, {n:"Job", id:"job", c:42},
+      {n:"Salmos", id:"salmos", c:150}, {n:"Proverbios", id:"proverbios", c:31}, {n:"Eclesiastés", id:"eclesiastes", c:12},
+      {n:"Cantares", id:"cantares", c:8}, {n:"Isaías", id:"isaias", c:66}, {n:"Jeremías", id:"jeremias", c:52},
+      {n:"Lamentaciones", id:"lamentaciones", c:5}, {n:"Ezequiel", id:"ezequiel", c:48}, {n:"Daniel", id:"daniel", c:12},
+      {n:"Oseas", id:"oseas", c:14}, {n:"Joel", id:"joel", c:3}, {n:"Amós", id:"amos", c:9},
+      {n:"Abdías", id:"abdias", c:1}, {n:"Jonás", id:"jonas", c:4}, {n:"Miqueas", id:"miqueas", c:7},
+      {n:"Nahúm", id:"nahum", c:3}, {n:"Habacuc", id:"habacuc", c:3}, {n:"Sofonías", id:"sofonias", c:3},
+      {n:"Hageo", id:"hageo", c:2}, {n:"Zacarías", id:"zacarias", c:14}, {n:"Malaquías", id:"malaquias", c:4},
+      {n:"Mateo", id:"mateo", c:28}, {n:"Marcos", id:"marcos", c:16}, {n:"Lucas", id:"lucas", c:24},
+      {n:"Juan", id:"juan", c:21}, {n:"Hechos", id:"hechos", c:28}, {n:"Romanos", id:"romanos", c:16},
+      {n:"1 Corintios", id:"1-corintios", c:16}, {n:"2 Corintios", id:"2-corintios", c:13}, {n:"Gálatas", id:"galatas", c:6},
+      {n:"Efesios", id:"efesios", c:6}, {n:"Filipenses", id:"filipenses", c:4}, {n:"Colosenses", id:"colosenses", c:4},
+      {n:"1 Tesalonicenses", id:"1-tesalonicenses", c:5}, {n:"2 Tesalonicenses", id:"2-tesalonicenses", c:3},
+      {n:"1 Timoteo", id:"1-timoteo", c:6}, {n:"2 Timoteo", id:"2-timoteo", c:4}, {n:"Tito", id:"tito", c:3},
+      {n:"Filemón", id:"filemon", c:1}, {n:"Hebreos", id:"hebreos", c:13}, {n:"Santiago", id:"santiago", c:5},
+      {n:"1 Pedro", id:"1-pedro", c:5}, {n:"2 Pedro", id:"2-pedro", c:3}, {n:"1 Juan", id:"1-juan", c:5},
+      {n:"2 Juan", id:"2-juan", c:1}, {n:"3 Juan", id:"3-juan", c:1}, {n:"Judas", id:"judas", c:1},
+      {n:"Apocalipsis", id:"apocalipsis", c:22}
+    ];
+
+    let db = null;
+    let planFull = [];
+    LIBROS.forEach(l => { for(let i=1; i<=l.c; i++) planFull.push({n:l.n, id:l.id, c:i}); });
+
+    let fechaInicio = new Date(localStorage.getItem("b365_fecha_inicio") || new Date().toISOString());
+    if(!localStorage.getItem("b365_fecha_inicio")) localStorage.setItem("b365_fecha_inicio", fechaInicio.toISOString());
+    let fechaNav = localStorage.getItem("b365_fecha_nav") ? new Date(localStorage.getItem("b365_fecha_nav")) : new Date();
+
+    let resaltados = JSON.parse(localStorage.getItem("b365_favs")) || {};
+    let leidos = JSON.parse(localStorage.getItem("b365_leidos")) || [];
+    let fontSize = parseInt(localStorage.getItem("b365_fsize")) || 21;
+    let vSel = null;
+
+    async function iniciar() {
+      try {
+        const res = await fetch("/biblia.json");
+        db = await res.json();
+        renderPlan();
+      } catch(e) { console.error("Error cargando Biblia", e); }
+    }
+
+    function renderPlan() {
+      const diffTime = Math.abs(fechaNav - fechaInicio);
+      const diaMision = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      const label = document.getElementById("labelDia");
+      if(label) label.innerText = "DÍA " + diaMision;
+      
+      const contenedor = document.getElementById("contenedor-lectura");
+      if(contenedor) contenedor.dataset.modo = "plan";
+
+      const promedio = planFull.length / 365; 
+      const inicioIndex = Math.floor((diaMision - 1) * promedio);
+      const finIndex = Math.floor(diaMision * promedio);
+      dibujarLectura(planFull.slice(inicioIndex, finIndex));
+      actualizarProgreso();
+      localStorage.setItem("b365_fecha_nav", fechaNav.toISOString());
+    }
+
+    function dibujarLectura(items) {
+      let html = "";
+      items.forEach((it, idx) => {
+        const cap = (db && db[it.id]) ? db[it.id][it.c] : null;
+        if(cap) {
+          html += '<div class="acordeon-item ' + (idx == 0 ? "active" : "") + '" id="ac-' + idx + '">';
+          html += '<div class="acordeon-header" onclick="window.toggleAc(' + idx + ')">';
+          html += '<h2>' + it.n + ' ' + it.c + '</h2><span>▼</span></div>';
+          html += '<div class="acordeon-content">';
+          Object.entries(cap).forEach(([n, t]) => {
+            const ref = it.n + " " + it.c + ":" + n;
+            const isFav = resaltados[ref] ? 'style="background:#fef08a; color:#000;"' : "";
+            const isRead = leidos.includes(ref) ? "read" : "";
+            html += '<span class="v-txt ' + isRead + '" ' + isFav + ' onclick="window.seleccionarV(this, \'' + ref + '\')">';
+            html += '<span class="v-num">' + n + '</span>' + t.replace(/^\d+\/n/, "").replace(/\/n/g, "<br>");
+            html += '</span>';
+          });
+          html += '</div></div>';
+        }
+      });
+      const cont = document.getElementById("contenedor-lectura");
+      if(cont) cont.innerHTML = html;
+    }
+
+    window.toggleAc = (i) => {
+      const items = document.querySelectorAll(".acordeon-item");
+      const wasActive = items[i].classList.contains("active");
+      items.forEach(el => el.classList.remove("active"));
+      if (!wasActive) items[i].classList.add("active");
+    };
+
+    window.seleccionarV = (el, ref) => {
+      vSel = { el: el, texto: el.innerText.replace(/^\d+/, "").trim(), ref: ref };
+      document.getElementById("menuAcciones").style.display = "flex";
+      if(!leidos.includes(ref)) {
+          leidos.push(ref);
+          el.classList.add("read");
+          localStorage.setItem("b365_leidos", JSON.stringify(leidos));
+          actualizarProgreso();
+      }
+    };
+
+    function actualizarProgreso() {
+      const totalHoy = document.querySelectorAll(".v-txt").length;
+      const leidosHoy = document.querySelectorAll(".v-txt.read").length;
+      if(totalHoy > 0) {
+        const porc = (leidosHoy / totalHoy * 100);
+        const barra = document.getElementById("progreso-valor");
+        if(barra) barra.style.width = porc + "%";
+        
+        const cont = document.getElementById("contenedor-lectura");
+        const label = document.getElementById("labelDia");
+        if (porc === 100 && cont && cont.dataset.modo === "plan" && !sessionStorage.getItem("fec_" + label.innerText)) {
+          const totalTxt = document.getElementById("txt-progreso-total");
+          if(totalTxt) totalTxt.innerText = ((leidos.length / 31102) * 100).toFixed(2) + "%";
+          document.getElementById("modalExito").style.display = "grid";
+          sessionStorage.setItem("fec_" + label.innerText, "true");
+        }
+      }
+    }
+
+    window.generarImagen = (tipo) => {
+      const btn = event.currentTarget;
+      const original = btn.innerHTML;
+      btn.innerHTML = "⏳...";
+      document.getElementById("render-texto").innerText = vSel.texto;
+      document.getElementById("render-ref").innerText = vSel.ref;
+      const t = document.getElementById("canvas-render");
+      t.className = tipo === "feed" ? "formato-feed" : "formato-historia";
+      setTimeout(() => {
+        html2canvas(t, { scale: 3, useCORS: true, backgroundColor: "#faf8f5" }).then(c => {
+          const a = document.createElement("a");
+          a.download = "Biblia365-" + vSel.ref.replace(/[: ]/g, "-") + ".png";
+          a.href = c.toDataURL("image/png", 1.0);
+          a.click();
+          btn.innerHTML = original;
+          window.cerrarMenu();
+        });
+      }, 200);
+    };
+
+    window.abrirBib = () => {
+      const m = document.getElementById("contenidoModal");
+      let html = '<h2 style="text-align:center;">Biblioteca</h2>';
+      html += '<button class="btn-lib" style="width:100%; margin-bottom:20px; background:var(--accent); color:white;" onclick="window.reiniciarPlan()">Reiniciar al Día 1</button>';
+      html += '<div class="grid-libros">' + LIBROS.map(l => '<button class="btn-lib" onclick="window.verCaps(\''+l.id+'\', \''+l.n+'\', '+l.c+')">'+l.n+'</button>').join("") + '</div>';
+      if(m) m.innerHTML = html;
+      document.getElementById("modalBib").style.display = "grid";
+    };
+
+    window.verCaps = (id, n, total) => {
+      let c = "";
+      for(let i=1; i<=total; i++) c += '<button class="btn-lib" onclick="window.irACap(\''+id+'\',\''+n+'\','+i+')">'+i+'</button>';
+      const m = document.getElementById("contenidoModal");
+      if(m) m.innerHTML = '<button onclick="window.abrirBib()" style="background:none; border:none; color:var(--accent); cursor:pointer;">◀ Volver</button><h2 style="text-align:center;">'+n+'</h2><div class="grid-caps">'+c+'</div>';
+    };
+
+    window.irACap = (id, n, c) => {
+      window.cerrarBib();
+      const cont = document.getElementById("contenedor-lectura");
+      if(cont) cont.dataset.modo = "libre"; 
+      dibujarLectura([{id:id, n:n, c:c}]);
+      window.scrollTo(0,0);
+    };
+
+    window.cambiarDia = (n) => { fechaNav.setDate(fechaNav.getDate()+n); renderPlan(); window.scrollTo(0,0); };
+    window.irHoy = () => { fechaNav = new Date(); renderPlan(); window.scrollTo(0,0); };
+    window.cerrarBib = () => document.getElementById("modalBib").style.display = "none";
+    window.cerrarMenu = () => document.getElementById("menuAcciones").style.display = "none";
+    window.modoNoche = () => document.body.classList.toggle("dark-mode");
+    window.zoom = (n) => { fontSize += n; document.documentElement.style.setProperty("--f-size", fontSize+"px"); };
+    window.resaltar = () => { if(resaltados[vSel.ref]) delete resaltados[vSel.ref]; else resaltados[vSel.ref]=true; localStorage.setItem("b365_favs", JSON.stringify(resaltados)); renderPlan(); window.cerrarMenu(); };
+    window.compartir = async () => { await navigator.share({title:"Biblia 365", text:'"' + vSel.texto + '" (' + vSel.ref + ')'}); window.cerrarMenu(); };
+    window.reiniciarPlan = () => { if(confirm("¿Día 1?")) { localStorage.setItem("b365_fecha_inicio", new Date().toISOString()); location.reload(); } };
+
+    document.addEventListener("DOMContentLoaded", iniciar);
+  </script>
+</PageLayout>
