@@ -10,9 +10,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const resolvedDescription = description || defaultDescription;
 const resolvedImage = image?.src || image || defaultImage;
 
-// Colores
-const primaryColor = "#1a4d2e";
-const accentColor = "#d4a574";
+// 🎯 Colores optimizados para contraste AA
+const primaryColor = "#163d26";   // verde profundo
+const accentColor = "#b7791f";    // dorado oscuro accesible
 ---
 
 <!DOCTYPE html>
@@ -39,7 +39,7 @@ const accentColor = "#d4a574";
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="es_CO" />
 
-    <!-- Twitter Card -->
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${title} | ${siteName}`} />
     <meta name="twitter:description" content={resolvedDescription} />
@@ -102,7 +102,7 @@ const accentColor = "#d4a574";
         nav {
             padding: 2rem 0;
             text-align: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
             margin-bottom: 2rem;
             display: flex;
             justify-content: center;
@@ -113,20 +113,23 @@ const accentColor = "#d4a574";
 
         nav a {
             text-decoration: none;
-            color: var(--text-dark);
+            color: #1a202c;
             font-weight: 600;
-            padding: 5px 10px;
+            padding: 6px 12px;
             font-size: 1.05rem;
             transition: all 0.3s ease;
         }
 
-        nav a:hover { color: var(--accent); }
+        nav a:hover {
+            color: var(--primary);
+        }
 
         nav a.nav-blog {
-            border: 1.5px solid var(--accent);
+            border: 2px solid var(--accent);
             border-radius: 25px;
-            padding: 5px 20px;
+            padding: 6px 22px;
             color: var(--accent);
+            font-weight: 700;
         }
 
         nav a.nav-blog:hover {
@@ -143,7 +146,7 @@ const accentColor = "#d4a574";
             margin-top: 4rem;
             padding: 3rem 1rem;
             font-size: 0.95rem;
-            color: #718096;
+            color: #4a5568; /* gris más oscuro accesible */
             border-top: 2px solid #f1ece4;
         }
 
@@ -173,7 +176,7 @@ const accentColor = "#d4a574";
         @media (max-width: 600px) {
             nav { padding: 1.5rem 0; gap: 0.5rem; }
             nav a { font-size: 0.95rem; padding: 5px; }
-            nav a.nav-blog { padding: 5px 12px; }
+            nav a.nav-blog { padding: 5px 14px; }
         }
     </style>
 </head>
