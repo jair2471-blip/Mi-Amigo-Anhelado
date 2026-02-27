@@ -35,9 +35,9 @@ const accentColor = "#d4a574";
     <meta property="og:description" content={resolvedDescription} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={resolvedImage} />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:locale" content="es_CO" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="es_CO" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -47,33 +47,28 @@ const accentColor = "#d4a574";
 
     <!-- Schema.org -->
     <script
-  type="application/ld+json"
-  set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: title,
-    description: resolvedDescription,
-    image: resolvedImage,
-    datePublished: pubDate,
-    author: {
-      "@type": "Person",
-      name: siteName
-    },
-    publisher: {
-      "@type": "Organization",
-      name: siteName,
-      logo: {
-        "@type": "ImageObject",
-        url: defaultImage
-      }
-    }
-  })}
-/>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: title,
+        description: resolvedDescription,
+        image: resolvedImage,
+        datePublished: pubDate,
+        author: {
+          "@type": "Person",
+          name: siteName
+        },
+        publisher: {
+          "@type": "Organization",
+          name: siteName,
+          logo: {
+            "@type": "ImageObject",
+            url: defaultImage
+          }
+        }
+      })}
+    />
 
     <style define:vars={{ primaryColor, accentColor }}>
         :root {
@@ -86,8 +81,8 @@ const accentColor = "#d4a574";
         * { box-sizing: border-box; }
 
         body {
-            font-family: 'Crimson Text', Georgia, serif;
-            line-height: 1.7;
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.8;
             margin: 0;
             padding: 0;
             background-color: var(--bg-soft);
@@ -121,7 +116,7 @@ const accentColor = "#d4a574";
             color: var(--text-dark);
             font-weight: 600;
             padding: 5px 10px;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             transition: all 0.3s ease;
         }
 
@@ -139,7 +134,9 @@ const accentColor = "#d4a574";
             color: white;
         }
 
-        main { flex: 1; }
+        main { 
+            flex: 1; 
+        }
 
         footer {
             text-align: center;
@@ -151,11 +148,12 @@ const accentColor = "#d4a574";
         }
 
         .footer-brand {
-            font-family: 'Playfair Display', serif;
+            font-family: Georgia, serif;
             color: var(--primary);
             font-size: 1.2rem;
             display: block;
             margin-bottom: 0.5rem;
+            font-weight: 700;
         }
 
         .slogan {
@@ -185,7 +183,7 @@ const accentColor = "#d4a574";
             <nav>
                 <a href="/">Inicio</a>
                 <a href="/app-biblia">Biblia</a>
-               <a href="/personajes-biblicos-importantes">Personajes Bíblicos</a>
+                <a href="/personajes-biblicos-importantes">Personajes Bíblicos</a>
                 <a href="/blog" class="nav-blog">Reflexiones</a>
             </nav>
         </header>
