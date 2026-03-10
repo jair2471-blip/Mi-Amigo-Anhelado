@@ -7,8 +7,6 @@ author: "Mi amigo Anhelado"
 tags: ["relación con Dios", "religión vs relación", "fe cristiana", "vida espiritual", "Dios"]
 ---
 
-# ¿Religión o Relación con Dios? La Diferencia que Cambiará tu Vida
-
 Hay una pregunta que muchos evitan en voz alta porque duele: **¿Lo que tengo con Dios es una relación real o solo una religión bien practicada?** No es un debate teológico, es una cuestión de vida o muerte espiritual.
 
 ## El Problema del "Sistema" Religioso
