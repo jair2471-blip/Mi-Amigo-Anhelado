@@ -2,7 +2,7 @@
 title: "¿Cristiano de Domingo o Guerrero de Verdad? El Despertar de la Fe Real"
 description: "¿Vives un evangelio de microondas o una fe de fuego? Descubre por qué la religión de domingo no sirve para las batallas del lunes."
 pubDate: 2026-03-09
-heroImage: "https://plus.unsplash.com/premium_photo-1714575080994-61d113cb183c?q=80&w=1200&h=630&auto=format&fit=crop"
+heroImage: "https://images.unsplash.com/photo-1457139621581-298d1801c832?q=80&w=1200&h=630&fit=crop&auto=format"
 author: "Mi amigo Anhelado"
 tags: ["fe real", "crecimiento espiritual", "obediencia", "vida cristiana", "testimonio"]
 ---
