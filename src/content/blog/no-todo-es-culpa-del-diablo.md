@@ -2,7 +2,7 @@
 title: "No Todo es Culpa del Diablo: El Verdadero Origen de tu Estancamiento"
 description: "¿Sientes que tu vida espiritual y material no avanza? Deja de buscar ataques externos y descubre cómo el desorden interno y la falta de responsabilidad bloquean tu bendición."
 pubDate: 2026-03-17
-heroImage: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhMiN0twNrypQrDfbj3qbDm4VccFh_vYDFXE1kK0rwKhl1KpT1E5OB0BKpzrnbNU0LgFTQqBKUk4b7Lin6Pr2AfRDLzJrYSelPWFDzSTOFp1sl8AEqtkO_h5-yR28AWNKWmyW92yiXyTufJxodfjt0hL0EaFzI6d7zwyPEat8gmbm8dkkghIjHlf4iGOqg/s16000/no-todo-es-culpa-del-diablo-estancamiento-espiritual.jpg"
+heroImage: "https://images.unsplash.com/photo-1611578721564-9a199b7d1bbf?q=80&w=1200&h=630&auto=format&fit=crop&crop=center"
 author: "Mi Amigo Anhelado"
 tags: ["estancamiento espiritual", "madurez cristiana", "fe práctica", "guerra espiritual", "crecimiento personal"]
 ---
