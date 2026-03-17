@@ -3,7 +3,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 ---
 
 <PageLayout title="Biblia 365 - Misión Marte">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" is:inline></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Bebas+Neue&family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
 
   <style is:inline>
@@ -119,167 +119,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     .btn-lib { background: var(--card-bg); border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 15px; cursor: pointer; color: var(--text); font-weight: 600; }
 
     /* ===== CANVAS DE RENDER ===== */
-    #canvas-render { 
-      position: fixed; top: 0; left: 0;
-      visibility: hidden; pointer-events: none;
-      box-sizing: border-box;
-      display: flex; justify-content: center; align-items: center;
-      z-index: -1;
-    }
-    .formato-feed { width: 1080px; height: 1080px; }
-    .formato-historia { width: 1080px; height: 1920px; }
-
-    /* === PLANTILLA 1: GLORIA === */
-    #canvas-render.tema-gloria {
-      background: #fdf6e3;
-    }
-    #canvas-render.tema-gloria .render-inner {
-      width: 100%; height: 100%; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 80px; box-sizing: border-box;
-      position: relative;
-    }
-    #canvas-render.tema-gloria .render-inner::before {
-      content: ''; position: absolute; inset: 40px;
-      border: 2px solid #c9973d; pointer-events: none;
-    }
-    #canvas-render.tema-gloria .render-inner::after {
-      content: ''; position: absolute; inset: 50px;
-      border: 1px solid rgba(201,151,61,0.4); pointer-events: none;
-    }
-    #canvas-render.tema-gloria .corner {
-      position: absolute; width: 60px; height: 60px; border-color: #c9973d;
-    }
-    #canvas-render.tema-gloria .corner-tl { top: 30px; left: 30px; border-top: 4px solid; border-left: 4px solid; }
-    #canvas-render.tema-gloria .corner-tr { top: 30px; right: 30px; border-top: 4px solid; border-right: 4px solid; }
-    #canvas-render.tema-gloria .corner-bl { bottom: 30px; left: 30px; border-bottom: 4px solid; border-left: 4px solid; }
-    #canvas-render.tema-gloria .corner-br { bottom: 30px; right: 30px; border-bottom: 4px solid; border-right: 4px solid; }
-    #canvas-render.tema-gloria .render-marca { font-family: 'Playfair Display', serif; font-size: 22px; color: #c9973d; letter-spacing: 8px; text-transform: uppercase; margin-bottom: 40px; }
-    #canvas-render.tema-gloria .render-comilla { font-family: 'Playfair Display', serif; font-size: 180px; color: #c9973d; line-height: 0.5; margin-bottom: 20px; }
-    #canvas-render.tema-gloria .render-texto { font-family: 'IM Fell English', serif; font-size: 58px; color: #3d2008; font-style: italic; line-height: 1.35; text-align: center; margin: 0; }
-    #canvas-render.tema-gloria .render-linea { width: 120px; height: 3px; background: linear-gradient(90deg, transparent, #c9973d, transparent); margin: 40px auto; }
-    #canvas-render.tema-gloria .render-ref { font-family: 'Playfair Display', serif; font-size: 28px; color: #c9973d; letter-spacing: 4px; text-transform: uppercase; }
-
-    /* === PLANTILLA 2: COSMOS === */
-    #canvas-render.tema-cosmos {
-      background: #020818;
-    }
-    #canvas-render.tema-cosmos .render-inner {
-      width: 100%; height: 100%; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 80px; box-sizing: border-box;
-      position: relative; overflow: hidden;
-    }
-    #canvas-render.tema-cosmos .estrellas {
-      position: absolute; inset: 0; 
-      background-image: 
-        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
-        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(2px 2px at 40% 10%, rgba(255,255,255,0.9) 0%, transparent 100%),
-        radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.7) 0%, transparent 100%),
-        radial-gradient(1px 1px at 75% 5%, rgba(255,255,255,0.8) 0%, transparent 100%),
-        radial-gradient(2px 2px at 85% 20%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 15% 60%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 50% 70%, rgba(255,255,255,0.8) 0%, transparent 100%),
-        radial-gradient(2px 2px at 70% 80%, rgba(255,255,255,0.7) 0%, transparent 100%),
-        radial-gradient(1px 1px at 90% 65%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 30% 85%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 5% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(2px 2px at 95% 45%, rgba(255,255,255,0.7) 0%, transparent 100%),
-        radial-gradient(1px 1px at 45% 50%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 80% 55%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(3px 3px at 20% 25%, rgba(240,200,100,0.7) 0%, transparent 100%),
-        radial-gradient(3px 3px at 65% 75%, rgba(180,160,255,0.5) 0%, transparent 100%);
-    }
-    #canvas-render.tema-cosmos .nebula {
-      position: absolute; inset: 0;
-      background: 
-        radial-gradient(ellipse 60% 40% at 20% 30%, rgba(30,10,80,0.7) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 60% at 80% 70%, rgba(10,40,80,0.5) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 50% at 50% 50%, rgba(60,10,30,0.3) 0%, transparent 70%);
-    }
-    #canvas-render.tema-cosmos .render-marca { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: rgba(240,200,100,0.7); letter-spacing: 10px; text-transform: uppercase; margin-bottom: 50px; position: relative; z-index: 1; }
-    #canvas-render.tema-cosmos .render-comilla { font-family: 'Cormorant Garamond', serif; font-size: 200px; color: rgba(240,200,100,0.3); line-height: 0.4; margin-bottom: 30px; position: relative; z-index: 1; }
-    #canvas-render.tema-cosmos .render-texto { font-family: 'Cormorant Garamond', serif; font-size: 60px; color: #f0e8d0; font-style: italic; font-weight: 300; line-height: 1.3; text-align: center; margin: 0; position: relative; z-index: 1; text-shadow: 0 0 40px rgba(240,200,100,0.3); }
-    #canvas-render.tema-cosmos .render-linea { width: 200px; height: 1px; background: linear-gradient(90deg, transparent, rgba(240,200,100,0.8), transparent); margin: 45px auto; position: relative; z-index: 1; }
-    #canvas-render.tema-cosmos .render-ref { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #f0c060; letter-spacing: 8px; position: relative; z-index: 1; }
-    #canvas-render.tema-cosmos .render-circulo {
-      position: absolute; width: 700px; height: 700px; border-radius: 50%;
-      border: 1px solid rgba(240,200,100,0.1);
-      box-shadow: 0 0 0 40px rgba(240,200,100,0.02), 0 0 0 80px rgba(240,200,100,0.01);
-      z-index: 0;
-    }
-
-    /* === PLANTILLA 3: EDITORIAL === */
-    #canvas-render.tema-editorial {
-      background: #f5f0e8;
-    }
-    #canvas-render.tema-editorial .render-inner {
-      width: 100%; height: 100%; display: flex; flex-direction: column;
-      align-items: flex-start; justify-content: center; padding: 100px; box-sizing: border-box;
-      position: relative;
-    }
-    #canvas-render.tema-editorial .render-linea-top {
-      position: absolute; top: 0; left: 0; right: 0; height: 20px; background: #1a1a1a;
-    }
-    #canvas-render.tema-editorial .render-linea-bottom {
-      position: absolute; bottom: 0; left: 0; right: 0; height: 8px; background: #c9973d;
-    }
-    #canvas-render.tema-editorial .render-marca { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #1a1a1a; letter-spacing: 12px; text-transform: uppercase; margin-bottom: 30px; opacity: 0.5; }
-    #canvas-render.tema-editorial .render-numero { font-family: 'Bebas Neue', sans-serif; font-size: 300px; color: rgba(0,0,0,0.06); line-height: 0.8; position: absolute; right: 60px; top: 50%; transform: translateY(-50%); }
-    #canvas-render.tema-editorial .render-texto { font-family: 'Playfair Display', serif; font-size: 72px; color: #1a1a1a; font-style: italic; line-height: 1.2; text-align: left; margin: 0; position: relative; z-index: 1; max-width: 800px; }
-    #canvas-render.tema-editorial .render-linea { width: 80px; height: 6px; background: #c9973d; margin: 40px 0; }
-    #canvas-render.tema-editorial .render-ref { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: #1a1a1a; letter-spacing: 6px; }
-
-    /* === PLANTILLA 4: LLAMA === */
-    #canvas-render.tema-llama {
-      background: linear-gradient(160deg, #0d0200 0%, #5c1503 30%, #a83800 60%, #d47000 85%, #e8a820 100%);
-    }
-    #canvas-render.tema-llama .render-inner {
-      width: 100%; height: 100%; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 80px; box-sizing: border-box;
-      position: relative;
-    }
-    #canvas-render.tema-llama .render-glow {
-      position: absolute; width: 500px; height: 500px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,150,50,0.25) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    #canvas-render.tema-llama .render-marca { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: rgba(255,220,150,0.7); letter-spacing: 10px; text-transform: uppercase; margin-bottom: 50px; position: relative; z-index: 1; }
-    #canvas-render.tema-llama .render-comilla { font-family: 'Playfair Display', serif; font-size: 160px; color: rgba(255,200,100,0.5); line-height: 0.5; margin-bottom: 20px; position: relative; z-index: 1; }
-    #canvas-render.tema-llama .render-texto { font-family: 'IM Fell English', serif; font-size: 62px; color: #fff8e8; font-style: italic; line-height: 1.3; text-align: center; margin: 0; position: relative; z-index: 1; text-shadow: 0 2px 20px rgba(200,100,0,0.5); }
-    #canvas-render.tema-llama .render-linea { width: 150px; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,200,100,0.8), transparent); margin: 45px auto; position: relative; z-index: 1; }
-    #canvas-render.tema-llama .render-ref { font-family: 'Bebas Neue', sans-serif; font-size: 34px; color: #ffd080; letter-spacing: 8px; position: relative; z-index: 1; text-shadow: 0 0 30px rgba(255,150,0,0.6); }
-    #canvas-render.tema-llama .render-linea-borde { position: absolute; inset: 30px; border: 1px solid rgba(255,200,100,0.15); pointer-events: none; }
-
-    /* === PLANTILLA 5: JARDÍN === */
-    #canvas-render.tema-jardin {
-      background: linear-gradient(160deg, #071510 0%, #0e2a1a 40%, #142b1c 70%, #091a10 100%);
-    }
-    #canvas-render.tema-jardin .render-inner {
-      width: 100%; height: 100%; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 100px; box-sizing: border-box;
-      position: relative;
-    }
-    #canvas-render.tema-jardin .render-borde {
-      position: absolute; inset: 35px; 
-      border: 1px solid rgba(100,200,130,0.2);
-      pointer-events: none;
-    }
-    #canvas-render.tema-jardin .render-borde::before {
-      content: ''; position: absolute; inset: 8px;
-      border: 1px solid rgba(100,200,130,0.1);
-    }
-    #canvas-render.tema-jardin .corner {
-      position: absolute; width: 50px; height: 50px; border-color: rgba(100,200,130,0.5);
-    }
-    #canvas-render.tema-jardin .corner-tl { top: 25px; left: 25px; border-top: 2px solid; border-left: 2px solid; }
-    #canvas-render.tema-jardin .corner-tr { top: 25px; right: 25px; border-top: 2px solid; border-right: 2px solid; }
-    #canvas-render.tema-jardin .corner-bl { bottom: 25px; left: 25px; border-bottom: 2px solid; border-left: 2px solid; }
-    #canvas-render.tema-jardin .corner-br { bottom: 25px; right: 25px; border-bottom: 2px solid; border-right: 2px solid; }
-    #canvas-render.tema-jardin .render-marca { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: rgba(140,220,160,0.6); letter-spacing: 10px; text-transform: uppercase; margin-bottom: 50px; position: relative; z-index: 1; }
-    #canvas-render.tema-jardin .render-hoja { font-size: 50px; margin-bottom: 10px; opacity: 0.6; position: relative; z-index: 1; }
-    #canvas-render.tema-jardin .render-texto { font-family: 'Cormorant Garamond', serif; font-size: 60px; color: #e8f5ec; font-style: italic; font-weight: 300; line-height: 1.35; text-align: center; margin: 0; position: relative; z-index: 1; }
-    #canvas-render.tema-jardin .render-linea { width: 100px; height: 1px; background: linear-gradient(90deg, transparent, rgba(140,220,160,0.7), transparent); margin: 45px auto; position: relative; z-index: 1; }
-    #canvas-render.tema-jardin .render-ref { font-family: 'Playfair Display', serif; font-size: 30px; color: #90d4a0; letter-spacing: 4px; position: relative; z-index: 1; }
+    #canvas-render { display: none; }
 
     /* ===== SUCCESS MODAL ===== */
     .corona { font-size: 6rem; display: block; margin-bottom: 15px; animation: bounce 2s infinite; }
@@ -379,10 +219,8 @@ import PageLayout from '../layouts/PageLayout.astro';
     <div class="modal-box" id="contenidoModal"></div>
   </div>
 
-  <!-- CANVAS DE RENDER (invisible, fuera de pantalla) -->
-  <div id="canvas-render">
-    <!-- El contenido HTML se inyecta dinámicamente por JS -->
-  </div>
+  <!-- Canvas nativo para render de imágenes -->
+  <canvas id="canvas-render" style="display:none;"></canvas>
 
   <script is:inline>
     const LIBROS = [
@@ -425,68 +263,6 @@ import PageLayout from '../layouts/PageLayout.astro';
     let temaActual = "gloria"; // plantilla por defecto
 
     // =============================================
-    // GENERADOR DE HTML POR PLANTILLA
-    // =============================================
-    const PLANTILLA_HTML = {
-      gloria: (texto, ref) => `
-        <div class="render-inner">
-          <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
-          <div class="corner corner-bl"></div><div class="corner corner-br"></div>
-          <div class="render-marca">BIBLIA 365</div>
-          <div class="render-comilla">"</div>
-          <p class="render-texto">${texto}</p>
-          <div class="render-linea"></div>
-          <p class="render-ref">${ref}</p>
-        </div>`,
-
-      cosmos: (texto, ref) => `
-        <div class="render-inner">
-          <div class="estrellas"></div>
-          <div class="nebula"></div>
-          <div class="render-circulo"></div>
-          <div class="render-marca">BIBLIA 365</div>
-          <div class="render-comilla">"</div>
-          <p class="render-texto">${texto}</p>
-          <div class="render-linea"></div>
-          <p class="render-ref">${ref}</p>
-        </div>`,
-
-      editorial: (texto, ref) => `
-        <div class="render-inner">
-          <div class="render-linea-top"></div>
-          <div class="render-linea-bottom"></div>
-          <div class="render-numero">❝</div>
-          <div class="render-marca">BIBLIA 365</div>
-          <p class="render-texto">${texto}</p>
-          <div class="render-linea"></div>
-          <p class="render-ref">${ref}</p>
-        </div>`,
-
-      llama: (texto, ref) => `
-        <div class="render-inner">
-          <div class="render-linea-borde"></div>
-          <div class="render-glow"></div>
-          <div class="render-marca">BIBLIA 365</div>
-          <div class="render-comilla">"</div>
-          <p class="render-texto">${texto}</p>
-          <div class="render-linea"></div>
-          <p class="render-ref">${ref}</p>
-        </div>`,
-
-      jardin: (texto, ref) => `
-        <div class="render-inner">
-          <div class="render-borde"></div>
-          <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
-          <div class="corner corner-bl"></div><div class="corner corner-br"></div>
-          <div class="render-hoja">✦</div>
-          <div class="render-marca">BIBLIA 365</div>
-          <p class="render-texto">${texto}</p>
-          <div class="render-linea"></div>
-          <p class="render-ref">${ref}</p>
-        </div>`
-    };
-
-    // =============================================
     // SELECTOR DE PLANTILLA
     // =============================================
     window.abrirSelectorPlantilla = () => {
@@ -502,70 +278,315 @@ import PageLayout from '../layouts/PageLayout.astro';
     };
 
     // =============================================
-    // GENERADOR DE IMAGEN
+    // MOTOR DE RENDER: Canvas 2D nativo
     // =============================================
-    const BG_TEMAS = {
-      gloria: "#fdf6e3", cosmos: "#020818",
-      editorial: "#f5f0e8", llama: "#3a0a00", jardin: "#071510"
+
+    // Wrap text helper — returns array of lines
+    function wrapText(ctx, text, maxWidth) {
+      const words = text.split(" ");
+      const lines = [];
+      let line = "";
+      for (const word of words) {
+        const test = line ? line + " " + word : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line);
+          line = word;
+        } else {
+          line = test;
+        }
+      }
+      if (line) lines.push(line);
+      return lines;
+    }
+
+    // Draw centered multiline text, returns final Y
+    function drawTextBlock(ctx, text, x, y, maxWidth, lineHeight) {
+      const lines = wrapText(ctx, text, maxWidth);
+      const totalH = lines.length * lineHeight;
+      let cy = y - totalH / 2;
+      for (const l of lines) {
+        ctx.fillText(l, x, cy);
+        cy += lineHeight;
+      }
+      return cy;
+    }
+
+    // Gradient line helper
+    function gradLine(ctx, x1, y, x2, color) {
+      const g = ctx.createLinearGradient(x1, y, x2, y);
+      g.addColorStop(0, "transparent");
+      g.addColorStop(0.5, color);
+      g.addColorStop(1, "transparent");
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
+    }
+
+    const RENDERIZADORES = {
+
+      gloria(ctx, W, H, texto, ref) {
+        // Fondo crema
+        ctx.fillStyle = "#fdf6e3";
+        ctx.fillRect(0, 0, W, H);
+
+        // Marco dorado doble
+        const M = 40, M2 = 55;
+        ctx.strokeStyle = "#c9973d"; ctx.lineWidth = 3;
+        ctx.strokeRect(M, M, W - M*2, H - M*2);
+        ctx.strokeStyle = "rgba(201,151,61,0.35)"; ctx.lineWidth = 1;
+        ctx.strokeRect(M2, M2, W - M2*2, H - M2*2);
+
+        // Esquinas ornamentales
+        const cSize = 60, cM = M - 10;
+        ctx.strokeStyle = "#c9973d"; ctx.lineWidth = 4;
+        [[cM, cM, 1, 1],[W-cM, cM, -1, 1],[cM, H-cM, 1, -1],[W-cM, H-cM, -1, -1]].forEach(([x,y,dx,dy]) => {
+          ctx.beginPath(); ctx.moveTo(x+dx*cSize, y); ctx.lineTo(x, y); ctx.lineTo(x, y+dy*cSize); ctx.stroke();
+        });
+
+        // Marca
+        ctx.fillStyle = "#c9973d";
+        ctx.font = "bold 22px 'Playfair Display', serif";
+        ctx.textAlign = "center"; ctx.letterSpacing = "8px";
+        ctx.fillText("BIBLIA 365", W/2, 130);
+
+        // Comilla
+        ctx.font = "italic 220px 'Playfair Display', serif";
+        ctx.fillStyle = "rgba(201,151,61,0.55)";
+        ctx.fillText("\u201C", W/2, H/2 - 200);
+
+        // Texto versículo
+        ctx.fillStyle = "#3d2008";
+        ctx.font = "italic 58px 'Georgia', serif";
+        ctx.textAlign = "center";
+        drawTextBlock(ctx, texto, W/2, H/2 + 30, W - 200, 80);
+
+        // Línea divisora
+        gradLine(ctx, W/2 - 100, H/2 + 200, W/2 + 100, "#c9973d");
+
+        // Referencia
+        ctx.fillStyle = "#c9973d";
+        ctx.font = "bold 28px 'Playfair Display', serif";
+        ctx.fillText(ref.toUpperCase(), W/2, H/2 + 260);
+      },
+
+      cosmos(ctx, W, H, texto, ref) {
+        // Fondo espacio
+        const bg = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, H*0.8);
+        bg.addColorStop(0, "#0d1b4b");
+        bg.addColorStop(0.5, "#020818");
+        bg.addColorStop(1, "#1a0a2e");
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+        // Nebulosa
+        const neb1 = ctx.createRadialGradient(W*0.2, H*0.3, 0, W*0.2, H*0.3, W*0.4);
+        neb1.addColorStop(0, "rgba(30,10,80,0.6)"); neb1.addColorStop(1, "transparent");
+        ctx.fillStyle = neb1; ctx.fillRect(0, 0, W, H);
+
+        // Estrellas
+        const seed = 42;
+        for (let i = 0; i < 120; i++) {
+          const sx = ((seed * (i*7+1)) % 1000) / 1000 * W;
+          const sy = ((seed * (i*13+3)) % 1000) / 1000 * H;
+          const sr = i % 7 === 0 ? 2.5 : i % 3 === 0 ? 1.5 : 0.8;
+          ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI*2);
+          ctx.fillStyle = i % 10 === 0 ? "rgba(240,200,100,0.9)" : "rgba(255,255,255,0.7)";
+          ctx.fill();
+        }
+
+        // Círculo sutil
+        ctx.strokeStyle = "rgba(240,200,100,0.08)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(W/2, H/2, W*0.42, 0, Math.PI*2); ctx.stroke();
+
+        // Marca
+        ctx.fillStyle = "rgba(240,200,100,0.65)";
+        ctx.font = "22px 'Georgia', serif";
+        ctx.textAlign = "center";
+        ctx.fillText("B I B L I A  3 6 5", W/2, 140);
+
+        // Comilla
+        ctx.font = "italic 240px 'Georgia', serif";
+        ctx.fillStyle = "rgba(240,200,100,0.2)";
+        ctx.fillText("\u201C", W/2, H/2 - 180);
+
+        // Texto
+        ctx.fillStyle = "#f0e8d0";
+        ctx.font = "italic 56px 'Georgia', serif";
+        ctx.shadowColor = "rgba(240,200,100,0.25)"; ctx.shadowBlur = 30;
+        drawTextBlock(ctx, texto, W/2, H/2 + 50, W - 200, 78);
+        ctx.shadowBlur = 0;
+
+        // Línea
+        gradLine(ctx, W/2 - 150, H/2 + 220, W/2 + 150, "rgba(240,200,100,0.8)");
+
+        // Referencia
+        ctx.fillStyle = "#f0c060";
+        ctx.font = "bold 30px 'Georgia', serif";
+        ctx.fillText(ref.toUpperCase(), W/2, H/2 + 280);
+      },
+
+      editorial(ctx, W, H, texto, ref) {
+        // Fondo papel
+        ctx.fillStyle = "#f5f0e8"; ctx.fillRect(0, 0, W, H);
+
+        // Barra negra superior
+        ctx.fillStyle = "#1a1a1a"; ctx.fillRect(0, 0, W, 22);
+        // Barra dorada inferior
+        ctx.fillStyle = "#c9973d"; ctx.fillRect(0, H - 10, W, 10);
+
+        // Número decorativo grande
+        ctx.fillStyle = "rgba(0,0,0,0.05)";
+        ctx.font = "bold 500px 'Georgia', serif";
+        ctx.textAlign = "right";
+        ctx.fillText("\u201D", W - 20, H/2 + 220);
+
+        // Marca
+        ctx.fillStyle = "rgba(26,26,26,0.4)";
+        ctx.font = "bold 20px 'Georgia', serif";
+        ctx.textAlign = "left";
+        ctx.fillText("B I B L I A  3 6 5", 100, 100);
+
+        // Texto — alineado izquierda
+        ctx.fillStyle = "#1a1a1a";
+        ctx.font = "italic bold 70px 'Georgia', serif";
+        ctx.textAlign = "left";
+        const linesEd = wrapText(ctx, texto, W - 230);
+        let yEd = H/2 - (linesEd.length * 90) / 2;
+        for (const l of linesEd) { ctx.fillText(l, 100, yEd); yEd += 90; }
+
+        // Línea acento
+        ctx.fillStyle = "#c9973d"; ctx.fillRect(100, yEd + 20, 80, 7);
+
+        // Referencia
+        ctx.fillStyle = "#1a1a1a";
+        ctx.font = "bold 34px 'Georgia', serif";
+        ctx.textAlign = "left";
+        ctx.fillText(ref.toUpperCase(), 100, yEd + 80);
+      },
+
+      llama(ctx, W, H, texto, ref) {
+        // Fondo fuego
+        const fire = ctx.createLinearGradient(0, 0, W*0.3, H);
+        fire.addColorStop(0, "#0d0200");
+        fire.addColorStop(0.3, "#5c1503");
+        fire.addColorStop(0.6, "#a83800");
+        fire.addColorStop(0.85, "#d47000");
+        fire.addColorStop(1, "#e8a820");
+        ctx.fillStyle = fire; ctx.fillRect(0, 0, W, H);
+
+        // Glow central
+        const glow = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W*0.45);
+        glow.addColorStop(0, "rgba(255,150,50,0.2)"); glow.addColorStop(1, "transparent");
+        ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+
+        // Borde sutil
+        ctx.strokeStyle = "rgba(255,200,100,0.18)"; ctx.lineWidth = 1;
+        ctx.strokeRect(35, 35, W - 70, H - 70);
+
+        // Marca
+        ctx.fillStyle = "rgba(255,220,150,0.65)";
+        ctx.font = "22px 'Georgia', serif";
+        ctx.textAlign = "center";
+        ctx.fillText("B I B L I A  3 6 5", W/2, 130);
+
+        // Comilla
+        ctx.font = "italic 200px 'Georgia', serif";
+        ctx.fillStyle = "rgba(255,200,100,0.4)";
+        ctx.fillText("\u201C", W/2, H/2 - 170);
+
+        // Texto con sombra cálida
+        ctx.fillStyle = "#fff8e8";
+        ctx.font = "italic 58px 'Georgia', serif";
+        ctx.shadowColor = "rgba(200,80,0,0.5)"; ctx.shadowBlur = 25;
+        drawTextBlock(ctx, texto, W/2, H/2 + 40, W - 200, 78);
+        ctx.shadowBlur = 0;
+
+        // Línea
+        gradLine(ctx, W/2 - 120, H/2 + 210, W/2 + 120, "rgba(255,200,100,0.8)");
+
+        // Referencia
+        ctx.fillStyle = "#ffd080";
+        ctx.font = "bold 32px 'Georgia', serif";
+        ctx.shadowColor = "rgba(255,100,0,0.5)"; ctx.shadowBlur = 20;
+        ctx.fillText(ref.toUpperCase(), W/2, H/2 + 270);
+        ctx.shadowBlur = 0;
+      },
+
+      jardin(ctx, W, H, texto, ref) {
+        // Fondo bosque
+        const bg = ctx.createLinearGradient(0, 0, W*0.3, H);
+        bg.addColorStop(0, "#071510");
+        bg.addColorStop(0.4, "#0e2a1a");
+        bg.addColorStop(0.7, "#142b1c");
+        bg.addColorStop(1, "#091a10");
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+        // Bordes doble
+        ctx.strokeStyle = "rgba(100,200,130,0.22)"; ctx.lineWidth = 1;
+        ctx.strokeRect(38, 38, W - 76, H - 76);
+        ctx.strokeStyle = "rgba(100,200,130,0.1)"; ctx.lineWidth = 1;
+        ctx.strokeRect(50, 50, W - 100, H - 100);
+
+        // Esquinas
+        const cS = 55, cO = 28;
+        ctx.strokeStyle = "rgba(100,200,130,0.55)"; ctx.lineWidth = 2;
+        [[cO,cO,1,1],[W-cO,cO,-1,1],[cO,H-cO,1,-1],[W-cO,H-cO,-1,-1]].forEach(([x,y,dx,dy]) => {
+          ctx.beginPath(); ctx.moveTo(x+dx*cS,y); ctx.lineTo(x,y); ctx.lineTo(x,y+dy*cS); ctx.stroke();
+        });
+
+        // Símbolo hoja
+        ctx.fillStyle = "rgba(140,220,160,0.5)";
+        ctx.font = "50px serif";
+        ctx.textAlign = "center";
+        ctx.fillText("✦", W/2, H/2 - 260);
+
+        // Marca
+        ctx.fillStyle = "rgba(140,220,160,0.55)";
+        ctx.font = "20px 'Georgia', serif";
+        ctx.fillText("B I B L I A  3 6 5", W/2, H/2 - 190);
+
+        // Texto
+        ctx.fillStyle = "#e8f5ec";
+        ctx.font = "italic 58px 'Georgia', serif";
+        drawTextBlock(ctx, texto, W/2, H/2 + 30, W - 220, 78);
+
+        // Línea
+        gradLine(ctx, W/2 - 80, H/2 + 210, W/2 + 80, "rgba(140,220,160,0.7)");
+
+        // Referencia
+        ctx.fillStyle = "#90d4a0";
+        ctx.font = "italic 30px 'Georgia', serif";
+        ctx.fillText(ref, W/2, H/2 + 270);
+      }
     };
 
     window.generarImagen = async (tipo) => {
       window.cerrarSelectorPlantilla();
+      window.cerrarMenu();
 
-      const t = document.getElementById("canvas-render");
-      const w = tipo === "feed" ? 1080 : 1080;
-      const h = tipo === "feed" ? 1080 : 1920;
+      const W = 1080;
+      const H = tipo === "feed" ? 1080 : 1920;
 
-      // Configurar tamaño y clases
-      t.style.width  = w + "px";
-      t.style.height = h + "px";
-      t.className = "";
-      t.classList.add("tema-" + temaActual);
-      t.classList.add(tipo === "feed" ? "formato-feed" : "formato-historia");
+      const canvas = document.getElementById("canvas-render");
+      canvas.width  = W;
+      canvas.height = H;
+      const ctx = canvas.getContext("2d");
 
-      // Inyectar HTML de la plantilla
-      t.innerHTML = PLANTILLA_HTML[temaActual](vSel.texto, vSel.ref);
-
-      // Mostrar brevemente para que el navegador lo renderice
-      t.style.visibility = "visible";
-      t.style.zIndex = "9999";
-
-      // Esperar fonts + layout
+      // Asegurarse que las fuentes estén listas
       await document.fonts.ready;
-      await new Promise(r => setTimeout(r, 400));
 
-      try {
-        const canvas = await html2canvas(t, {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: BG_TEMAS[temaActual],
-          width: w,
-          height: h,
-          windowWidth: w,
-          windowHeight: h,
-          logging: false,
-          imageTimeout: 0
-        });
+      // Dibujar la plantilla seleccionada
+      RENDERIZADORES[temaActual](ctx, W, H, vSel.texto, vSel.ref);
 
-        // Ocultar de nuevo
-        t.style.visibility = "hidden";
-        t.style.zIndex = "-1";
-
-        // Descargar imagen
+      // Descargar directamente
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
+        a.href = url;
         a.download = "Biblia365-" + temaActual + "-" + vSel.ref.replace(/[: ]/g, "-") + ".png";
-        a.href = canvas.toDataURL("image/png", 1.0);
         document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
-
-      } catch(err) {
-        console.error("Error generando imagen:", err);
-        t.style.visibility = "hidden";
-        t.style.zIndex = "-1";
-        alert("Error al generar la imagen. Intenta de nuevo.");
-      }
+        setTimeout(() => { URL.revokeObjectURL(url); document.body.removeChild(a); }, 1000);
+      }, "image/png");
     };
 
     // =============================================
