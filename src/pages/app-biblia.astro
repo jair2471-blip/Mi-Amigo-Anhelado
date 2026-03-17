@@ -281,7 +281,6 @@ import PageLayout from '../layouts/PageLayout.astro';
     // MOTOR DE RENDER: Canvas 2D nativo
     // =============================================
 
-    // Wrap text helper — returns array of lines
     function wrapText(ctx, text, maxWidth) {
       const words = text.split(" ");
       const lines = [];
@@ -289,273 +288,238 @@ import PageLayout from '../layouts/PageLayout.astro';
       for (const word of words) {
         const test = line ? line + " " + word : word;
         if (ctx.measureText(test).width > maxWidth && line) {
-          lines.push(line);
-          line = word;
-        } else {
-          line = test;
-        }
+          lines.push(line); line = word;
+        } else { line = test; }
       }
       if (line) lines.push(line);
       return lines;
     }
 
-    // Draw centered multiline text, returns final Y
-    function drawTextBlock(ctx, text, x, y, maxWidth, lineHeight) {
+    // Dibuja texto centrado horizontalmente desde startY hacia abajo. Retorna Y final.
+    function drawLines(ctx, text, cx, startY, maxWidth, lineH) {
       const lines = wrapText(ctx, text, maxWidth);
-      const totalH = lines.length * lineHeight;
-      let cy = y - totalH / 2;
-      for (const l of lines) {
-        ctx.fillText(l, x, cy);
-        cy += lineHeight;
-      }
-      return cy;
+      let y = startY;
+      for (const l of lines) { ctx.fillText(l, cx, y); y += lineH; }
+      return y;
     }
 
-    // Gradient line helper
+    // Solo calcula la altura que ocupará el texto
+    function textH(ctx, text, maxWidth, lineH) {
+      return wrapText(ctx, text, maxWidth).length * lineH;
+    }
+
     function gradLine(ctx, x1, y, x2, color) {
       const g = ctx.createLinearGradient(x1, y, x2, y);
-      g.addColorStop(0, "transparent");
-      g.addColorStop(0.5, color);
-      g.addColorStop(1, "transparent");
-      ctx.strokeStyle = g;
-      ctx.lineWidth = 2;
+      g.addColorStop(0, "transparent"); g.addColorStop(0.5, color); g.addColorStop(1, "transparent");
+      ctx.strokeStyle = g; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
+    }
+
+    // Calcula Y de inicio para que todo el bloque quede centrado verticalmente
+    // bloques: [{h: altura}, ...] — retorna Y de inicio
+    function centerY(H, pad, ...alturas) {
+      const total = alturas.reduce((a, b) => a + b, 0);
+      return (H - total) / 2;
     }
 
     const RENDERIZADORES = {
 
       gloria(ctx, W, H, texto, ref) {
-        // Fondo crema
-        ctx.fillStyle = "#fdf6e3";
-        ctx.fillRect(0, 0, W, H);
-
-        // Marco dorado doble
+        ctx.fillStyle = "#fdf6e3"; ctx.fillRect(0, 0, W, H);
         const M = 40, M2 = 55;
         ctx.strokeStyle = "#c9973d"; ctx.lineWidth = 3;
         ctx.strokeRect(M, M, W - M*2, H - M*2);
         ctx.strokeStyle = "rgba(201,151,61,0.35)"; ctx.lineWidth = 1;
         ctx.strokeRect(M2, M2, W - M2*2, H - M2*2);
-
-        // Esquinas ornamentales
         const cSize = 60, cM = M - 10;
         ctx.strokeStyle = "#c9973d"; ctx.lineWidth = 4;
-        [[cM, cM, 1, 1],[W-cM, cM, -1, 1],[cM, H-cM, 1, -1],[W-cM, H-cM, -1, -1]].forEach(([x,y,dx,dy]) => {
-          ctx.beginPath(); ctx.moveTo(x+dx*cSize, y); ctx.lineTo(x, y); ctx.lineTo(x, y+dy*cSize); ctx.stroke();
+        [[cM,cM,1,1],[W-cM,cM,-1,1],[cM,H-cM,1,-1],[W-cM,H-cM,-1,-1]].forEach(([x,y,dx,dy]) => {
+          ctx.beginPath(); ctx.moveTo(x+dx*cSize,y); ctx.lineTo(x,y); ctx.lineTo(x,y+dy*cSize); ctx.stroke();
         });
 
-        // Marca
+        // Calcular layout dinámico
+        ctx.font = "italic 58px 'Georgia', serif";
+        const pad = W - 220;
+        const lh = 82;
+        const hTexto  = textH(ctx, texto, pad, lh);
+        const hMarca  = 30, hComilla = 90, hGap1 = 20, hLinea = 40, hRef = 50;
+        const total   = hMarca + hComilla + hGap1 + hTexto + hLinea + hRef;
+        let y = (H - total) / 2;
+
         ctx.fillStyle = "#c9973d";
-        ctx.font = "bold 22px 'Playfair Display', serif";
-        ctx.textAlign = "center"; ctx.letterSpacing = "8px";
-        ctx.fillText("BIBLIA 365", W/2, 130);
+        ctx.font = "bold 22px 'Georgia', serif";
+        ctx.textAlign = "center";
+        ctx.fillText("B I B L I A  3 6 5", W/2, y + hMarca); y += hMarca + hGap1;
 
-        // Comilla
-        ctx.font = "italic 220px 'Playfair Display', serif";
-        ctx.fillStyle = "rgba(201,151,61,0.55)";
-        ctx.fillText("\u201C", W/2, H/2 - 200);
+        ctx.font = "italic 120px 'Georgia', serif";
+        ctx.fillStyle = "rgba(201,151,61,0.5)";
+        ctx.fillText("\u201C", W/2, y + hComilla); y += hComilla + hGap1;
 
-        // Texto versículo
         ctx.fillStyle = "#3d2008";
         ctx.font = "italic 58px 'Georgia', serif";
         ctx.textAlign = "center";
-        drawTextBlock(ctx, texto, W/2, H/2 + 30, W - 200, 80);
+        y = drawLines(ctx, texto, W/2, y, pad, lh);
 
-        // Línea divisora
-        gradLine(ctx, W/2 - 100, H/2 + 200, W/2 + 100, "#c9973d");
+        y += 30;
+        gradLine(ctx, W/2 - 100, y, W/2 + 100, "#c9973d"); y += hLinea;
 
-        // Referencia
         ctx.fillStyle = "#c9973d";
-        ctx.font = "bold 28px 'Playfair Display', serif";
-        ctx.fillText(ref.toUpperCase(), W/2, H/2 + 260);
+        ctx.font = "bold 28px 'Georgia', serif";
+        ctx.fillText(ref.toUpperCase(), W/2, y);
       },
 
       cosmos(ctx, W, H, texto, ref) {
-        // Fondo espacio
         const bg = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, H*0.8);
-        bg.addColorStop(0, "#0d1b4b");
-        bg.addColorStop(0.5, "#020818");
-        bg.addColorStop(1, "#1a0a2e");
+        bg.addColorStop(0, "#0d1b4b"); bg.addColorStop(0.5, "#020818"); bg.addColorStop(1, "#1a0a2e");
         ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-
-        // Nebulosa
-        const neb1 = ctx.createRadialGradient(W*0.2, H*0.3, 0, W*0.2, H*0.3, W*0.4);
-        neb1.addColorStop(0, "rgba(30,10,80,0.6)"); neb1.addColorStop(1, "transparent");
-        ctx.fillStyle = neb1; ctx.fillRect(0, 0, W, H);
-
-        // Estrellas
-        const seed = 42;
+        const neb = ctx.createRadialGradient(W*0.2, H*0.3, 0, W*0.2, H*0.3, W*0.4);
+        neb.addColorStop(0, "rgba(30,10,80,0.6)"); neb.addColorStop(1, "transparent");
+        ctx.fillStyle = neb; ctx.fillRect(0, 0, W, H);
         for (let i = 0; i < 120; i++) {
-          const sx = ((seed * (i*7+1)) % 1000) / 1000 * W;
-          const sy = ((seed * (i*13+3)) % 1000) / 1000 * H;
-          const sr = i % 7 === 0 ? 2.5 : i % 3 === 0 ? 1.5 : 0.8;
+          const sx = ((42*(i*7+1))%1000)/1000*W, sy = ((42*(i*13+3))%1000)/1000*H;
+          const sr = i%7===0?2.5:i%3===0?1.5:0.8;
           ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI*2);
-          ctx.fillStyle = i % 10 === 0 ? "rgba(240,200,100,0.9)" : "rgba(255,255,255,0.7)";
-          ctx.fill();
+          ctx.fillStyle = i%10===0?"rgba(240,200,100,0.9)":"rgba(255,255,255,0.7)"; ctx.fill();
         }
-
-        // Círculo sutil
         ctx.strokeStyle = "rgba(240,200,100,0.08)"; ctx.lineWidth = 1;
         ctx.beginPath(); ctx.arc(W/2, H/2, W*0.42, 0, Math.PI*2); ctx.stroke();
 
-        // Marca
+        ctx.font = "italic 56px 'Georgia', serif";
+        const pad = W - 200, lh = 78;
+        const hTexto = textH(ctx, texto, pad, lh);
+        const hMarca = 30, hComilla = 80, hGap = 20, hLinea = 40, hRef = 50;
+        const total  = hMarca + hComilla + hGap + hTexto + hLinea + hRef;
+        let y = (H - total) / 2;
+
         ctx.fillStyle = "rgba(240,200,100,0.65)";
-        ctx.font = "22px 'Georgia', serif";
-        ctx.textAlign = "center";
-        ctx.fillText("B I B L I A  3 6 5", W/2, 140);
+        ctx.font = "22px 'Georgia', serif"; ctx.textAlign = "center";
+        ctx.fillText("B I B L I A  3 6 5", W/2, y + hMarca); y += hMarca + 10;
 
-        // Comilla
-        ctx.font = "italic 240px 'Georgia', serif";
+        ctx.font = "italic 130px 'Georgia', serif";
         ctx.fillStyle = "rgba(240,200,100,0.2)";
-        ctx.fillText("\u201C", W/2, H/2 - 180);
+        ctx.fillText("\u201C", W/2, y + hComilla); y += hComilla + hGap;
 
-        // Texto
         ctx.fillStyle = "#f0e8d0";
         ctx.font = "italic 56px 'Georgia', serif";
         ctx.shadowColor = "rgba(240,200,100,0.25)"; ctx.shadowBlur = 30;
-        drawTextBlock(ctx, texto, W/2, H/2 + 50, W - 200, 78);
+        y = drawLines(ctx, texto, W/2, y, pad, lh);
         ctx.shadowBlur = 0;
 
-        // Línea
-        gradLine(ctx, W/2 - 150, H/2 + 220, W/2 + 150, "rgba(240,200,100,0.8)");
+        y += 25;
+        gradLine(ctx, W/2-150, y, W/2+150, "rgba(240,200,100,0.8)"); y += hLinea;
 
-        // Referencia
-        ctx.fillStyle = "#f0c060";
-        ctx.font = "bold 30px 'Georgia', serif";
-        ctx.fillText(ref.toUpperCase(), W/2, H/2 + 280);
+        ctx.fillStyle = "#f0c060"; ctx.font = "bold 30px 'Georgia', serif";
+        ctx.fillText(ref.toUpperCase(), W/2, y);
       },
 
       editorial(ctx, W, H, texto, ref) {
-        // Fondo papel
         ctx.fillStyle = "#f5f0e8"; ctx.fillRect(0, 0, W, H);
-
-        // Barra negra superior
         ctx.fillStyle = "#1a1a1a"; ctx.fillRect(0, 0, W, 22);
-        // Barra dorada inferior
         ctx.fillStyle = "#c9973d"; ctx.fillRect(0, H - 10, W, 10);
-
-        // Número decorativo grande
-        ctx.fillStyle = "rgba(0,0,0,0.05)";
-        ctx.font = "bold 500px 'Georgia', serif";
-        ctx.textAlign = "right";
+        ctx.fillStyle = "rgba(0,0,0,0.04)";
+        ctx.font = "bold 500px 'Georgia', serif"; ctx.textAlign = "right";
         ctx.fillText("\u201D", W - 20, H/2 + 220);
 
-        // Marca
+        ctx.font = "italic bold 68px 'Georgia', serif";
+        const pad = W - 230, lh = 88;
+        const hTexto = textH(ctx, texto, pad, lh);
+        const hMarca = 30, hGap = 30, hLinea = 20, hRef = 50;
+        const total  = hMarca + hGap + hTexto + hLinea + hGap + hRef;
+        let y = (H - total) / 2;
+
         ctx.fillStyle = "rgba(26,26,26,0.4)";
-        ctx.font = "bold 20px 'Georgia', serif";
-        ctx.textAlign = "left";
-        ctx.fillText("B I B L I A  3 6 5", 100, 100);
+        ctx.font = "bold 20px 'Georgia', serif"; ctx.textAlign = "left";
+        ctx.fillText("B I B L I A  3 6 5", 100, y + hMarca); y += hMarca + hGap;
 
-        // Texto — alineado izquierda
         ctx.fillStyle = "#1a1a1a";
-        ctx.font = "italic bold 70px 'Georgia', serif";
-        ctx.textAlign = "left";
-        const linesEd = wrapText(ctx, texto, W - 230);
-        let yEd = H/2 - (linesEd.length * 90) / 2;
-        for (const l of linesEd) { ctx.fillText(l, 100, yEd); yEd += 90; }
+        ctx.font = "italic bold 68px 'Georgia', serif"; ctx.textAlign = "left";
+        y = drawLines(ctx, texto, 100, y, pad, lh);
 
-        // Línea acento
-        ctx.fillStyle = "#c9973d"; ctx.fillRect(100, yEd + 20, 80, 7);
+        y += hGap;
+        ctx.fillStyle = "#c9973d"; ctx.fillRect(100, y, 80, 7); y += hLinea + hGap;
 
-        // Referencia
-        ctx.fillStyle = "#1a1a1a";
-        ctx.font = "bold 34px 'Georgia', serif";
-        ctx.textAlign = "left";
-        ctx.fillText(ref.toUpperCase(), 100, yEd + 80);
+        ctx.fillStyle = "#1a1a1a"; ctx.font = "bold 34px 'Georgia', serif"; ctx.textAlign = "left";
+        ctx.fillText(ref.toUpperCase(), 100, y);
       },
 
       llama(ctx, W, H, texto, ref) {
-        // Fondo fuego
         const fire = ctx.createLinearGradient(0, 0, W*0.3, H);
-        fire.addColorStop(0, "#0d0200");
-        fire.addColorStop(0.3, "#5c1503");
-        fire.addColorStop(0.6, "#a83800");
-        fire.addColorStop(0.85, "#d47000");
-        fire.addColorStop(1, "#e8a820");
+        fire.addColorStop(0, "#0d0200"); fire.addColorStop(0.3, "#5c1503");
+        fire.addColorStop(0.6, "#a83800"); fire.addColorStop(0.85, "#d47000"); fire.addColorStop(1, "#e8a820");
         ctx.fillStyle = fire; ctx.fillRect(0, 0, W, H);
-
-        // Glow central
         const glow = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W*0.45);
         glow.addColorStop(0, "rgba(255,150,50,0.2)"); glow.addColorStop(1, "transparent");
         ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
-
-        // Borde sutil
         ctx.strokeStyle = "rgba(255,200,100,0.18)"; ctx.lineWidth = 1;
-        ctx.strokeRect(35, 35, W - 70, H - 70);
+        ctx.strokeRect(35, 35, W-70, H-70);
 
-        // Marca
-        ctx.fillStyle = "rgba(255,220,150,0.65)";
-        ctx.font = "22px 'Georgia', serif";
-        ctx.textAlign = "center";
-        ctx.fillText("B I B L I A  3 6 5", W/2, 130);
-
-        // Comilla
-        ctx.font = "italic 200px 'Georgia', serif";
-        ctx.fillStyle = "rgba(255,200,100,0.4)";
-        ctx.fillText("\u201C", W/2, H/2 - 170);
-
-        // Texto con sombra cálida
-        ctx.fillStyle = "#fff8e8";
         ctx.font = "italic 58px 'Georgia', serif";
+        const pad = W - 200, lh = 80;
+        const hTexto  = textH(ctx, texto, pad, lh);
+        const hMarca  = 30, hComilla = 85, hGap = 18, hLinea = 40, hRef = 50;
+        const total   = hMarca + hComilla + hGap + hTexto + hLinea + hRef;
+        let y = (H - total) / 2;
+
+        ctx.fillStyle = "rgba(255,220,150,0.65)";
+        ctx.font = "22px 'Georgia', serif"; ctx.textAlign = "center";
+        ctx.fillText("B I B L I A  3 6 5", W/2, y + hMarca); y += hMarca + 10;
+
+        ctx.font = "italic 130px 'Georgia', serif";
+        ctx.fillStyle = "rgba(255,200,100,0.4)";
+        ctx.fillText("\u201C", W/2, y + hComilla); y += hComilla + hGap;
+
+        ctx.fillStyle = "#fff8e8"; ctx.font = "italic 58px 'Georgia', serif";
         ctx.shadowColor = "rgba(200,80,0,0.5)"; ctx.shadowBlur = 25;
-        drawTextBlock(ctx, texto, W/2, H/2 + 40, W - 200, 78);
+        y = drawLines(ctx, texto, W/2, y, pad, lh);
         ctx.shadowBlur = 0;
 
-        // Línea
-        gradLine(ctx, W/2 - 120, H/2 + 210, W/2 + 120, "rgba(255,200,100,0.8)");
+        y += 25;
+        gradLine(ctx, W/2-120, y, W/2+120, "rgba(255,200,100,0.8)"); y += hLinea;
 
-        // Referencia
-        ctx.fillStyle = "#ffd080";
-        ctx.font = "bold 32px 'Georgia', serif";
+        ctx.fillStyle = "#ffd080"; ctx.font = "bold 32px 'Georgia', serif";
         ctx.shadowColor = "rgba(255,100,0,0.5)"; ctx.shadowBlur = 20;
-        ctx.fillText(ref.toUpperCase(), W/2, H/2 + 270);
+        ctx.fillText(ref.toUpperCase(), W/2, y);
         ctx.shadowBlur = 0;
       },
 
       jardin(ctx, W, H, texto, ref) {
-        // Fondo bosque
         const bg = ctx.createLinearGradient(0, 0, W*0.3, H);
-        bg.addColorStop(0, "#071510");
-        bg.addColorStop(0.4, "#0e2a1a");
-        bg.addColorStop(0.7, "#142b1c");
-        bg.addColorStop(1, "#091a10");
+        bg.addColorStop(0, "#071510"); bg.addColorStop(0.4, "#0e2a1a");
+        bg.addColorStop(0.7, "#142b1c"); bg.addColorStop(1, "#091a10");
         ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-
-        // Bordes doble
         ctx.strokeStyle = "rgba(100,200,130,0.22)"; ctx.lineWidth = 1;
-        ctx.strokeRect(38, 38, W - 76, H - 76);
-        ctx.strokeStyle = "rgba(100,200,130,0.1)"; ctx.lineWidth = 1;
-        ctx.strokeRect(50, 50, W - 100, H - 100);
-
-        // Esquinas
+        ctx.strokeRect(38, 38, W-76, H-76);
+        ctx.strokeStyle = "rgba(100,200,130,0.1)";
+        ctx.strokeRect(50, 50, W-100, H-100);
         const cS = 55, cO = 28;
         ctx.strokeStyle = "rgba(100,200,130,0.55)"; ctx.lineWidth = 2;
         [[cO,cO,1,1],[W-cO,cO,-1,1],[cO,H-cO,1,-1],[W-cO,H-cO,-1,-1]].forEach(([x,y,dx,dy]) => {
           ctx.beginPath(); ctx.moveTo(x+dx*cS,y); ctx.lineTo(x,y); ctx.lineTo(x,y+dy*cS); ctx.stroke();
         });
 
-        // Símbolo hoja
-        ctx.fillStyle = "rgba(140,220,160,0.5)";
-        ctx.font = "50px serif";
-        ctx.textAlign = "center";
-        ctx.fillText("✦", W/2, H/2 - 260);
+        ctx.font = "italic 58px 'Georgia', serif";
+        const pad = W - 220, lh = 78;
+        const hTexto  = textH(ctx, texto, pad, lh);
+        const hSimbolo = 70, hMarca = 30, hGap = 20, hLinea = 35, hRef = 50;
+        const total    = hSimbolo + hMarca + hGap + hTexto + hLinea + hRef;
+        let y = (H - total) / 2;
 
-        // Marca
+        ctx.fillStyle = "rgba(140,220,160,0.5)";
+        ctx.font = "48px serif"; ctx.textAlign = "center";
+        ctx.fillText("✦", W/2, y + hSimbolo); y += hSimbolo + 10;
+
         ctx.fillStyle = "rgba(140,220,160,0.55)";
         ctx.font = "20px 'Georgia', serif";
-        ctx.fillText("B I B L I A  3 6 5", W/2, H/2 - 190);
+        ctx.fillText("B I B L I A  3 6 5", W/2, y + hMarca); y += hMarca + hGap;
 
-        // Texto
-        ctx.fillStyle = "#e8f5ec";
-        ctx.font = "italic 58px 'Georgia', serif";
-        drawTextBlock(ctx, texto, W/2, H/2 + 30, W - 220, 78);
+        ctx.fillStyle = "#e8f5ec"; ctx.font = "italic 58px 'Georgia', serif";
+        y = drawLines(ctx, texto, W/2, y, pad, lh);
 
-        // Línea
-        gradLine(ctx, W/2 - 80, H/2 + 210, W/2 + 80, "rgba(140,220,160,0.7)");
+        y += 25;
+        gradLine(ctx, W/2-80, y, W/2+80, "rgba(140,220,160,0.7)"); y += hLinea;
 
-        // Referencia
-        ctx.fillStyle = "#90d4a0";
-        ctx.font = "italic 30px 'Georgia', serif";
-        ctx.fillText(ref, W/2, H/2 + 270);
+        ctx.fillStyle = "#90d4a0"; ctx.font = "italic 30px 'Georgia', serif";
+        ctx.fillText(ref, W/2, y);
       }
     };
 
