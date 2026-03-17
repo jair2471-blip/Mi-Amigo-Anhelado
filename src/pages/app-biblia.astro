@@ -4,7 +4,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 
 <PageLayout title="Biblia 365 - Misión Marte">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" is:inline></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Bebas+Neue&family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
 
   <style is:inline>
     :root { 
@@ -53,6 +53,61 @@ import PageLayout from '../layouts/PageLayout.astro';
     }
     .btn-tool { background: none; border: none; color: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; gap: 4px; }
 
+    /* ===== MODAL SELECTOR DE PLANTILLA ===== */
+    #modalPlantilla {
+      position: fixed; inset: 0; display: none; z-index: 3500;
+      background: rgba(0,0,0,0.92); backdrop-filter: blur(16px);
+      flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+    }
+    #modalPlantilla.visible { display: flex; }
+    .plantilla-header { color: white; text-align: center; margin-bottom: 24px; }
+    .plantilla-header h3 { font-family: 'Playfair Display'; font-size: 1.8rem; margin: 0; color: #d4a574; }
+    .plantilla-header p { color: rgba(255,255,255,0.6); margin: 6px 0 0; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; }
+    
+    .plantillas-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+      width: 100%; max-width: 700px;
+    }
+    @media (max-width: 600px) { .plantillas-grid { grid-template-columns: repeat(3, 1fr); } }
+    
+    .plantilla-card {
+      aspect-ratio: 1; border-radius: 16px; cursor: pointer; overflow: hidden;
+      border: 3px solid transparent; transition: all 0.25s; position: relative;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .plantilla-card:hover { transform: scale(1.06); border-color: #d4a574; }
+    .plantilla-card.seleccionada { border-color: #d4a574; box-shadow: 0 0 20px rgba(212,165,116,0.6); }
+    .plantilla-card span { font-size: 0.65rem; font-weight: bold; letter-spacing: 1px; text-align: center; padding: 0 4px; }
+    
+    /* Preview cards */
+    .prev-gloria { background: linear-gradient(135deg, #fdf6e3 0%, #f5e6c8 100%); border: 2px solid #c9973d; }
+    .prev-gloria span { color: #7a4f1a; }
+    .prev-cosmos { background: linear-gradient(160deg, #020818 0%, #0d1b4b 50%, #1a0a2e 100%); }
+    .prev-cosmos span { color: #f0c060; }
+    .prev-editorial { background: #f5f0e8; }
+    .prev-editorial span { color: #1a1a1a; }
+    .prev-llama { background: linear-gradient(160deg, #1a0500 0%, #7c1d06 40%, #c45a00 80%, #e8a020 100%); }
+    .prev-llama span { color: #fde8c0; }
+    .prev-jardin { background: linear-gradient(160deg, #0a1f10 0%, #183d22 50%, #0e2918 100%); }
+    .prev-jardin span { color: #90d4a0; }
+
+    .prev-icon { font-size: 1.8rem; margin-bottom: 4px; }
+    
+    .formato-selector {
+      display: flex; gap: 12px; margin-top: 20px;
+    }
+    .btn-formato {
+      flex: 1; padding: 14px 20px; border-radius: 50px; border: 2px solid rgba(255,255,255,0.3);
+      background: transparent; color: white; cursor: pointer; font-family: 'Playfair Display'; font-size: 1rem;
+      transition: all 0.2s; max-width: 160px;
+    }
+    .btn-formato:hover { background: #d4a574; border-color: #d4a574; color: #1a0a00; }
+    .btn-cerrar-plantilla {
+      margin-top: 16px; background: transparent; border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.5); padding: 8px 24px; border-radius: 30px; cursor: pointer; font-size: 0.85rem;
+    }
+
+    /* ===== MODALES ===== */
     #modalBib, #modalExito { position: fixed; inset: 0; display: none; place-items: center; z-index: 3000; padding: 20px; backdrop-filter: blur(10px); }
     #modalBib { background: rgba(0,0,0,0.85); }
     #modalExito { background: rgba(26, 77, 46, 0.95); }
@@ -63,28 +118,167 @@ import PageLayout from '../layouts/PageLayout.astro';
     .grid-libros, .grid-caps { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
     .btn-lib { background: var(--card-bg); border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 15px; cursor: pointer; color: var(--text); font-weight: 600; }
 
-    /* --- ESTILOS DE RENDER HD --- */
+    /* ===== CANVAS DE RENDER (fuera de pantalla) ===== */
     #canvas-render { 
-      position: absolute; left: -9999px; top: 0; 
-      background: #faf8f5; border: 40px solid #1a4d2e; 
-      box-sizing: border-box; display: flex; justify-content: center; align-items: center; 
+      position: absolute; left: -9999px; top: 0; box-sizing: border-box;
+      display: flex; justify-content: center; align-items: center; 
     }
-    .formato-feed { width: 1080px; height: 1080px; padding: 80px; }
-    .formato-historia { width: 1080px; height: 1920px; padding: 150px 80px; }
-    
-    #canvas-render .marco-interno { 
-      border: 6px solid #d4a574; padding: 60px; 
-      background: white; width: 100%; text-align: center; 
+    .formato-feed { width: 1080px; height: 1080px; }
+    .formato-historia { width: 1080px; height: 1920px; }
+
+    /* === PLANTILLA 1: GLORIA === */
+    #canvas-render.tema-gloria {
+      background: #fdf6e3;
     }
-    #render-texto { 
-      font-family: 'Crimson Text', serif; font-size: 60px !important; 
-      color: #1a4d2e; font-style: italic; line-height: 1.3; margin: 30px 0;
+    #canvas-render.tema-gloria .render-inner {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 80px; box-sizing: border-box;
+      position: relative;
     }
-    #render-ref { 
-      font-family: 'Playfair Display', serif; font-size: 34px !important; 
-      color: #d4a574; text-transform: uppercase; letter-spacing: 4px; font-weight: bold; 
+    #canvas-render.tema-gloria .render-inner::before {
+      content: ''; position: absolute; inset: 40px;
+      border: 2px solid #c9973d; pointer-events: none;
+    }
+    #canvas-render.tema-gloria .render-inner::after {
+      content: ''; position: absolute; inset: 50px;
+      border: 1px solid rgba(201,151,61,0.4); pointer-events: none;
+    }
+    #canvas-render.tema-gloria .corner {
+      position: absolute; width: 60px; height: 60px; border-color: #c9973d;
+    }
+    #canvas-render.tema-gloria .corner-tl { top: 30px; left: 30px; border-top: 4px solid; border-left: 4px solid; }
+    #canvas-render.tema-gloria .corner-tr { top: 30px; right: 30px; border-top: 4px solid; border-right: 4px solid; }
+    #canvas-render.tema-gloria .corner-bl { bottom: 30px; left: 30px; border-bottom: 4px solid; border-left: 4px solid; }
+    #canvas-render.tema-gloria .corner-br { bottom: 30px; right: 30px; border-bottom: 4px solid; border-right: 4px solid; }
+    #canvas-render.tema-gloria .render-marca { font-family: 'Playfair Display', serif; font-size: 22px; color: #c9973d; letter-spacing: 8px; text-transform: uppercase; margin-bottom: 40px; }
+    #canvas-render.tema-gloria .render-comilla { font-family: 'Playfair Display', serif; font-size: 180px; color: #c9973d; line-height: 0.5; margin-bottom: 20px; }
+    #canvas-render.tema-gloria .render-texto { font-family: 'IM Fell English', serif; font-size: 58px; color: #3d2008; font-style: italic; line-height: 1.35; text-align: center; margin: 0; }
+    #canvas-render.tema-gloria .render-linea { width: 120px; height: 3px; background: linear-gradient(90deg, transparent, #c9973d, transparent); margin: 40px auto; }
+    #canvas-render.tema-gloria .render-ref { font-family: 'Playfair Display', serif; font-size: 28px; color: #c9973d; letter-spacing: 4px; text-transform: uppercase; }
+
+    /* === PLANTILLA 2: COSMOS === */
+    #canvas-render.tema-cosmos {
+      background: #020818;
+    }
+    #canvas-render.tema-cosmos .render-inner {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 80px; box-sizing: border-box;
+      position: relative; overflow: hidden;
+    }
+    #canvas-render.tema-cosmos .estrellas {
+      position: absolute; inset: 0; 
+      background-image: 
+        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(2px 2px at 40% 10%, rgba(255,255,255,0.9) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 5%, rgba(255,255,255,0.8) 0%, transparent 100%),
+        radial-gradient(2px 2px at 85% 20%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 15% 60%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 70%, rgba(255,255,255,0.8) 0%, transparent 100%),
+        radial-gradient(2px 2px at 70% 80%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 65%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 85%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 5% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(2px 2px at 95% 45%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 45% 50%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 80% 55%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(3px 3px at 20% 25%, rgba(240,200,100,0.7) 0%, transparent 100%),
+        radial-gradient(3px 3px at 65% 75%, rgba(180,160,255,0.5) 0%, transparent 100%);
+    }
+    #canvas-render.tema-cosmos .nebula {
+      position: absolute; inset: 0;
+      background: 
+        radial-gradient(ellipse 60% 40% at 20% 30%, rgba(30,10,80,0.7) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 80% 70%, rgba(10,40,80,0.5) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 50% 50%, rgba(60,10,30,0.3) 0%, transparent 70%);
+    }
+    #canvas-render.tema-cosmos .render-marca { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: rgba(240,200,100,0.7); letter-spacing: 10px; text-transform: uppercase; margin-bottom: 50px; position: relative; z-index: 1; }
+    #canvas-render.tema-cosmos .render-comilla { font-family: 'Cormorant Garamond', serif; font-size: 200px; color: rgba(240,200,100,0.3); line-height: 0.4; margin-bottom: 30px; position: relative; z-index: 1; }
+    #canvas-render.tema-cosmos .render-texto { font-family: 'Cormorant Garamond', serif; font-size: 60px; color: #f0e8d0; font-style: italic; font-weight: 300; line-height: 1.3; text-align: center; margin: 0; position: relative; z-index: 1; text-shadow: 0 0 40px rgba(240,200,100,0.3); }
+    #canvas-render.tema-cosmos .render-linea { width: 200px; height: 1px; background: linear-gradient(90deg, transparent, rgba(240,200,100,0.8), transparent); margin: 45px auto; position: relative; z-index: 1; }
+    #canvas-render.tema-cosmos .render-ref { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #f0c060; letter-spacing: 8px; position: relative; z-index: 1; }
+    #canvas-render.tema-cosmos .render-circulo {
+      position: absolute; width: 700px; height: 700px; border-radius: 50%;
+      border: 1px solid rgba(240,200,100,0.1);
+      box-shadow: 0 0 0 40px rgba(240,200,100,0.02), 0 0 0 80px rgba(240,200,100,0.01);
+      z-index: 0;
     }
 
+    /* === PLANTILLA 3: EDITORIAL === */
+    #canvas-render.tema-editorial {
+      background: #f5f0e8;
+    }
+    #canvas-render.tema-editorial .render-inner {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: center; padding: 100px; box-sizing: border-box;
+      position: relative;
+    }
+    #canvas-render.tema-editorial .render-linea-top {
+      position: absolute; top: 0; left: 0; right: 0; height: 20px; background: #1a1a1a;
+    }
+    #canvas-render.tema-editorial .render-linea-bottom {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 8px; background: #c9973d;
+    }
+    #canvas-render.tema-editorial .render-marca { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #1a1a1a; letter-spacing: 12px; text-transform: uppercase; margin-bottom: 30px; opacity: 0.5; }
+    #canvas-render.tema-editorial .render-numero { font-family: 'Bebas Neue', sans-serif; font-size: 300px; color: rgba(0,0,0,0.06); line-height: 0.8; position: absolute; right: 60px; top: 50%; transform: translateY(-50%); }
+    #canvas-render.tema-editorial .render-texto { font-family: 'Playfair Display', serif; font-size: 72px; color: #1a1a1a; font-style: italic; line-height: 1.2; text-align: left; margin: 0; position: relative; z-index: 1; max-width: 800px; }
+    #canvas-render.tema-editorial .render-linea { width: 80px; height: 6px; background: #c9973d; margin: 40px 0; }
+    #canvas-render.tema-editorial .render-ref { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: #1a1a1a; letter-spacing: 6px; }
+
+    /* === PLANTILLA 4: LLAMA === */
+    #canvas-render.tema-llama {
+      background: linear-gradient(160deg, #0d0200 0%, #5c1503 30%, #a83800 60%, #d47000 85%, #e8a820 100%);
+    }
+    #canvas-render.tema-llama .render-inner {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 80px; box-sizing: border-box;
+      position: relative;
+    }
+    #canvas-render.tema-llama .render-glow {
+      position: absolute; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,150,50,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    #canvas-render.tema-llama .render-marca { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: rgba(255,220,150,0.7); letter-spacing: 10px; text-transform: uppercase; margin-bottom: 50px; position: relative; z-index: 1; }
+    #canvas-render.tema-llama .render-comilla { font-family: 'Playfair Display', serif; font-size: 160px; color: rgba(255,200,100,0.5); line-height: 0.5; margin-bottom: 20px; position: relative; z-index: 1; }
+    #canvas-render.tema-llama .render-texto { font-family: 'IM Fell English', serif; font-size: 62px; color: #fff8e8; font-style: italic; line-height: 1.3; text-align: center; margin: 0; position: relative; z-index: 1; text-shadow: 0 2px 20px rgba(200,100,0,0.5); }
+    #canvas-render.tema-llama .render-linea { width: 150px; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,200,100,0.8), transparent); margin: 45px auto; position: relative; z-index: 1; }
+    #canvas-render.tema-llama .render-ref { font-family: 'Bebas Neue', sans-serif; font-size: 34px; color: #ffd080; letter-spacing: 8px; position: relative; z-index: 1; text-shadow: 0 0 30px rgba(255,150,0,0.6); }
+    #canvas-render.tema-llama .render-linea-borde { position: absolute; inset: 30px; border: 1px solid rgba(255,200,100,0.15); pointer-events: none; }
+
+    /* === PLANTILLA 5: JARDÍN === */
+    #canvas-render.tema-jardin {
+      background: linear-gradient(160deg, #071510 0%, #0e2a1a 40%, #142b1c 70%, #091a10 100%);
+    }
+    #canvas-render.tema-jardin .render-inner {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 100px; box-sizing: border-box;
+      position: relative;
+    }
+    #canvas-render.tema-jardin .render-borde {
+      position: absolute; inset: 35px; 
+      border: 1px solid rgba(100,200,130,0.2);
+      pointer-events: none;
+    }
+    #canvas-render.tema-jardin .render-borde::before {
+      content: ''; position: absolute; inset: 8px;
+      border: 1px solid rgba(100,200,130,0.1);
+    }
+    #canvas-render.tema-jardin .corner {
+      position: absolute; width: 50px; height: 50px; border-color: rgba(100,200,130,0.5);
+    }
+    #canvas-render.tema-jardin .corner-tl { top: 25px; left: 25px; border-top: 2px solid; border-left: 2px solid; }
+    #canvas-render.tema-jardin .corner-tr { top: 25px; right: 25px; border-top: 2px solid; border-right: 2px solid; }
+    #canvas-render.tema-jardin .corner-bl { bottom: 25px; left: 25px; border-bottom: 2px solid; border-left: 2px solid; }
+    #canvas-render.tema-jardin .corner-br { bottom: 25px; right: 25px; border-bottom: 2px solid; border-right: 2px solid; }
+    #canvas-render.tema-jardin .render-marca { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: rgba(140,220,160,0.6); letter-spacing: 10px; text-transform: uppercase; margin-bottom: 50px; position: relative; z-index: 1; }
+    #canvas-render.tema-jardin .render-hoja { font-size: 50px; margin-bottom: 10px; opacity: 0.6; position: relative; z-index: 1; }
+    #canvas-render.tema-jardin .render-texto { font-family: 'Cormorant Garamond', serif; font-size: 60px; color: #e8f5ec; font-style: italic; font-weight: 300; line-height: 1.35; text-align: center; margin: 0; position: relative; z-index: 1; }
+    #canvas-render.tema-jardin .render-linea { width: 100px; height: 1px; background: linear-gradient(90deg, transparent, rgba(140,220,160,0.7), transparent); margin: 45px auto; position: relative; z-index: 1; }
+    #canvas-render.tema-jardin .render-ref { font-family: 'Playfair Display', serif; font-size: 30px; color: #90d4a0; letter-spacing: 4px; position: relative; z-index: 1; }
+
+    /* ===== SUCCESS MODAL ===== */
     .corona { font-size: 6rem; display: block; margin-bottom: 15px; animation: bounce 2s infinite; }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
     .btn-continuar { background: var(--primary); color: white; border: none; padding: 18px 30px; border-radius: 40px; font-weight: bold; cursor: pointer; margin-top: 25px; width: 100%; }
@@ -118,6 +312,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     </footer>
   </div>
 
+  <!-- MODAL ÉXITO -->
   <div id="modalExito">
     <div class="box-exito">
       <span class="corona">👑</span>
@@ -131,25 +326,59 @@ import PageLayout from '../layouts/PageLayout.astro';
     </div>
   </div>
 
+  <!-- MENÚ DE ACCIONES -->
   <div id="menuAcciones">
     <button class="btn-tool" onclick="window.resaltar()">🟡<span>Marca</span></button>
     <button class="btn-tool" onclick="window.compartir()">📤<span>Enviar</span></button>
-    <button class="btn-tool" onclick="window.generarImagen('feed')" style="color:#d4a574;">🖼️<span>Feed</span></button>
-    <button class="btn-tool" onclick="window.generarImagen('historia')" style="color:#d4a574;">📱<span>Story</span></button>
+    <button class="btn-tool" onclick="window.abrirSelectorPlantilla()" style="color:#d4a574;">✨<span>Imagen</span></button>
     <button class="btn-tool" onclick="window.cerrarMenu()">❌<span>Cerrar</span></button>
   </div>
 
+  <!-- MODAL SELECTOR DE PLANTILLA -->
+  <div id="modalPlantilla">
+    <div class="plantilla-header">
+      <h3>Elige tu Estilo</h3>
+      <p>Selecciona una plantilla y formato</p>
+    </div>
+
+    <div class="plantillas-grid">
+      <div class="plantilla-card prev-gloria seleccionada" onclick="window.elegirPlantilla('gloria', this)" data-tema="gloria">
+        <div class="prev-icon">🏛️</div>
+        <span>GLORIA</span>
+      </div>
+      <div class="plantilla-card prev-cosmos" onclick="window.elegirPlantilla('cosmos', this)" data-tema="cosmos">
+        <div class="prev-icon" style="filter:drop-shadow(0 0 8px gold);">✦</div>
+        <span style="color:#f0c060;">COSMOS</span>
+      </div>
+      <div class="plantilla-card prev-editorial" onclick="window.elegirPlantilla('editorial', this)" data-tema="editorial">
+        <div class="prev-icon">📰</div>
+        <span>EDITORIAL</span>
+      </div>
+      <div class="plantilla-card prev-llama" onclick="window.elegirPlantilla('llama', this)" data-tema="llama">
+        <div class="prev-icon">🔥</div>
+        <span style="color:#fde8c0;">LLAMA</span>
+      </div>
+      <div class="plantilla-card prev-jardin" onclick="window.elegirPlantilla('jardin', this)" data-tema="jardin">
+        <div class="prev-icon">🌿</div>
+        <span style="color:#90d4a0;">JARDÍN</span>
+      </div>
+    </div>
+
+    <div class="formato-selector">
+      <button class="btn-formato" onclick="window.generarImagen('feed')">🖼️ Feed 1:1</button>
+      <button class="btn-formato" onclick="window.generarImagen('historia')">📱 Historia 9:16</button>
+    </div>
+    <button class="btn-cerrar-plantilla" onclick="window.cerrarSelectorPlantilla()">Cancelar</button>
+  </div>
+
+  <!-- MODAL BIBLIOTECA -->
   <div id="modalBib" onclick="if(event.target==this) window.cerrarBib()">
     <div class="modal-box" id="contenidoModal"></div>
   </div>
 
+  <!-- CANVAS DE RENDER (invisible, fuera de pantalla) -->
   <div id="canvas-render">
-    <div class="marco-interno">
-      <span style="color: #d4a574; font-size: 80px; font-family: 'Playfair Display'; line-height: 1; display:block; margin-bottom:-10px;">"</span>
-      <p id="render-texto"></p>
-      <div style="width: 80px; height: 4px; background: #d4a574; margin: 40px auto;"></div>
-      <p id="render-ref"></p>
-    </div>
+    <!-- El contenido HTML se inyecta dinámicamente por JS -->
   </div>
 
   <script is:inline>
@@ -179,8 +408,7 @@ import PageLayout from '../layouts/PageLayout.astro';
       {n:"Apocalipsis", id:"apocalipsis", c:22}
     ];
 
-    let db = null;
-    let planFull = [];
+    let db = null, planFull = [];
     LIBROS.forEach(l => { for(let i=1; i<=l.c; i++) planFull.push({n:l.n, id:l.id, c:i}); });
 
     let fechaInicio = new Date(localStorage.getItem("b365_fecha_inicio") || new Date().toISOString());
@@ -191,7 +419,121 @@ import PageLayout from '../layouts/PageLayout.astro';
     let leidos = JSON.parse(localStorage.getItem("b365_leidos")) || [];
     let fontSize = parseInt(localStorage.getItem("b365_fsize")) || 21;
     let vSel = null;
+    let temaActual = "gloria"; // plantilla por defecto
 
+    // =============================================
+    // GENERADOR DE HTML POR PLANTILLA
+    // =============================================
+    const PLANTILLA_HTML = {
+      gloria: (texto, ref) => `
+        <div class="render-inner">
+          <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+          <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+          <div class="render-marca">BIBLIA 365</div>
+          <div class="render-comilla">"</div>
+          <p class="render-texto">${texto}</p>
+          <div class="render-linea"></div>
+          <p class="render-ref">${ref}</p>
+        </div>`,
+
+      cosmos: (texto, ref) => `
+        <div class="render-inner">
+          <div class="estrellas"></div>
+          <div class="nebula"></div>
+          <div class="render-circulo"></div>
+          <div class="render-marca">BIBLIA 365</div>
+          <div class="render-comilla">"</div>
+          <p class="render-texto">${texto}</p>
+          <div class="render-linea"></div>
+          <p class="render-ref">${ref}</p>
+        </div>`,
+
+      editorial: (texto, ref) => `
+        <div class="render-inner">
+          <div class="render-linea-top"></div>
+          <div class="render-linea-bottom"></div>
+          <div class="render-numero">❝</div>
+          <div class="render-marca">BIBLIA 365</div>
+          <p class="render-texto">${texto}</p>
+          <div class="render-linea"></div>
+          <p class="render-ref">${ref}</p>
+        </div>`,
+
+      llama: (texto, ref) => `
+        <div class="render-inner">
+          <div class="render-linea-borde"></div>
+          <div class="render-glow"></div>
+          <div class="render-marca">BIBLIA 365</div>
+          <div class="render-comilla">"</div>
+          <p class="render-texto">${texto}</p>
+          <div class="render-linea"></div>
+          <p class="render-ref">${ref}</p>
+        </div>`,
+
+      jardin: (texto, ref) => `
+        <div class="render-inner">
+          <div class="render-borde"></div>
+          <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+          <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+          <div class="render-hoja">✦</div>
+          <div class="render-marca">BIBLIA 365</div>
+          <p class="render-texto">${texto}</p>
+          <div class="render-linea"></div>
+          <p class="render-ref">${ref}</p>
+        </div>`
+    };
+
+    // =============================================
+    // SELECTOR DE PLANTILLA
+    // =============================================
+    window.abrirSelectorPlantilla = () => {
+      document.getElementById("modalPlantilla").classList.add("visible");
+    };
+    window.cerrarSelectorPlantilla = () => {
+      document.getElementById("modalPlantilla").classList.remove("visible");
+    };
+    window.elegirPlantilla = (tema, card) => {
+      temaActual = tema;
+      document.querySelectorAll(".plantilla-card").forEach(c => c.classList.remove("seleccionada"));
+      card.classList.add("seleccionada");
+    };
+
+    // =============================================
+    // GENERADOR DE IMAGEN
+    // =============================================
+    window.generarImagen = (tipo) => {
+      window.cerrarSelectorPlantilla();
+
+      const t = document.getElementById("canvas-render");
+      
+      // Aplicar clase de tema y formato
+      t.className = "";
+      t.classList.add("tema-" + temaActual);
+      t.classList.add(tipo === "feed" ? "formato-feed" : "formato-historia");
+
+      // Inyectar HTML de la plantilla
+      t.innerHTML = PLANTILLA_HTML[temaActual](vSel.texto, vSel.ref);
+
+      // Esperar a que el DOM esté listo y renderizar
+      setTimeout(() => {
+        html2canvas(t, { 
+          scale: 2, 
+          useCORS: true, 
+          allowTaint: true,
+          backgroundColor: null,
+          logging: false
+        }).then(c => {
+          const a = document.createElement("a");
+          a.download = "Biblia365-" + temaActual + "-" + vSel.ref.replace(/[: ]/g, "-") + ".png";
+          a.href = c.toDataURL("image/png", 1.0);
+          a.click();
+        });
+      }, 300);
+    };
+
+    // =============================================
+    // LÓGICA PRINCIPAL (sin cambios)
+    // =============================================
     async function iniciar() {
       try {
         const res = await fetch("/biblia.json");
@@ -205,10 +547,8 @@ import PageLayout from '../layouts/PageLayout.astro';
       const diaMision = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
       const label = document.getElementById("labelDia");
       if(label) label.innerText = "DÍA " + diaMision;
-      
-      const contenedor = document.getElementById("contenedor-lectura");
-      if(contenedor) contenedor.dataset.modo = "plan";
-
+      const cont = document.getElementById("contenedor-lectura");
+      if(cont) cont.dataset.modo = "plan";
       const promedio = planFull.length / 365; 
       const inicioIndex = Math.floor((diaMision - 1) * promedio);
       const finIndex = Math.floor(diaMision * promedio);
@@ -266,7 +606,6 @@ import PageLayout from '../layouts/PageLayout.astro';
         const porc = (leidosHoy / totalHoy * 100);
         const barra = document.getElementById("progreso-valor");
         if(barra) barra.style.width = porc + "%";
-        
         const cont = document.getElementById("contenedor-lectura");
         const label = document.getElementById("labelDia");
         if (porc === 100 && cont && cont.dataset.modo === "plan" && !sessionStorage.getItem("fec_" + label.innerText)) {
@@ -277,26 +616,6 @@ import PageLayout from '../layouts/PageLayout.astro';
         }
       }
     }
-
-    window.generarImagen = (tipo) => {
-      const btn = event.currentTarget;
-      const original = btn.innerHTML;
-      btn.innerHTML = "⏳...";
-      document.getElementById("render-texto").innerText = vSel.texto;
-      document.getElementById("render-ref").innerText = vSel.ref;
-      const t = document.getElementById("canvas-render");
-      t.className = tipo === "feed" ? "formato-feed" : "formato-historia";
-      setTimeout(() => {
-        html2canvas(t, { scale: 3, useCORS: true, backgroundColor: "#faf8f5" }).then(c => {
-          const a = document.createElement("a");
-          a.download = "Biblia365-" + vSel.ref.replace(/[: ]/g, "-") + ".png";
-          a.href = c.toDataURL("image/png", 1.0);
-          a.click();
-          btn.innerHTML = original;
-          window.cerrarMenu();
-        });
-      }, 200);
-    };
 
     window.abrirBib = () => {
       const m = document.getElementById("contenidoModal");
