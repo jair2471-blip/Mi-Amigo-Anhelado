@@ -118,10 +118,13 @@ import PageLayout from '../layouts/PageLayout.astro';
     .grid-libros, .grid-caps { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
     .btn-lib { background: var(--card-bg); border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 15px; cursor: pointer; color: var(--text); font-weight: 600; }
 
-    /* ===== CANVAS DE RENDER (fuera de pantalla) ===== */
+    /* ===== CANVAS DE RENDER ===== */
     #canvas-render { 
-      position: absolute; left: -9999px; top: 0; box-sizing: border-box;
-      display: flex; justify-content: center; align-items: center; 
+      position: fixed; top: 0; left: 0;
+      visibility: hidden; pointer-events: none;
+      box-sizing: border-box;
+      display: flex; justify-content: center; align-items: center;
+      z-index: -1;
     }
     .formato-feed { width: 1080px; height: 1080px; }
     .formato-historia { width: 1080px; height: 1920px; }
@@ -501,12 +504,21 @@ import PageLayout from '../layouts/PageLayout.astro';
     // =============================================
     // GENERADOR DE IMAGEN
     // =============================================
-    window.generarImagen = (tipo) => {
+    const BG_TEMAS = {
+      gloria: "#fdf6e3", cosmos: "#020818",
+      editorial: "#f5f0e8", llama: "#3a0a00", jardin: "#071510"
+    };
+
+    window.generarImagen = async (tipo) => {
       window.cerrarSelectorPlantilla();
 
       const t = document.getElementById("canvas-render");
-      
-      // Aplicar clase de tema y formato
+      const w = tipo === "feed" ? 1080 : 1080;
+      const h = tipo === "feed" ? 1080 : 1920;
+
+      // Configurar tamaño y clases
+      t.style.width  = w + "px";
+      t.style.height = h + "px";
       t.className = "";
       t.classList.add("tema-" + temaActual);
       t.classList.add(tipo === "feed" ? "formato-feed" : "formato-historia");
@@ -514,21 +526,46 @@ import PageLayout from '../layouts/PageLayout.astro';
       // Inyectar HTML de la plantilla
       t.innerHTML = PLANTILLA_HTML[temaActual](vSel.texto, vSel.ref);
 
-      // Esperar a que el DOM esté listo y renderizar
-      setTimeout(() => {
-        html2canvas(t, { 
-          scale: 2, 
-          useCORS: true, 
+      // Mostrar brevemente para que el navegador lo renderice
+      t.style.visibility = "visible";
+      t.style.zIndex = "9999";
+
+      // Esperar fonts + layout
+      await document.fonts.ready;
+      await new Promise(r => setTimeout(r, 400));
+
+      try {
+        const canvas = await html2canvas(t, {
+          scale: 2,
+          useCORS: true,
           allowTaint: true,
-          backgroundColor: null,
-          logging: false
-        }).then(c => {
-          const a = document.createElement("a");
-          a.download = "Biblia365-" + temaActual + "-" + vSel.ref.replace(/[: ]/g, "-") + ".png";
-          a.href = c.toDataURL("image/png", 1.0);
-          a.click();
+          backgroundColor: BG_TEMAS[temaActual],
+          width: w,
+          height: h,
+          windowWidth: w,
+          windowHeight: h,
+          logging: false,
+          imageTimeout: 0
         });
-      }, 300);
+
+        // Ocultar de nuevo
+        t.style.visibility = "hidden";
+        t.style.zIndex = "-1";
+
+        // Descargar imagen
+        const a = document.createElement("a");
+        a.download = "Biblia365-" + temaActual + "-" + vSel.ref.replace(/[: ]/g, "-") + ".png";
+        a.href = canvas.toDataURL("image/png", 1.0);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+      } catch(err) {
+        console.error("Error generando imagen:", err);
+        t.style.visibility = "hidden";
+        t.style.zIndex = "-1";
+        alert("Error al generar la imagen. Intenta de nuevo.");
+      }
     };
 
     // =============================================
