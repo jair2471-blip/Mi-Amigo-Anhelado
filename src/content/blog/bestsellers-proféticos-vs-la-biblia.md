@@ -1,10 +1,10 @@
 ---
 title: "Bestsellers Proféticos vs. La Biblia: El Negocio de las 'Nuevas Revelaciones'"
-description: "¿Por qué pagamos $50 USD por 'secretos apostólicos' si Pablo entregó Romanos gratis? Un análisis crudo sobre la comercialización de la fe y la suficiencia de la Escritura."
+description: "¿Por qué pagamos por 'secretos apostólicos' si ya tenemos la Verdad gratuita? Un análisis sobre la mercantilización de la fe."
 pubDate: 2026-03-17
-heroImage: "https://images.unsplash.com/photo-1507434965515-61970f2bd7c6?q=80&w=1200&h=630&auto=format&fit=crop&crop=center"
+heroImage: "https://images.unsplash.com/photo-1660927059794-152d06e11016?q=80&w=1200&h=630&auto=format&fit=crop&crop=focalpoint&fp-y=0.4"
 author: "Mi Amigo Anhelado"
-tags: ["apostoles modernos", "sola scriptura", "mercantilización de la fe", "discernimiento", "falsos profetas"]
+tags: ["mercantilización de la fe", "sola scriptura", "libros cristianos", "discernimiento"]
 ---
 
 En el cristianismo moderno, la mente es el verdadero campo de batalla. Pero hay un problema: mientras la Biblia es una revelación gratuita y suficiente, una industria editorial ha transformado la fe en un mercado de "secretos exclusivos" y "palabras proféticas" con precio de lujo.
